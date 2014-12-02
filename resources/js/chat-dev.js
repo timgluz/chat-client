@@ -33420,8 +33420,8 @@ cljs.core._add_method.call(null, chat_client.connection.handle_message, "Channel
   var chan_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174)], null), global_app_state);
   var names = cljs.core.get.call(null, msg, "names");
   var chan_tbl = cljs.core.zipmap.call(null, names, cljs.core.mapv.call(null, function(chan_cur, names) {
-    return function(p1__6618_SHARP_) {
-      return cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null, "name", "name", 1843675177)], [p1__6618_SHARP_]);
+    return function(p1__7723_SHARP_) {
+      return cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null, "name", "name", 1843675177)], [p1__7723_SHARP_]);
     };
   }(chan_cur, names), names));
   cljs.core.reset_BANG_.call(null, chan_cur, chan_tbl);
@@ -33590,61 +33590,61 @@ if (typeof chat_client.core.app_state !== "undefined") {
 chat_client.core.main = function main() {
   var app_mount_points = new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".connection-modal", chat_client.components.modal.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".status-app", chat_client.components.status.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".channels-app", 
   chat_client.components.channels.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".users-app", chat_client.components.users.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".chat-app", chat_client.components.chat.render], null)], null);
-  var seq__6793 = cljs.core.seq.call(null, app_mount_points);
-  var chunk__6794 = null;
-  var count__6795 = 0;
-  var i__6796 = 0;
+  var seq__7701 = cljs.core.seq.call(null, app_mount_points);
+  var chunk__7702 = null;
+  var count__7703 = 0;
+  var i__7704 = 0;
   while (true) {
-    if (i__6796 < count__6795) {
-      var vec__6797 = cljs.core._nth.call(null, chunk__6794, i__6796);
-      var selector = cljs.core.nth.call(null, vec__6797, 0, null);
-      var app_renderer = cljs.core.nth.call(null, vec__6797, 1, null);
-      reagent.core.render_component.call(null, function(seq__6793, chunk__6794, count__6795, i__6796, vec__6797, selector, app_renderer, app_mount_points) {
+    if (i__7704 < count__7703) {
+      var vec__7705 = cljs.core._nth.call(null, chunk__7702, i__7704);
+      var selector = cljs.core.nth.call(null, vec__7705, 0, null);
+      var app_renderer = cljs.core.nth.call(null, vec__7705, 1, null);
+      reagent.core.render_component.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [function(seq__7701, chunk__7702, count__7703, i__7704, vec__7705, selector, app_renderer, app_mount_points) {
         return function() {
           return app_renderer.call(null, chat_client.core.app_state);
         };
-      }(seq__6793, chunk__6794, count__6795, i__6796, vec__6797, selector, app_renderer, app_mount_points), chat_client.core.$.call(null, selector));
-      var G__6799 = seq__6793;
-      var G__6800 = chunk__6794;
-      var G__6801 = count__6795;
-      var G__6802 = i__6796 + 1;
-      seq__6793 = G__6799;
-      chunk__6794 = G__6800;
-      count__6795 = G__6801;
-      i__6796 = G__6802;
+      }(seq__7701, chunk__7702, count__7703, i__7704, vec__7705, selector, app_renderer, app_mount_points)], null), chat_client.core.$.call(null, selector));
+      var G__7707 = seq__7701;
+      var G__7708 = chunk__7702;
+      var G__7709 = count__7703;
+      var G__7710 = i__7704 + 1;
+      seq__7701 = G__7707;
+      chunk__7702 = G__7708;
+      count__7703 = G__7709;
+      i__7704 = G__7710;
       continue;
     } else {
-      var temp__4126__auto__ = cljs.core.seq.call(null, seq__6793);
+      var temp__4126__auto__ = cljs.core.seq.call(null, seq__7701);
       if (temp__4126__auto__) {
-        var seq__6793__$1 = temp__4126__auto__;
-        if (cljs.core.chunked_seq_QMARK_.call(null, seq__6793__$1)) {
-          var c__4410__auto__ = cljs.core.chunk_first.call(null, seq__6793__$1);
-          var G__6803 = cljs.core.chunk_rest.call(null, seq__6793__$1);
-          var G__6804 = c__4410__auto__;
-          var G__6805 = cljs.core.count.call(null, c__4410__auto__);
-          var G__6806 = 0;
-          seq__6793 = G__6803;
-          chunk__6794 = G__6804;
-          count__6795 = G__6805;
-          i__6796 = G__6806;
+        var seq__7701__$1 = temp__4126__auto__;
+        if (cljs.core.chunked_seq_QMARK_.call(null, seq__7701__$1)) {
+          var c__4410__auto__ = cljs.core.chunk_first.call(null, seq__7701__$1);
+          var G__7711 = cljs.core.chunk_rest.call(null, seq__7701__$1);
+          var G__7712 = c__4410__auto__;
+          var G__7713 = cljs.core.count.call(null, c__4410__auto__);
+          var G__7714 = 0;
+          seq__7701 = G__7711;
+          chunk__7702 = G__7712;
+          count__7703 = G__7713;
+          i__7704 = G__7714;
           continue;
         } else {
-          var vec__6798 = cljs.core.first.call(null, seq__6793__$1);
-          var selector = cljs.core.nth.call(null, vec__6798, 0, null);
-          var app_renderer = cljs.core.nth.call(null, vec__6798, 1, null);
-          reagent.core.render_component.call(null, function(seq__6793, chunk__6794, count__6795, i__6796, vec__6798, selector, app_renderer, seq__6793__$1, temp__4126__auto__, app_mount_points) {
+          var vec__7706 = cljs.core.first.call(null, seq__7701__$1);
+          var selector = cljs.core.nth.call(null, vec__7706, 0, null);
+          var app_renderer = cljs.core.nth.call(null, vec__7706, 1, null);
+          reagent.core.render_component.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [function(seq__7701, chunk__7702, count__7703, i__7704, vec__7706, selector, app_renderer, seq__7701__$1, temp__4126__auto__, app_mount_points) {
             return function() {
               return app_renderer.call(null, chat_client.core.app_state);
             };
-          }(seq__6793, chunk__6794, count__6795, i__6796, vec__6798, selector, app_renderer, seq__6793__$1, temp__4126__auto__, app_mount_points), chat_client.core.$.call(null, selector));
-          var G__6807 = cljs.core.next.call(null, seq__6793__$1);
-          var G__6808 = null;
-          var G__6809 = 0;
-          var G__6810 = 0;
-          seq__6793 = G__6807;
-          chunk__6794 = G__6808;
-          count__6795 = G__6809;
-          i__6796 = G__6810;
+          }(seq__7701, chunk__7702, count__7703, i__7704, vec__7706, selector, app_renderer, seq__7701__$1, temp__4126__auto__, app_mount_points)], null), chat_client.core.$.call(null, selector));
+          var G__7715 = cljs.core.next.call(null, seq__7701__$1);
+          var G__7716 = null;
+          var G__7717 = 0;
+          var G__7718 = 0;
+          seq__7701 = G__7715;
+          chunk__7702 = G__7716;
+          count__7703 = G__7717;
+          i__7704 = G__7718;
           continue;
         }
       } else {

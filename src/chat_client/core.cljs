@@ -36,11 +36,7 @@
     ;;--mount apps
     (doseq [[selector app-renderer] app-mount-points]
       (reagent/render-component
-        (fn [] (app-renderer app-state))
-        ($ selector) ))
-
-    ;(reagent/render-component #(channels-app/render app-state) ($ ".channels-app"))
-
-    ))
+        [(fn [] (app-renderer app-state))]
+        ($ selector)))))
 
 (main)

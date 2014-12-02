@@ -16,10 +16,6 @@
         chan-tbl (zipmap names
                          (mapv #(hash-map :name %1) names))]
     (reset! chan-cur chan-tbl)
-    #_(swap! global-app-state
-           (fn [xs]
-             (assoc-in xs [:chat :channels] chan-tbl)))
-    ;(reagent/force-update-all)
     (.log js/console "New channels: " (pr-str @chan-cur))
     @chan-cur))
 
@@ -30,7 +26,6 @@
     (reset! ch-cur {:name ch-name
                     :users (get msg "users")
                     :messages (get msg "messages")})
-    ;(reagent/force-update-all)
     @ch-cur))
 
 (defmethod handle-message :default [_ msg]
@@ -42,7 +37,6 @@
 
 (defn close! [socket]
   (.close socket))
-
 
 (defn create
   [global-app-state]
