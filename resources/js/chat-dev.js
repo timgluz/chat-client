@@ -26893,6 +26893,1949 @@ cljs.core.special_symbol_QMARK_ = function special_symbol_QMARK_(x) {
   "letfn*", "letfn*", -110097810, null), null, new cljs.core.Symbol(null, "if", "if", 1181717262, null), null, new cljs.core.Symbol(null, "new", "new", -444906321, null), null, new cljs.core.Symbol(null, "ns", "ns", 2082130287, null), null, new cljs.core.Symbol(null, "deftype*", "deftype*", 962659890, null), null, new cljs.core.Symbol(null, "let*", "let*", 1920721458, null), null, new cljs.core.Symbol(null, "js*", "js*", -1134233646, null), null, new cljs.core.Symbol(null, "fn*", "fn*", -752876845, 
   null), null, new cljs.core.Symbol(null, "recur", "recur", 1202958259, null), null, new cljs.core.Symbol(null, "set!", "set!", 250714521, null), null, new cljs.core.Symbol(null, ".", ".", 1975675962, null), null, new cljs.core.Symbol(null, "quote", "quote", 1377916282, null), null, new cljs.core.Symbol(null, "throw", "throw", 595905694, null), null, new cljs.core.Symbol(null, "def", "def", 597100991, null), null], null), null), x);
 };
+goog.provide("chat_client.utils");
+goog.require("cljs.core");
+chat_client.utils.by_selector = function() {
+  var by_selector = null;
+  var by_selector__1 = function(selector) {
+    return by_selector.call(null, document, selector);
+  };
+  var by_selector__2 = function(doc_node, selector) {
+    return doc_node.querySelector("" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(selector));
+  };
+  by_selector = function(doc_node, selector) {
+    switch(arguments.length) {
+      case 1:
+        return by_selector__1.call(this, doc_node);
+      case 2:
+        return by_selector__2.call(this, doc_node, selector);
+    }
+    throw new Error("Invalid arity: " + arguments.length);
+  };
+  by_selector.cljs$core$IFn$_invoke$arity$1 = by_selector__1;
+  by_selector.cljs$core$IFn$_invoke$arity$2 = by_selector__2;
+  return by_selector;
+}();
+chat_client.utils.time_ago = function time_ago(dt) {
+  return "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new moment(dt)).fromNow());
+};
+goog.provide("com.cognitect.transit.util");
+goog.require("goog.object");
+goog.scope(function() {
+  var util = com.cognitect.transit.util, gobject = goog.object;
+  if (typeof Object.keys != "undefined") {
+    util.objectKeys = function(obj) {
+      return Object.keys(obj);
+    };
+  } else {
+    util.objectKeys = function(obj) {
+      return gobject.getKeys(obj);
+    };
+  }
+  if (typeof Array.isArray != "undefined") {
+    util.isArray = function(obj) {
+      return Array.isArray(obj);
+    };
+  } else {
+    util.isArray = function(obj) {
+      return goog.typeOf(obj) === "array";
+    };
+  }
+  util.chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\x3d";
+  util.randInt = function(ub) {
+    return Math.round(Math.random() * ub);
+  };
+  util.randHex = function() {
+    return util.randInt(15).toString(16);
+  };
+  util.randomUUID = function() {
+    var rhex = (8 | 3 & util.randInt(14)).toString(16), ret = util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + "-" + util.randHex() + util.randHex() + util.randHex() + util.randHex() + "-" + "4" + util.randHex() + util.randHex() + util.randHex() + "-" + rhex + util.randHex() + util.randHex() + util.randHex() + "-" + util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + 
+    util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex();
+    return ret;
+  };
+  util.btoa = function(input) {
+    if (typeof btoa != "undefined") {
+      return btoa(input);
+    } else {
+      var str = String(input);
+      for (var block, charCode, idx = 0, map = util.chars, output = "";str.charAt(idx | 0) || (map = "\x3d", idx % 1);output += map.charAt(63 & block >> 8 - idx % 1 * 8)) {
+        charCode = str.charCodeAt(idx += 3 / 4);
+        if (charCode > 255) {
+          throw new Error("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");
+        }
+        block = block << 8 | charCode;
+      }
+      return output;
+    }
+  };
+  util.atob = function(input) {
+    if (typeof atob != "undefined") {
+      return atob(input);
+    } else {
+      var str = String(input).replace(/=+$/, "");
+      if (str.length % 4 == 1) {
+        throw new Error("'atob' failed: The string to be decoded is not correctly encoded.");
+      }
+      for (var bc = 0, bs, buffer, idx = 0, output = "";buffer = str.charAt(idx++);~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer, bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0) {
+        buffer = util.chars.indexOf(buffer);
+      }
+      return output;
+    }
+  };
+  util.Uint8ToBase64 = function(u8Arr) {
+    var CHUNK_SIZE = 32768, index = 0, length = u8Arr.length, result = "", slice = null;
+    while (index < length) {
+      slice = u8Arr.subarray(index, Math.min(index + CHUNK_SIZE, length));
+      result += String.fromCharCode.apply(null, slice);
+      index += CHUNK_SIZE;
+    }
+    return util.btoa(result);
+  };
+  util.Base64ToUint8 = function(base64) {
+    var binary_string = util.atob(base64), len = binary_string.length, bytes = new Uint8Array(len);
+    for (var i = 0;i < len;i++) {
+      var ascii = binary_string.charCodeAt(i);
+      bytes[i] = ascii;
+    }
+    return bytes;
+  };
+});
+goog.provide("com.cognitect.transit.delimiters");
+goog.scope(function() {
+  var delimiters = com.cognitect.transit.delimiters;
+  delimiters.ESC = "~";
+  delimiters.TAG = "#";
+  delimiters.SUB = "^";
+  delimiters.RES = "`";
+  delimiters.ESC_TAG = "~#";
+});
+goog.provide("com.cognitect.transit.caching");
+goog.require("com.cognitect.transit.delimiters");
+goog.scope(function() {
+  var caching = com.cognitect.transit.caching, d = com.cognitect.transit.delimiters;
+  caching.MIN_SIZE_CACHEABLE = 3;
+  caching.BASE_CHAR_IDX = 48;
+  caching.CACHE_CODE_DIGITS = 44;
+  caching.MAX_CACHE_ENTRIES = caching.CACHE_CODE_DIGITS * caching.CACHE_CODE_DIGITS;
+  caching.MAX_CACHE_SIZE = 4096;
+  caching.isCacheable = function(string, asMapKey) {
+    if (string.length > caching.MIN_SIZE_CACHEABLE) {
+      if (asMapKey) {
+        return true;
+      } else {
+        var c0 = string.charAt(0), c1 = string.charAt(1);
+        if (c0 === d.ESC) {
+          return c1 === ":" || c1 === "$" || c1 === "#";
+        } else {
+          return false;
+        }
+      }
+    } else {
+      return false;
+    }
+  };
+  caching.idxToCode = function(idx) {
+    var hi = Math.floor(idx / caching.CACHE_CODE_DIGITS), lo = idx % caching.CACHE_CODE_DIGITS, loc = String.fromCharCode(lo + caching.BASE_CHAR_IDX);
+    if (hi === 0) {
+      return d.SUB + loc;
+    } else {
+      return d.SUB + String.fromCharCode(hi + caching.BASE_CHAR_IDX) + loc;
+    }
+  };
+  caching.WriteCache = function() {
+    this.idx = 0;
+    this.gen = 0;
+    this.cacheSize = 0;
+    this.cache = {};
+  };
+  caching.WriteCache.prototype.write = function(string, asMapKey) {
+    if (caching.isCacheable(string, asMapKey)) {
+      if (this.cacheSize === caching.MAX_CACHE_SIZE) {
+        this.clear();
+        this.gen = 0;
+        this.cache = {};
+      } else {
+        if (this.idx === caching.MAX_CACHE_ENTRIES) {
+          this.clear();
+        }
+      }
+      var entry = this.cache[string];
+      if (entry == null) {
+        this.cache[string] = [caching.idxToCode(this.idx), this.gen];
+        this.idx++;
+        return string;
+      } else {
+        if (entry[1] != this.gen) {
+          entry[1] = this.gen;
+          entry[0] = caching.idxToCode(this.idx);
+          this.idx++;
+          return string;
+        } else {
+          return entry[0];
+        }
+      }
+    } else {
+      return string;
+    }
+  };
+  caching.WriteCache.prototype.clear = function() {
+    this.idx = 0;
+    this.gen++;
+  };
+  caching.writeCache = function() {
+    return new caching.WriteCache;
+  };
+  caching.isCacheCode = function(string) {
+    return string.charAt(0) === d.SUB && string.charAt(1) !== " ";
+  };
+  caching.codeToIdx = function(code) {
+    if (code.length === 2) {
+      return code.charCodeAt(1) - caching.BASE_CHAR_IDX;
+    } else {
+      var hi = (code.charCodeAt(1) - caching.BASE_CHAR_IDX) * caching.CACHE_CODE_DIGITS, lo = code.charCodeAt(2) - caching.BASE_CHAR_IDX;
+      return hi + lo;
+    }
+  };
+  caching.ReadCache = function() {
+    this.idx = 0;
+    this.cache = [];
+  };
+  caching.ReadCache.prototype.write = function(obj, asMapKey) {
+    if (this.idx == caching.MAX_CACHE_ENTRIES) {
+      this.idx = 0;
+    }
+    this.cache[this.idx] = obj;
+    this.idx++;
+    return obj;
+  };
+  caching.ReadCache.prototype.read = function(string, asMapKey) {
+    return this.cache[caching.codeToIdx(string)];
+  };
+  caching.ReadCache.prototype.clear = function() {
+    this.idx = 0;
+  };
+  caching.readCache = function() {
+    return new caching.ReadCache;
+  };
+});
+goog.provide("com.cognitect.transit.eq");
+goog.require("com.cognitect.transit.util");
+goog.scope(function() {
+  var eq = com.cognitect.transit.eq, util = com.cognitect.transit.util;
+  eq.hashCodeProperty = "transit$hashCode$";
+  eq.hashCodeCounter = 1;
+  eq.equals = function(x, y) {
+    if (x == null) {
+      return y == null;
+    } else {
+      if (x === y) {
+        return true;
+      } else {
+        if (typeof x === "object") {
+          if (util.isArray(x)) {
+            if (util.isArray(y)) {
+              if (x.length === y.length) {
+                for (var i = 0;i < x.length;i++) {
+                  if (!eq.equals(x[i], y[i])) {
+                    return false;
+                  }
+                }
+                return true;
+              } else {
+                return false;
+              }
+            } else {
+              return false;
+            }
+          } else {
+            if (x.com$cognitect$transit$equals) {
+              return x.com$cognitect$transit$equals(y);
+            } else {
+              if (y != null && typeof y === "object") {
+                if (y.com$cognitect$transit$equals) {
+                  return y.com$cognitect$transit$equals(x);
+                } else {
+                  var xklen = 0, yklen = util.objectKeys(y).length;
+                  for (var p in x) {
+                    if (!x.hasOwnProperty(p)) {
+                      continue;
+                    }
+                    xklen++;
+                    if (!y.hasOwnProperty(p)) {
+                      return false;
+                    } else {
+                      if (!eq.equals(x[p], y[p])) {
+                        return false;
+                      }
+                    }
+                  }
+                  return xklen === yklen;
+                }
+              } else {
+                return false;
+              }
+            }
+          }
+        } else {
+          return false;
+        }
+      }
+    }
+  };
+  eq.hashCombine = function(seed, hash) {
+    return seed ^ hash + 2654435769 + (seed << 6) + (seed >> 2);
+  };
+  eq.stringCodeCache = {};
+  eq.stringCodeCacheSize = 0;
+  eq.STR_CACHE_MAX = 256;
+  eq.hashString = function(str) {
+    var cached = eq.stringCodeCache[str];
+    if (cached != null) {
+      return cached;
+    }
+    var code = 0;
+    for (var i = 0;i < str.length;++i) {
+      code = 31 * code + str.charCodeAt(i);
+      code %= 4294967296;
+    }
+    eq.stringCodeCacheSize++;
+    if (eq.stringCodeCacheSize >= eq.STR_CACHE_MAX) {
+      eq.stringCodeCache = {};
+      eq.stringCodeCacheSize = 1;
+    }
+    eq.stringCodeCache[str] = code;
+    return code;
+  };
+  eq.hashMapLike = function(m) {
+    var code = 0;
+    if (m.forEach != null) {
+      m.forEach(function(val, key, m) {
+        code = (code + (eq.hashCode(key) ^ eq.hashCode(val))) % 4503599627370496;
+      });
+    } else {
+      var keys = util.objectKeys(m);
+      for (var i = 0;i < keys.length;i++) {
+        var key = keys[i];
+        var val = m[key];
+        code = (code + (eq.hashCode(key) ^ eq.hashCode(val))) % 4503599627370496;
+      }
+    }
+    return code;
+  };
+  eq.hashArrayLike = function(arr) {
+    var code = 0;
+    if (util.isArray(arr)) {
+      for (var i = 0;i < arr.length;i++) {
+        code = eq.hashCombine(code, eq.hashCode(arr[i]));
+      }
+    } else {
+      if (arr.forEach) {
+        arr.forEach(function(x, i) {
+          code = eq.hashCombine(code, eq.hashCode(x));
+        });
+      }
+    }
+    return code;
+  };
+  eq.hashCode = function(x) {
+    if (x == null) {
+      return 0;
+    } else {
+      switch(typeof x) {
+        case "number":
+          return x;
+          break;
+        case "boolean":
+          return x === true ? 1 : 0;
+          break;
+        case "string":
+          return eq.hashString(x);
+          break;
+        case "function":
+          var code = x[eq.hashCodeProperty];
+          if (code) {
+            return code;
+          } else {
+            code = eq.hashCodeCounter;
+            if (typeof Object.defineProperty != "undefined") {
+              Object.defineProperty(x, eq.hashCodeProperty, {value:code, enumerable:false});
+            } else {
+              x[eq.hashCodeProperty] = code;
+            }
+            eq.hashCodeCounter++;
+            return code;
+          }
+          break;
+        default:
+          if (x instanceof Date) {
+            return x.valueOf();
+          } else {
+            if (util.isArray(x)) {
+              return eq.hashArrayLike(x);
+            }
+          }
+          if (x.com$cognitect$transit$hashCode) {
+            return x.com$cognitect$transit$hashCode();
+          } else {
+            return eq.hashMapLike(x);
+          }
+          break;
+      }
+    }
+  };
+  eq.extendToEQ = function(obj, opts) {
+    obj.com$cognitect$transit$hashCode = opts["hashCode"];
+    obj.com$cognitect$transit$equals = opts["equals"];
+    return obj;
+  };
+});
+goog.provide("goog.math.Long");
+goog.math.Long = function(low, high) {
+  this.low_ = low | 0;
+  this.high_ = high | 0;
+};
+goog.math.Long.IntCache_ = {};
+goog.math.Long.fromInt = function(value) {
+  if (-128 <= value && value < 128) {
+    var cachedObj = goog.math.Long.IntCache_[value];
+    if (cachedObj) {
+      return cachedObj;
+    }
+  }
+  var obj = new goog.math.Long(value | 0, value < 0 ? -1 : 0);
+  if (-128 <= value && value < 128) {
+    goog.math.Long.IntCache_[value] = obj;
+  }
+  return obj;
+};
+goog.math.Long.fromNumber = function(value) {
+  if (isNaN(value) || !isFinite(value)) {
+    return goog.math.Long.ZERO;
+  } else {
+    if (value <= -goog.math.Long.TWO_PWR_63_DBL_) {
+      return goog.math.Long.MIN_VALUE;
+    } else {
+      if (value + 1 >= goog.math.Long.TWO_PWR_63_DBL_) {
+        return goog.math.Long.MAX_VALUE;
+      } else {
+        if (value < 0) {
+          return goog.math.Long.fromNumber(-value).negate();
+        } else {
+          return new goog.math.Long(value % goog.math.Long.TWO_PWR_32_DBL_ | 0, value / goog.math.Long.TWO_PWR_32_DBL_ | 0);
+        }
+      }
+    }
+  }
+};
+goog.math.Long.fromBits = function(lowBits, highBits) {
+  return new goog.math.Long(lowBits, highBits);
+};
+goog.math.Long.fromString = function(str, opt_radix) {
+  if (str.length == 0) {
+    throw Error("number format error: empty string");
+  }
+  var radix = opt_radix || 10;
+  if (radix < 2 || 36 < radix) {
+    throw Error("radix out of range: " + radix);
+  }
+  if (str.charAt(0) == "-") {
+    return goog.math.Long.fromString(str.substring(1), radix).negate();
+  } else {
+    if (str.indexOf("-") >= 0) {
+      throw Error('number format error: interior "-" character: ' + str);
+    }
+  }
+  var radixToPower = goog.math.Long.fromNumber(Math.pow(radix, 8));
+  var result = goog.math.Long.ZERO;
+  for (var i = 0;i < str.length;i += 8) {
+    var size = Math.min(8, str.length - i);
+    var value = parseInt(str.substring(i, i + size), radix);
+    if (size < 8) {
+      var power = goog.math.Long.fromNumber(Math.pow(radix, size));
+      result = result.multiply(power).add(goog.math.Long.fromNumber(value));
+    } else {
+      result = result.multiply(radixToPower);
+      result = result.add(goog.math.Long.fromNumber(value));
+    }
+  }
+  return result;
+};
+goog.math.Long.TWO_PWR_16_DBL_ = 1 << 16;
+goog.math.Long.TWO_PWR_24_DBL_ = 1 << 24;
+goog.math.Long.TWO_PWR_32_DBL_ = goog.math.Long.TWO_PWR_16_DBL_ * goog.math.Long.TWO_PWR_16_DBL_;
+goog.math.Long.TWO_PWR_31_DBL_ = goog.math.Long.TWO_PWR_32_DBL_ / 2;
+goog.math.Long.TWO_PWR_48_DBL_ = goog.math.Long.TWO_PWR_32_DBL_ * goog.math.Long.TWO_PWR_16_DBL_;
+goog.math.Long.TWO_PWR_64_DBL_ = goog.math.Long.TWO_PWR_32_DBL_ * goog.math.Long.TWO_PWR_32_DBL_;
+goog.math.Long.TWO_PWR_63_DBL_ = goog.math.Long.TWO_PWR_64_DBL_ / 2;
+goog.math.Long.ZERO = goog.math.Long.fromInt(0);
+goog.math.Long.ONE = goog.math.Long.fromInt(1);
+goog.math.Long.NEG_ONE = goog.math.Long.fromInt(-1);
+goog.math.Long.MAX_VALUE = goog.math.Long.fromBits(4294967295 | 0, 2147483647 | 0);
+goog.math.Long.MIN_VALUE = goog.math.Long.fromBits(0, 2147483648 | 0);
+goog.math.Long.TWO_PWR_24_ = goog.math.Long.fromInt(1 << 24);
+goog.math.Long.prototype.toInt = function() {
+  return this.low_;
+};
+goog.math.Long.prototype.toNumber = function() {
+  return this.high_ * goog.math.Long.TWO_PWR_32_DBL_ + this.getLowBitsUnsigned();
+};
+goog.math.Long.prototype.toString = function(opt_radix) {
+  var radix = opt_radix || 10;
+  if (radix < 2 || 36 < radix) {
+    throw Error("radix out of range: " + radix);
+  }
+  if (this.isZero()) {
+    return "0";
+  }
+  if (this.isNegative()) {
+    if (this.equals(goog.math.Long.MIN_VALUE)) {
+      var radixLong = goog.math.Long.fromNumber(radix);
+      var div = this.div(radixLong);
+      var rem = div.multiply(radixLong).subtract(this);
+      return div.toString(radix) + rem.toInt().toString(radix);
+    } else {
+      return "-" + this.negate().toString(radix);
+    }
+  }
+  var radixToPower = goog.math.Long.fromNumber(Math.pow(radix, 6));
+  var rem = this;
+  var result = "";
+  while (true) {
+    var remDiv = rem.div(radixToPower);
+    var intval = rem.subtract(remDiv.multiply(radixToPower)).toInt();
+    var digits = intval.toString(radix);
+    rem = remDiv;
+    if (rem.isZero()) {
+      return digits + result;
+    } else {
+      while (digits.length < 6) {
+        digits = "0" + digits;
+      }
+      result = "" + digits + result;
+    }
+  }
+};
+goog.math.Long.prototype.getHighBits = function() {
+  return this.high_;
+};
+goog.math.Long.prototype.getLowBits = function() {
+  return this.low_;
+};
+goog.math.Long.prototype.getLowBitsUnsigned = function() {
+  return this.low_ >= 0 ? this.low_ : goog.math.Long.TWO_PWR_32_DBL_ + this.low_;
+};
+goog.math.Long.prototype.getNumBitsAbs = function() {
+  if (this.isNegative()) {
+    if (this.equals(goog.math.Long.MIN_VALUE)) {
+      return 64;
+    } else {
+      return this.negate().getNumBitsAbs();
+    }
+  } else {
+    var val = this.high_ != 0 ? this.high_ : this.low_;
+    for (var bit = 31;bit > 0;bit--) {
+      if ((val & 1 << bit) != 0) {
+        break;
+      }
+    }
+    return this.high_ != 0 ? bit + 33 : bit + 1;
+  }
+};
+goog.math.Long.prototype.isZero = function() {
+  return this.high_ == 0 && this.low_ == 0;
+};
+goog.math.Long.prototype.isNegative = function() {
+  return this.high_ < 0;
+};
+goog.math.Long.prototype.isOdd = function() {
+  return(this.low_ & 1) == 1;
+};
+goog.math.Long.prototype.equals = function(other) {
+  return this.high_ == other.high_ && this.low_ == other.low_;
+};
+goog.math.Long.prototype.notEquals = function(other) {
+  return this.high_ != other.high_ || this.low_ != other.low_;
+};
+goog.math.Long.prototype.lessThan = function(other) {
+  return this.compare(other) < 0;
+};
+goog.math.Long.prototype.lessThanOrEqual = function(other) {
+  return this.compare(other) <= 0;
+};
+goog.math.Long.prototype.greaterThan = function(other) {
+  return this.compare(other) > 0;
+};
+goog.math.Long.prototype.greaterThanOrEqual = function(other) {
+  return this.compare(other) >= 0;
+};
+goog.math.Long.prototype.compare = function(other) {
+  if (this.equals(other)) {
+    return 0;
+  }
+  var thisNeg = this.isNegative();
+  var otherNeg = other.isNegative();
+  if (thisNeg && !otherNeg) {
+    return-1;
+  }
+  if (!thisNeg && otherNeg) {
+    return 1;
+  }
+  if (this.subtract(other).isNegative()) {
+    return-1;
+  } else {
+    return 1;
+  }
+};
+goog.math.Long.prototype.negate = function() {
+  if (this.equals(goog.math.Long.MIN_VALUE)) {
+    return goog.math.Long.MIN_VALUE;
+  } else {
+    return this.not().add(goog.math.Long.ONE);
+  }
+};
+goog.math.Long.prototype.add = function(other) {
+  var a48 = this.high_ >>> 16;
+  var a32 = this.high_ & 65535;
+  var a16 = this.low_ >>> 16;
+  var a00 = this.low_ & 65535;
+  var b48 = other.high_ >>> 16;
+  var b32 = other.high_ & 65535;
+  var b16 = other.low_ >>> 16;
+  var b00 = other.low_ & 65535;
+  var c48 = 0, c32 = 0, c16 = 0, c00 = 0;
+  c00 += a00 + b00;
+  c16 += c00 >>> 16;
+  c00 &= 65535;
+  c16 += a16 + b16;
+  c32 += c16 >>> 16;
+  c16 &= 65535;
+  c32 += a32 + b32;
+  c48 += c32 >>> 16;
+  c32 &= 65535;
+  c48 += a48 + b48;
+  c48 &= 65535;
+  return goog.math.Long.fromBits(c16 << 16 | c00, c48 << 16 | c32);
+};
+goog.math.Long.prototype.subtract = function(other) {
+  return this.add(other.negate());
+};
+goog.math.Long.prototype.multiply = function(other) {
+  if (this.isZero()) {
+    return goog.math.Long.ZERO;
+  } else {
+    if (other.isZero()) {
+      return goog.math.Long.ZERO;
+    }
+  }
+  if (this.equals(goog.math.Long.MIN_VALUE)) {
+    return other.isOdd() ? goog.math.Long.MIN_VALUE : goog.math.Long.ZERO;
+  } else {
+    if (other.equals(goog.math.Long.MIN_VALUE)) {
+      return this.isOdd() ? goog.math.Long.MIN_VALUE : goog.math.Long.ZERO;
+    }
+  }
+  if (this.isNegative()) {
+    if (other.isNegative()) {
+      return this.negate().multiply(other.negate());
+    } else {
+      return this.negate().multiply(other).negate();
+    }
+  } else {
+    if (other.isNegative()) {
+      return this.multiply(other.negate()).negate();
+    }
+  }
+  if (this.lessThan(goog.math.Long.TWO_PWR_24_) && other.lessThan(goog.math.Long.TWO_PWR_24_)) {
+    return goog.math.Long.fromNumber(this.toNumber() * other.toNumber());
+  }
+  var a48 = this.high_ >>> 16;
+  var a32 = this.high_ & 65535;
+  var a16 = this.low_ >>> 16;
+  var a00 = this.low_ & 65535;
+  var b48 = other.high_ >>> 16;
+  var b32 = other.high_ & 65535;
+  var b16 = other.low_ >>> 16;
+  var b00 = other.low_ & 65535;
+  var c48 = 0, c32 = 0, c16 = 0, c00 = 0;
+  c00 += a00 * b00;
+  c16 += c00 >>> 16;
+  c00 &= 65535;
+  c16 += a16 * b00;
+  c32 += c16 >>> 16;
+  c16 &= 65535;
+  c16 += a00 * b16;
+  c32 += c16 >>> 16;
+  c16 &= 65535;
+  c32 += a32 * b00;
+  c48 += c32 >>> 16;
+  c32 &= 65535;
+  c32 += a16 * b16;
+  c48 += c32 >>> 16;
+  c32 &= 65535;
+  c32 += a00 * b32;
+  c48 += c32 >>> 16;
+  c32 &= 65535;
+  c48 += a48 * b00 + a32 * b16 + a16 * b32 + a00 * b48;
+  c48 &= 65535;
+  return goog.math.Long.fromBits(c16 << 16 | c00, c48 << 16 | c32);
+};
+goog.math.Long.prototype.div = function(other) {
+  if (other.isZero()) {
+    throw Error("division by zero");
+  } else {
+    if (this.isZero()) {
+      return goog.math.Long.ZERO;
+    }
+  }
+  if (this.equals(goog.math.Long.MIN_VALUE)) {
+    if (other.equals(goog.math.Long.ONE) || other.equals(goog.math.Long.NEG_ONE)) {
+      return goog.math.Long.MIN_VALUE;
+    } else {
+      if (other.equals(goog.math.Long.MIN_VALUE)) {
+        return goog.math.Long.ONE;
+      } else {
+        var halfThis = this.shiftRight(1);
+        var approx = halfThis.div(other).shiftLeft(1);
+        if (approx.equals(goog.math.Long.ZERO)) {
+          return other.isNegative() ? goog.math.Long.ONE : goog.math.Long.NEG_ONE;
+        } else {
+          var rem = this.subtract(other.multiply(approx));
+          var result = approx.add(rem.div(other));
+          return result;
+        }
+      }
+    }
+  } else {
+    if (other.equals(goog.math.Long.MIN_VALUE)) {
+      return goog.math.Long.ZERO;
+    }
+  }
+  if (this.isNegative()) {
+    if (other.isNegative()) {
+      return this.negate().div(other.negate());
+    } else {
+      return this.negate().div(other).negate();
+    }
+  } else {
+    if (other.isNegative()) {
+      return this.div(other.negate()).negate();
+    }
+  }
+  var res = goog.math.Long.ZERO;
+  var rem = this;
+  while (rem.greaterThanOrEqual(other)) {
+    var approx = Math.max(1, Math.floor(rem.toNumber() / other.toNumber()));
+    var log2 = Math.ceil(Math.log(approx) / Math.LN2);
+    var delta = log2 <= 48 ? 1 : Math.pow(2, log2 - 48);
+    var approxRes = goog.math.Long.fromNumber(approx);
+    var approxRem = approxRes.multiply(other);
+    while (approxRem.isNegative() || approxRem.greaterThan(rem)) {
+      approx -= delta;
+      approxRes = goog.math.Long.fromNumber(approx);
+      approxRem = approxRes.multiply(other);
+    }
+    if (approxRes.isZero()) {
+      approxRes = goog.math.Long.ONE;
+    }
+    res = res.add(approxRes);
+    rem = rem.subtract(approxRem);
+  }
+  return res;
+};
+goog.math.Long.prototype.modulo = function(other) {
+  return this.subtract(this.div(other).multiply(other));
+};
+goog.math.Long.prototype.not = function() {
+  return goog.math.Long.fromBits(~this.low_, ~this.high_);
+};
+goog.math.Long.prototype.and = function(other) {
+  return goog.math.Long.fromBits(this.low_ & other.low_, this.high_ & other.high_);
+};
+goog.math.Long.prototype.or = function(other) {
+  return goog.math.Long.fromBits(this.low_ | other.low_, this.high_ | other.high_);
+};
+goog.math.Long.prototype.xor = function(other) {
+  return goog.math.Long.fromBits(this.low_ ^ other.low_, this.high_ ^ other.high_);
+};
+goog.math.Long.prototype.shiftLeft = function(numBits) {
+  numBits &= 63;
+  if (numBits == 0) {
+    return this;
+  } else {
+    var low = this.low_;
+    if (numBits < 32) {
+      var high = this.high_;
+      return goog.math.Long.fromBits(low << numBits, high << numBits | low >>> 32 - numBits);
+    } else {
+      return goog.math.Long.fromBits(0, low << numBits - 32);
+    }
+  }
+};
+goog.math.Long.prototype.shiftRight = function(numBits) {
+  numBits &= 63;
+  if (numBits == 0) {
+    return this;
+  } else {
+    var high = this.high_;
+    if (numBits < 32) {
+      var low = this.low_;
+      return goog.math.Long.fromBits(low >>> numBits | high << 32 - numBits, high >> numBits);
+    } else {
+      return goog.math.Long.fromBits(high >> numBits - 32, high >= 0 ? 0 : -1);
+    }
+  }
+};
+goog.math.Long.prototype.shiftRightUnsigned = function(numBits) {
+  numBits &= 63;
+  if (numBits == 0) {
+    return this;
+  } else {
+    var high = this.high_;
+    if (numBits < 32) {
+      var low = this.low_;
+      return goog.math.Long.fromBits(low >>> numBits | high << 32 - numBits, high >>> numBits);
+    } else {
+      if (numBits == 32) {
+        return goog.math.Long.fromBits(high, 0);
+      } else {
+        return goog.math.Long.fromBits(high >>> numBits - 32, 0);
+      }
+    }
+  }
+};
+goog.provide("com.cognitect.transit.types");
+goog.require("com.cognitect.transit.util");
+goog.require("com.cognitect.transit.eq");
+goog.require("goog.math.Long");
+goog.scope(function() {
+  var types = com.cognitect.transit.types, util = com.cognitect.transit.util, eq = com.cognitect.transit.eq, Long = goog.math.Long;
+  types.TaggedValue = function(tag, rep) {
+    this.tag = tag;
+    this.rep = rep;
+    this.hashCode = -1;
+  };
+  types.TaggedValue.prototype.toString = function() {
+    return "[TaggedValue: " + this.tag + ", " + this.rep + "]";
+  };
+  types.TaggedValue.prototype.equiv = function(other) {
+    return eq.equals(this, other);
+  };
+  types.TaggedValue.prototype["equiv"] = types.TaggedValue.prototype.equiv;
+  types.TaggedValue.prototype.com$cognitect$transit$equals = function(other) {
+    if (other instanceof types.TaggedValue) {
+      return this.tag === other.tag && eq.equals(this.rep, other.rep);
+    } else {
+      return false;
+    }
+  };
+  types.TaggedValue.prototype.com$cognitect$transit$hashCode = function() {
+    if (this.hashCode === -1) {
+      this.hashCode = eq.hashCombine(eq.hashCode(this.tag), eq.hashCode(this.rep));
+    }
+    return this.hashCode;
+  };
+  types.taggedValue = function(tag, rep) {
+    return new types.TaggedValue(tag, rep);
+  };
+  types.isTaggedValue = function(x) {
+    return x instanceof types.TaggedValue;
+  };
+  types.nullValue = function() {
+    return null;
+  };
+  types.boolValue = function(s) {
+    return s === "t";
+  };
+  types.MAX_INT = Long.fromString("9007199254740992");
+  types.MIN_INT = Long.fromString("-9007199254740992");
+  types.intValue = function(s) {
+    if (typeof s === "number") {
+      return s;
+    } else {
+      if (s instanceof Long) {
+        return s;
+      } else {
+        var n = Long.fromString(s, 10);
+        if (n.greaterThan(types.MAX_INT) || n.lessThan(types.MIN_INT)) {
+          return n;
+        } else {
+          return n.toNumber();
+        }
+      }
+    }
+  };
+  Long.prototype.equiv = function(other) {
+    return eq.equals(this, other);
+  };
+  Long.prototype["equiv"] = Long.prototype.equiv;
+  Long.prototype.com$cognitect$transit$equals = function(other) {
+    return other instanceof Long && this.equals(other);
+  };
+  Long.prototype.com$cognitect$transit$hashCode = function() {
+    return this.toInt();
+  };
+  types.isInteger = function(x) {
+    if (x instanceof Long) {
+      return true;
+    } else {
+      return typeof x === "number" && !isNaN(x) && !(x === Infinity) && parseFloat(x) === parseInt(x);
+    }
+  };
+  types.floatValue = function(s) {
+    return parseFloat(s);
+  };
+  types.bigInteger = function(s) {
+    return types.taggedValue("n", s);
+  };
+  types.isBigInteger = function(x) {
+    return x instanceof types.TaggedValue && x.tag === "n";
+  };
+  types.bigDecimalValue = function(s) {
+    return types.taggedValue("f", s);
+  };
+  types.isBigDecimal = function(x) {
+    return x instanceof types.TaggedValue && x.tag === "f";
+  };
+  types.charValue = function(s) {
+    return s;
+  };
+  types.Keyword = function(name) {
+    this.name = name;
+    this.hashCode = -1;
+  };
+  types.Keyword.prototype.toString = function() {
+    return ":" + this.name;
+  };
+  types.Keyword.prototype.equiv = function(other) {
+    return eq.equals(this, other);
+  };
+  types.Keyword.prototype["equiv"] = types.Keyword.prototype.equiv;
+  types.Keyword.prototype.com$cognitect$transit$equals = function(other) {
+    return other instanceof types.Keyword && this.name == other.name;
+  };
+  types.Keyword.prototype.com$cognitect$transit$hashCode = function() {
+    if (this.hashCode === -1) {
+      this.hashCode = eq.hashCode(this.name);
+    }
+    return this.hashCode;
+  };
+  types.keyword = function(s) {
+    return new types.Keyword(s);
+  };
+  types.isKeyword = function(x) {
+    return x instanceof types.Keyword;
+  };
+  types.Symbol = function(name) {
+    this.name = name;
+    this.hashCode = -1;
+  };
+  types.Symbol.prototype.toString = function() {
+    return "[Symbol: " + this.name + "]";
+  };
+  types.Symbol.prototype.equiv = function(other) {
+    return eq.equals(this, other);
+  };
+  types.Symbol.prototype["equiv"] = types.Symbol.prototype.equiv;
+  types.Symbol.prototype.com$cognitect$transit$equals = function(other) {
+    return other instanceof types.Symbol && this.name == other.name;
+  };
+  types.Symbol.prototype.com$cognitect$transit$hashCode = function() {
+    if (this.hashCode === -1) {
+      this.hashCode = eq.hashCode(this.name);
+    }
+    return this.hashCode;
+  };
+  types.symbol = function(s) {
+    return new types.Symbol(s);
+  };
+  types.isSymbol = function(x) {
+    return x instanceof types.Symbol;
+  };
+  types.hexFor = function(aLong, sidx, eidx) {
+    var ret = "", eidx = eidx || sidx + 1;
+    for (var i = sidx, shift = (7 - i) * 8, mask = Long.fromInt(255).shiftLeft(shift);i < eidx;i++, shift -= 8, mask = mask.shiftRightUnsigned(8)) {
+      var s = aLong.and(mask).shiftRightUnsigned(shift).toString(16);
+      if (s.length == 1) {
+        s = "0" + s;
+      }
+      ret += s;
+    }
+    return ret;
+  };
+  types.UUID = function(high, low) {
+    this.high = high;
+    this.low = low;
+    this.hashCode = -1;
+  };
+  types.UUID.prototype.getLeastSignificantBits = function() {
+    return this.low;
+  };
+  types.UUID.prototype.getMostSignificantBits = function() {
+    return this.high;
+  };
+  types.UUID.prototype.toString = function(s) {
+    var s = "", hi64 = this.high, lo64 = this.low;
+    s += types.hexFor(hi64, 0, 4) + "-";
+    s += types.hexFor(hi64, 4, 6) + "-";
+    s += types.hexFor(hi64, 6, 8) + "-";
+    s += types.hexFor(lo64, 0, 2) + "-";
+    s += types.hexFor(lo64, 2, 8);
+    return s;
+  };
+  types.UUID.prototype.equiv = function(other) {
+    return eq.equals(this, other);
+  };
+  types.UUID.prototype["equiv"] = types.UUID.prototype.equiv;
+  types.UUID.prototype.com$cognitect$transit$equals = function(other) {
+    return other instanceof types.UUID && this.high.equals(other.high) && this.low.equals(other.low);
+  };
+  types.UUID.prototype.com$cognitect$transit$hashCode = function() {
+    if (this.hashCode === -1) {
+      this.hashCode = eq.hashCode(this.toString());
+    }
+    return this.hashCode;
+  };
+  types.UUIDfromString = function uuidFromString(s) {
+    var s = s.replace(/-/g, ""), hi64 = null, lo64 = null, hi32 = 0, lo32 = 0, off = 24, i = 0;
+    for (hi32 = 0, i = 0, off = 24;i < 8;i += 2, off -= 8) {
+      hi32 |= parseInt(s.substring(i, i + 2), 16) << off;
+    }
+    for (lo32 = 0, i = 8, off = 24;i < 16;i += 2, off -= 8) {
+      lo32 |= parseInt(s.substring(i, i + 2), 16) << off;
+    }
+    hi64 = Long.fromBits(lo32, hi32);
+    for (hi32 = 0, i = 16, off = 24;i < 24;i += 2, off -= 8) {
+      hi32 |= parseInt(s.substring(i, i + 2), 16) << off;
+    }
+    for (lo32 = 0, i = 24, off = 24;i < 32;i += 2, off -= 8) {
+      lo32 |= parseInt(s.substring(i, i + 2), 16) << off;
+    }
+    lo64 = Long.fromBits(lo32, hi32);
+    return new types.UUID(hi64, lo64);
+  };
+  types.uuid = function(s) {
+    return types.UUIDfromString(s);
+  };
+  types.isUUID = function(x) {
+    return x instanceof types.UUID;
+  };
+  types.date = function(s) {
+    s = typeof s === "number" ? s : parseInt(s, 10);
+    return new Date(s);
+  };
+  types.verboseDate = function(s) {
+    return new Date(s);
+  };
+  Date.prototype.com$cognitect$transit$equals = function(other) {
+    if (other instanceof Date) {
+      return this.valueOf() === other.valueOf();
+    } else {
+      return false;
+    }
+  };
+  Date.prototype.com$cognitect$transit$hashCode = function() {
+    return this.valueOf();
+  };
+  types.binary = function(str, decoder) {
+    if ((!decoder || decoder.preferBuffers !== false) && typeof Buffer != "undefined") {
+      return new Buffer(str, "base64");
+    } else {
+      if (typeof Uint8Array != "undefined") {
+        return util.Base64ToUint8(str);
+      } else {
+        return types.taggedValue("b", str);
+      }
+    }
+  };
+  types.isBinary = function(x) {
+    if (typeof Buffer != "undefined" && x instanceof Buffer) {
+      return true;
+    } else {
+      if (typeof Uint8Array != "undefined" && x instanceof Uint8Array) {
+        return true;
+      } else {
+        return x instanceof types.TaggedValue && x.tag === "b";
+      }
+    }
+  };
+  types.uri = function(s) {
+    return types.taggedValue("r", s);
+  };
+  types.isURI = function(x) {
+    return x instanceof types.TaggedValue && x.tag === "r";
+  };
+  types.KEYS = 0;
+  types.VALUES = 1;
+  types.ENTRIES = 2;
+  types.TransitArrayMapIterator = function(entries, type) {
+    this.entries = entries;
+    this.type = type || types.KEYS;
+    this.idx = 0;
+  };
+  types.TransitArrayMapIterator.prototype.next = function(map, type) {
+    if (this.idx < this.entries.length) {
+      var value = null;
+      if (this.type === types.KEYS) {
+        value = this.entries[this.idx];
+      } else {
+        if (this.type === types.VALUES) {
+          value = this.entries[this.idx + 1];
+        } else {
+          value = [this.entries[this.idx], this.entries[this.idx + 1]];
+        }
+      }
+      var ret = {"value":value, "done":false};
+      this.idx += 2;
+      return ret;
+    } else {
+      return{"value":null, "done":true};
+    }
+  };
+  types.TransitArrayMapIterator.prototype["next"] = types.TransitArrayMapIterator.prototype.next;
+  types.TransitMapIterator = function(map, type) {
+    this.map = map;
+    this.type = type || types.KEYS;
+    this.keys = this.map.getKeys();
+    this.idx = 0;
+    this.bucket = null;
+    this.bucketIdx = 0;
+  };
+  types.TransitMapIterator.prototype.next = function() {
+    if (this.idx < this.map.size) {
+      if (this.bucket == null || !(this.bucketIdx < this.bucket.length)) {
+        this.bucket = this.map.map[this.keys[this.idx]];
+        this.bucketIdx = 0;
+      }
+      var value = null;
+      if (this.type === types.KEYS) {
+        value = this.bucket[this.bucketIdx];
+      } else {
+        if (this.type === types.VALUES) {
+          value = this.bucket[this.bucketIdx + 1];
+        } else {
+          value = [this.bucket[this.bucketIdx], this.bucket[this.bucketIdx + 1]];
+        }
+      }
+      var ret = {"value":value, "done":false};
+      this.idx++;
+      this.bucketIdx += 2;
+      return ret;
+    } else {
+      return{"value":null, "done":true};
+    }
+  };
+  types.TransitMapIterator.prototype["next"] = types.TransitMapIterator.prototype.next;
+  types.mapEquals = function(me, you) {
+    if ((you instanceof types.TransitMap || you instanceof types.TransitArrayMap) && me.size === you.size) {
+      for (var code in me.map) {
+        var bucket = me.map[code];
+        for (var j = 0;j < bucket.length;j += 2) {
+          if (!eq.equals(bucket[j + 1], you.get(bucket[j]))) {
+            return false;
+          }
+        }
+      }
+      return true;
+    } else {
+      if (you != null && typeof you === "object") {
+        var ks = util.objectKeys(you), kslen = ks.length;
+        if (me.size === kslen) {
+          for (var i = 0;i < kslen;i++) {
+            var k = ks[i];
+            if (!me.has(k) || !eq.equals(you[k], me.get(k))) {
+              return false;
+            }
+          }
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+  };
+  types.SMALL_ARRAY_MAP_THRESHOLD = 8;
+  types.ARRAY_MAP_THRESHOLD = 32;
+  types.ARRAY_MAP_ACCESS_THRESHOLD = 32;
+  types.TransitArrayMap = function(entries) {
+    this._entries = entries;
+    this.backingMap = null;
+    this.hashCode = -1;
+    this.size = entries.length / 2;
+    this.accesses = 0;
+  };
+  types.TransitArrayMap.prototype.toString = function() {
+    return "[TransitArrayMap]";
+  };
+  types.TransitArrayMap.prototype.convert = function() {
+    if (this.backingMap) {
+      throw Error("Invalid operation, already converted");
+    }
+    if (this.size < types.SMALL_ARRAY_MAP_THRESHOLD) {
+      return false;
+    }
+    this.accesses++;
+    if (this.accesses > types.ARRAY_MAP_ACCESS_THRESHOLD) {
+      this.backingMap = types.map(this._entries, false, true);
+      this._entries = [];
+      return true;
+    } else {
+      return false;
+    }
+  };
+  types.TransitArrayMap.prototype.clear = function() {
+    this.hashCode = -1;
+    if (this.backingMap) {
+      this.backingMap.clear();
+      this.size = 0;
+    } else {
+      this._entries = [];
+      this.size = 0;
+    }
+  };
+  types.TransitArrayMap.prototype["clear"] = types.TransitArrayMap.prototype.clear;
+  types.TransitArrayMap.prototype.keys = function() {
+    if (this.backingMap) {
+      return this.backingMap.keys();
+    } else {
+      return new types.TransitArrayMapIterator(this._entries, types.KEYS);
+    }
+  };
+  types.TransitArrayMap.prototype["keys"] = types.TransitArrayMap.prototype.keys;
+  types.TransitArrayMap.prototype.keySet = function() {
+    if (this.backingMap) {
+      return this.backingMap.keySet();
+    } else {
+      var ret = [];
+      for (var i = 0, j = 0;j < this._entries.length;i++, j += 2) {
+        ret[i] = this._entries[j];
+      }
+      return ret;
+    }
+  };
+  types.TransitArrayMap.prototype["keySet"] = types.TransitArrayMap.prototype.keySet;
+  types.TransitArrayMap.prototype.entries = function() {
+    if (this.backingMap) {
+      return this.backingMap.entries();
+    } else {
+      return new types.TransitArrayMapIterator(this._entries, types.ENTRIES);
+    }
+  };
+  types.TransitArrayMap.prototype["entries"] = types.TransitArrayMap.prototype.entries;
+  types.TransitArrayMap.prototype.values = function() {
+    if (this.backingMap) {
+      return this.backingMap.values();
+    } else {
+      return new types.TransitArrayMapIterator(this._entries, types.VALUES);
+    }
+  };
+  types.TransitArrayMap.prototype["values"] = types.TransitArrayMap.prototype.values;
+  types.TransitArrayMap.prototype.forEach = function(f) {
+    if (this.backingMap) {
+      this.backingMap.forEach(f);
+    } else {
+      for (var i = 0;i < this._entries.length;i += 2) {
+        f(this._entries[i + 1], this._entries[i]);
+      }
+    }
+  };
+  types.TransitArrayMap.prototype["forEach"] = types.TransitArrayMap.prototype.forEach;
+  types.TransitArrayMap.prototype.get = function(k, notFound) {
+    if (this.backingMap) {
+      return this.backingMap.get(k);
+    } else {
+      if (this.convert()) {
+        return this.get(k);
+      } else {
+        for (var i = 0;i < this._entries.length;i += 2) {
+          if (eq.equals(this._entries[i], k)) {
+            return this._entries[i + 1];
+          }
+        }
+        return notFound;
+      }
+    }
+  };
+  types.TransitArrayMap.prototype["get"] = types.TransitArrayMap.prototype.get;
+  types.TransitArrayMap.prototype.has = function(k) {
+    if (this.backingMap) {
+      return this.backingMap.has(k);
+    } else {
+      if (this.convert()) {
+        return this.has(k);
+      } else {
+        for (var i = 0;i < this._entries.length;i += 2) {
+          if (eq.equals(this._entries[i], k)) {
+            return true;
+          }
+        }
+        return false;
+      }
+    }
+  };
+  types.TransitArrayMap.prototype["has"] = types.TransitArrayMap.prototype.has;
+  types.TransitArrayMap.prototype.set = function(k, v) {
+    this.hashCode = -1;
+    if (this.backingMap) {
+      this.backingMap.set(k, v);
+      this.size = this.backingMap.size;
+    } else {
+      for (var i = 0;i < this._entries.length;i += 2) {
+        if (eq.equals(this._entries[i], k)) {
+          this._entries[i + 1] = v;
+          return;
+        }
+      }
+      this._entries.push(k);
+      this._entries.push(v);
+      this.size++;
+      if (this.size > types.ARRAY_MAP_THRESHOLD) {
+        this.backingMap = types.map(this._entries, false, true);
+        this._entries = null;
+      }
+    }
+  };
+  types.TransitArrayMap.prototype["set"] = types.TransitArrayMap.prototype.set;
+  types.TransitArrayMap.prototype["delete"] = function(k) {
+    this.hashCode = -1;
+    if (this.backingMap) {
+      this.backingMap["delete"](k);
+      this.size = this.backingMap.size;
+    } else {
+      for (var i = 0;i < this._entries.length;i += 2) {
+        if (eq.equals(this._entries[i], k)) {
+          this._entries.splice(i, 2);
+          this.size--;
+          return;
+        }
+      }
+    }
+  };
+  types.TransitArrayMap.prototype.com$cognitect$transit$hashCode = function() {
+    if (this.backingMap) {
+      return this.backingMap.com$cognitect$transit$hashCode();
+    } else {
+      if (this.hashCode === -1) {
+        this.hashCode = eq.hashMapLike(this);
+      }
+      return this.hashCode;
+    }
+  };
+  types.TransitArrayMap.prototype.com$cognitect$transit$equals = function(other) {
+    if (this.backingMap) {
+      return types.mapEquals(this.backingMap, other);
+    } else {
+      return types.mapEquals(this, other);
+    }
+  };
+  types.TransitMap = function(keys, map, size) {
+    this.map = map || {};
+    this._keys = keys || [];
+    this.size = size || 0;
+    this.hashCode = -1;
+  };
+  types.TransitMap.prototype.toString = function() {
+    return "[TransitMap]";
+  };
+  types.TransitMap.prototype.clear = function() {
+    this.hashCode = -1;
+    this.map = {};
+    this._keys = [];
+    this.size = 0;
+  };
+  types.TransitMap.prototype["clear"] = types.TransitMap.prototype.clear;
+  types.TransitMap.prototype.getKeys = function() {
+    if (this._keys != null) {
+      return this._keys;
+    } else {
+      return util.objectKeys(this.map);
+    }
+  };
+  types.TransitMap.prototype["delete"] = function(k) {
+    this.hashCode = -1;
+    this._keys = null;
+    var code = eq.hashCode(k), bucket = this.map[code];
+    for (var i = 0;i < bucket.length;i += 2) {
+      if (eq.equals(k, bucket[i])) {
+        bucket.splice(i, 2);
+        if (bucket.length === 0) {
+          delete this.map[code];
+        }
+        this.size--;
+        break;
+      }
+    }
+  };
+  types.TransitMap.prototype.entries = function() {
+    return new types.TransitMapIterator(this, types.ENTRIES);
+  };
+  types.TransitMap.prototype["entries"] = types.TransitMap.prototype.entries;
+  types.TransitMap.prototype.forEach = function(callback) {
+    var ks = this.getKeys();
+    for (var i = 0;i < ks.length;i++) {
+      var bucket = this.map[ks[i]];
+      for (var j = 0;j < bucket.length;j += 2) {
+        callback(bucket[j + 1], bucket[j], this);
+      }
+    }
+  };
+  types.TransitMap.prototype["forEach"] = types.TransitMap.prototype.forEach;
+  types.TransitMap.prototype.get = function(k, notFound) {
+    var code = eq.hashCode(k), bucket = this.map[code];
+    if (bucket != null) {
+      for (var i = 0;i < bucket.length;i += 2) {
+        if (eq.equals(k, bucket[i])) {
+          return bucket[i + 1];
+        }
+      }
+    } else {
+      return notFound;
+    }
+  };
+  types.TransitMap.prototype["get"] = types.TransitMap.prototype.get;
+  types.TransitMap.prototype.has = function(k) {
+    var code = eq.hashCode(k), bucket = this.map[code];
+    if (bucket != null) {
+      for (var i = 0;i < bucket.length;i += 2) {
+        if (eq.equals(k, bucket[i])) {
+          return true;
+        }
+      }
+      return false;
+    } else {
+      return false;
+    }
+  };
+  types.TransitMap.prototype["has"] = types.TransitMap.prototype.has;
+  types.TransitMap.prototype.keys = function() {
+    return new types.TransitMapIterator(this, types.KEYS);
+  };
+  types.TransitMap.prototype["keys"] = types.TransitMap.prototype.keys;
+  types.TransitMap.prototype.keySet = function() {
+    var keys = this.getKeys(), ret = [];
+    for (var i = 0;i < keys.length;i++) {
+      var bucket = this.map[keys[i]];
+      for (var j = 0;j < bucket.length;j += 2) {
+        ret.push(bucket[j]);
+      }
+    }
+    return ret;
+  };
+  types.TransitMap.prototype["keySet"] = types.TransitMap.prototype.keySet;
+  types.TransitMap.prototype.set = function(k, v) {
+    this.hashCode = -1;
+    var code = eq.hashCode(k), bucket = this.map[code];
+    if (bucket == null) {
+      if (this._keys) {
+        this._keys.push(code);
+      }
+      this.map[code] = [k, v];
+      this.size++;
+    } else {
+      var newEntry = true;
+      for (var i = 0;i < bucket.length;i += 2) {
+        if (eq.equals(v, bucket[i])) {
+          newEntry = false;
+          bucket[i] = v;
+          break;
+        }
+      }
+      if (newEntry) {
+        bucket.push(k);
+        bucket.push(v);
+        this.size++;
+      }
+    }
+  };
+  types.TransitMap.prototype["set"] = types.TransitMap.prototype.set;
+  types.TransitMap.prototype.values = function() {
+    return new types.TransitMapIterator(this, types.VALUES);
+  };
+  types.TransitMap.prototype["values"] = types.TransitMap.prototype.values;
+  types.TransitMap.prototype.com$cognitect$transit$hashCode = function() {
+    if (this.hashCode === -1) {
+      this.hashCode = eq.hashMapLike(this);
+    }
+    return this.hashCode;
+  };
+  types.TransitMap.prototype.com$cognitect$transit$equals = function(other) {
+    return types.mapEquals(this, other);
+  };
+  types.map = function(arr, checkDups, hashMap) {
+    arr = arr || [];
+    checkDups = checkDups === false ? checkDups : true;
+    hashMap = hashMap === true ? hashMap : false;
+    if (!hashMap && arr.length <= types.ARRAY_MAP_THRESHOLD * 2) {
+      if (checkDups) {
+        var t = arr;
+        arr = [];
+        for (var i = 0;i < t.length;i += 2) {
+          var seen = false;
+          for (var j = 0;j < arr.length;j += 2) {
+            if (eq.equals(arr[j], t[i])) {
+              arr[j + 1] = t[i + 1];
+              seen = true;
+              break;
+            }
+          }
+          if (!seen) {
+            arr.push(t[i]);
+            arr.push(t[i + 1]);
+          }
+        }
+      }
+      return new types.TransitArrayMap(arr);
+    } else {
+      var map = {}, keys = [], size = 0;
+      for (var i = 0;i < arr.length;i += 2) {
+        var code = eq.hashCode(arr[i]), bucket = map[code];
+        if (bucket == null) {
+          keys.push(code);
+          map[code] = [arr[i], arr[i + 1]];
+          size++;
+        } else {
+          var newEntry = true;
+          for (var j = 0;j < bucket.length;j += 2) {
+            if (eq.equals(bucket[j], arr[i])) {
+              bucket[j + 1] = arr[i + 1];
+              newEntry = false;
+              break;
+            }
+          }
+          if (newEntry) {
+            bucket.push(arr[i]);
+            bucket.push(arr[i + 1]);
+            size++;
+          }
+        }
+      }
+      return new types.TransitMap(keys, map, size);
+    }
+  };
+  types.isArrayMap = function(x) {
+    return x instanceof types.TransitArrayMap;
+  };
+  types.isMap = function(x) {
+    return x instanceof types.TransitArrayMap || x instanceof types.TransitMap;
+  };
+  types.TransitSet = function(map) {
+    this.map = map;
+    this.size = map.size;
+  };
+  types.TransitSet.prototype.toString = function() {
+    return "[TransitSet]";
+  };
+  types.TransitSet.prototype.add = function(value) {
+    this.map.set(value, value);
+    this.size = this.map.size;
+  };
+  types.TransitSet.prototype["add"] = types.TransitSet.prototype.add;
+  types.TransitSet.prototype.clear = function() {
+    this.map = new types.TransitMap;
+    this.size = 0;
+  };
+  types.TransitSet.prototype["clear"] = types.TransitSet.prototype.clear;
+  types.TransitSet.prototype["delete"] = function(value) {
+    this.map["delete"](value);
+    this.size = this.map.size;
+  };
+  types.TransitSet.prototype.entries = function() {
+    return this.map.entries();
+  };
+  types.TransitSet.prototype["entries"] = types.TransitSet.prototype.entries;
+  types.TransitSet.prototype.forEach = function(iterator, thisArg) {
+    var self = this;
+    this.map.forEach(function(v, k, m) {
+      iterator(k, self);
+    });
+  };
+  types.TransitSet.prototype["forEach"] = types.TransitSet.prototype.forEach;
+  types.TransitSet.prototype.has = function(value) {
+    return this.map.has(value);
+  };
+  types.TransitSet.prototype["has"] = types.TransitSet.prototype.has;
+  types.TransitSet.prototype.keys = function() {
+    return this.map.keys();
+  };
+  types.TransitSet.prototype["keys"] = types.TransitSet.prototype.keys;
+  types.TransitSet.prototype.keySet = function() {
+    return this.map.keySet();
+  };
+  types.TransitSet.prototype["keySet"] = types.TransitSet.prototype.keySet;
+  types.TransitSet.prototype.values = function() {
+    return this.map.values();
+  };
+  types.TransitSet.prototype["values"] = types.TransitSet.prototype.values;
+  types.TransitSet.prototype.com$cognitect$transit$equals = function(other) {
+    if (other instanceof types.TransitSet) {
+      if (this.size === other.size) {
+        return eq.equals(this.map, other.map);
+      }
+    } else {
+      return false;
+    }
+  };
+  types.TransitSet.prototype.com$cognitect$transit$hashCode = function(other) {
+    return eq.hashCode(this.map);
+  };
+  types.set = function(arr) {
+    arr = arr || [];
+    var map = {}, keys = [], size = 0;
+    for (var i = 0;i < arr.length;i++) {
+      var code = eq.hashCode(arr[i]), vals = map[code];
+      if (vals == null) {
+        keys.push(code);
+        map[code] = [arr[i], arr[i]];
+        size++;
+      } else {
+        var newEntry = true;
+        for (var j = 0;j < vals.length;j += 2) {
+          if (eq.equals(vals[j], arr[i])) {
+            newEntry = false;
+            break;
+          }
+        }
+        if (newEntry) {
+          vals.push(arr[i]);
+          vals.push(arr[i]);
+          size++;
+        }
+      }
+    }
+    return new types.TransitSet(new types.TransitMap(keys, map, size));
+  };
+  types.isSet = function(x) {
+    return x instanceof types.TransitSet;
+  };
+  types.quoted = function(obj) {
+    return types.taggedValue("'", obj);
+  };
+  types.isQuoted = function(x) {
+    return x instanceof types.TaggedValue && x.tag === "'";
+  };
+  types.list = function(xs) {
+    return types.taggedValue("list", xs);
+  };
+  types.isList = function(x) {
+    return x instanceof types.List && x.tag === "list";
+  };
+  types.link = function(rep) {
+    return types.taggedValue("link", rep);
+  };
+  types.isLink = function(x) {
+    return x instanceof types.TaggedValue && x.tag === "link";
+  };
+  types.specialDouble = function(v) {
+    switch(v) {
+      case "-INF":
+        return-Infinity;
+      case "INF":
+        return Infinity;
+      case "NaN":
+        return NaN;
+      default:
+        throw new Error("Invalid special double value " + v);break;
+    }
+  };
+});
+goog.provide("com.cognitect.transit.impl.decoder");
+goog.require("com.cognitect.transit.util");
+goog.require("com.cognitect.transit.delimiters");
+goog.require("com.cognitect.transit.caching");
+goog.require("com.cognitect.transit.types");
+goog.scope(function() {
+  var decoder = com.cognitect.transit.impl.decoder, util = com.cognitect.transit.util, d = com.cognitect.transit.delimiters, caching = com.cognitect.transit.caching, types = com.cognitect.transit.types;
+  decoder.Tag = function(s) {
+    this.str = s;
+  };
+  decoder.tag = function(s) {
+    return new decoder.Tag(s);
+  };
+  decoder.isTag = function(x) {
+    return x && x instanceof decoder.Tag;
+  };
+  decoder.isGroundHandler = function(handler) {
+    switch(handler) {
+      case "_":
+      ;
+      case "s":
+      ;
+      case "?":
+      ;
+      case "i":
+      ;
+      case "d":
+      ;
+      case "b":
+      ;
+      case "'":
+      ;
+      case "array":
+      ;
+      case "map":
+        return true;
+    }
+    return false;
+  };
+  decoder.Decoder = function(options) {
+    this.options = options || {};
+    this.handlers = {};
+    for (var h in this.defaults.handlers) {
+      this.handlers[h] = this.defaults.handlers[h];
+    }
+    for (var h in this.options["handlers"]) {
+      if (decoder.isGroundHandler(h)) {
+        throw new Error('Cannot override handler for ground type "' + h + '"');
+      }
+      this.handlers[h] = this.options["handlers"][h];
+    }
+    this.preferStrings = this.options["preferStrings"] != null ? this.options["preferStrings"] : this.defaults.preferStrings;
+    this.preferBuffers = this.options["preferBuffers"] != null ? this.options["preferBuffers"] : this.defaults.preferBuffers;
+    this.defaultHandler = this.options["defaultHandler"] || this.defaults.defaultHandler;
+    this.mapBuilder = this.options["mapBuilder"];
+    this.arrayBuilder = this.options["arrayBuilder"];
+  };
+  decoder.Decoder.prototype.defaults = {handlers:{"_":function(v, d) {
+    return types.nullValue();
+  }, "?":function(v, d) {
+    return types.boolValue(v);
+  }, "b":function(v, d) {
+    return types.binary(v, d);
+  }, "i":function(v, d) {
+    return types.intValue(v);
+  }, "n":function(v, d) {
+    return types.bigInteger(v);
+  }, "d":function(v, d) {
+    return types.floatValue(v);
+  }, "f":function(v, d) {
+    return types.bigDecimalValue(v);
+  }, "c":function(v, d) {
+    return types.charValue(v);
+  }, ":":function(v, d) {
+    return types.keyword(v);
+  }, "$":function(v, d) {
+    return types.symbol(v);
+  }, "r":function(v, d) {
+    return types.uri(v);
+  }, "z":function(v, d) {
+    return types.specialDouble(v);
+  }, "'":function(v, d) {
+    return v;
+  }, "m":function(v, d) {
+    return types.date(v);
+  }, "t":function(v, d) {
+    return types.verboseDate(v);
+  }, "u":function(v, d) {
+    return types.uuid(v);
+  }, "set":function(v, d) {
+    return types.set(v);
+  }, "list":function(v, d) {
+    return types.list(v);
+  }, "link":function(v, d) {
+    return types.link(v);
+  }, "cmap":function(v, d) {
+    return types.map(v, false);
+  }}, defaultHandler:function(c, val) {
+    return types.taggedValue(c, val);
+  }, preferStrings:true, preferBuffers:true};
+  decoder.Decoder.prototype.decode = function(node, cache, asMapKey, tagValue) {
+    if (node == null) {
+      return null;
+    }
+    var t = typeof node;
+    switch(t) {
+      case "string":
+        return this.decodeString(node, cache, asMapKey, tagValue);
+        break;
+      case "object":
+        if (util.isArray(node)) {
+          if (node[0] === "^ ") {
+            return this.decodeArrayHash(node, cache, asMapKey, tagValue);
+          } else {
+            return this.decodeArray(node, cache, asMapKey, tagValue);
+          }
+        } else {
+          return this.decodeHash(node, cache, asMapKey, tagValue);
+        }
+        break;
+    }
+    return node;
+  };
+  decoder.Decoder.prototype["decode"] = decoder.Decoder.prototype.decode;
+  decoder.Decoder.prototype.decodeString = function(string, cache, asMapKey, tagValue) {
+    if (caching.isCacheable(string, asMapKey)) {
+      var val = this.parseString(string, cache, false);
+      if (cache) {
+        cache.write(val, asMapKey);
+      }
+      return val;
+    } else {
+      if (caching.isCacheCode(string)) {
+        return cache.read(string, asMapKey);
+      } else {
+        return this.parseString(string, cache, asMapKey);
+      }
+    }
+  };
+  decoder.Decoder.prototype.decodeHash = function(hash, cache, asMapKey, tagValue) {
+    var ks = util.objectKeys(hash), key = ks[0], tag = ks.length == 1 ? this.decode(key, cache, false, false) : null;
+    if (decoder.isTag(tag)) {
+      var val = hash[key], handler = this.handlers[tag.str];
+      if (handler != null) {
+        return handler(this.decode(val, cache, false, true), this);
+      } else {
+        return types.taggedValue(tag.str, this.decode(val, cache, false, false));
+      }
+    } else {
+      if (this.mapBuilder) {
+        if (ks.length < types.SMALL_ARRAY_MAP_THRESHOLD * 2 && this.mapBuilder.fromArray) {
+          var nodep = [];
+          for (var i = 0;i < ks.length;i++) {
+            var strKey = ks[i];
+            nodep.push(this.decode(strKey, cache, true, false));
+            nodep.push(this.decode(hash[strKey], cache, false, false));
+          }
+          return this.mapBuilder.fromArray(nodep, hash);
+        } else {
+          var ret = this.mapBuilder.init(hash);
+          for (var i = 0;i < ks.length;i++) {
+            var strKey = ks[i];
+            ret = this.mapBuilder.add(ret, this.decode(strKey, cache, true, false), this.decode(hash[strKey], cache, false, false), hash);
+          }
+          return this.mapBuilder.finalize(ret, hash);
+        }
+      } else {
+        var nodep = [];
+        for (var i = 0;i < ks.length;i++) {
+          var strKey = ks[i];
+          nodep.push(this.decode(strKey, cache, true, false));
+          nodep.push(this.decode(hash[strKey], cache, false, false));
+        }
+        return types.map(nodep, false);
+      }
+    }
+  };
+  decoder.Decoder.prototype.decodeArrayHash = function(node, cache, asMapKey, tagValue) {
+    if (this.mapBuilder) {
+      if (node.length < types.SMALL_ARRAY_MAP_THRESHOLD * 2 + 1 && this.mapBuilder.fromArray) {
+        var nodep = [];
+        for (var i = 1;i < node.length;i += 2) {
+          nodep.push(this.decode(node[i], cache, true, false));
+          nodep.push(this.decode(node[i + 1], cache, false, false));
+        }
+        return this.mapBuilder.fromArray(nodep, node);
+      } else {
+        var ret = this.mapBuilder.init(node);
+        for (var i = 1;i < node.length;i += 2) {
+          ret = this.mapBuilder.add(ret, this.decode(node[i], cache, true, false), this.decode(node[i + 1], cache, false, false), node);
+        }
+        return this.mapBuilder.finalize(ret, node);
+      }
+    } else {
+      var nodep = [];
+      for (var i = 1;i < node.length;i += 2) {
+        nodep.push(this.decode(node[i], cache, true, false));
+        nodep.push(this.decode(node[i + 1], cache, false, false));
+      }
+      return types.map(nodep, false);
+    }
+  };
+  decoder.Decoder.prototype.decodeArray = function(node, cache, asMapKey, tagValue) {
+    if (tagValue) {
+      var ret = [];
+      for (var i = 0;i < node.length;i++) {
+        ret.push(this.decode(node[i], cache, asMapKey, false));
+      }
+      return ret;
+    } else {
+      var cacheIdx = cache && cache.idx;
+      if (node.length === 2 && typeof node[0] === "string") {
+        var tag = this.decode(node[0], cache, false, false);
+        if (decoder.isTag(tag)) {
+          var val = node[1], handler = this.handlers[tag.str];
+          if (handler != null) {
+            var ret = handler(this.decode(val, cache, asMapKey, true), this);
+            return ret;
+          } else {
+            return types.taggedValue(tag.str, this.decode(val, cache, asMapKey, false));
+          }
+        }
+      }
+      if (cache && cacheIdx != cache.idx) {
+        cache.idx = cacheIdx;
+      }
+      if (this.arrayBuilder) {
+        if (node.length <= 32 && this.arrayBuilder.fromArray) {
+          var arr = [];
+          for (var i = 0;i < node.length;i++) {
+            arr.push(this.decode(node[i], cache, asMapKey, false));
+          }
+          return this.arrayBuilder.fromArray(arr, node);
+        } else {
+          var ret = this.arrayBuilder.init();
+          for (var i = 0;i < node.length;i++) {
+            ret = this.arrayBuilder.add(ret, this.decode(node[i], cache, asMapKey, false), node);
+          }
+          return this.arrayBuilder.finalize(ret, node);
+        }
+      } else {
+        var ret = [];
+        for (var i = 0;i < node.length;i++) {
+          ret.push(this.decode(node[i], cache, asMapKey, false));
+        }
+        return ret;
+      }
+    }
+  };
+  decoder.Decoder.prototype.parseString = function(string, cache, asMapKey) {
+    if (string.charAt(0) === d.ESC) {
+      var c = string.charAt(1);
+      if (c === d.ESC || c === d.SUB || c === d.RES) {
+        return string.substring(1);
+      } else {
+        if (c === d.TAG) {
+          return decoder.tag(string.substring(2));
+        } else {
+          var handler = this.handlers[c];
+          if (handler == null) {
+            return this.defaultHandler(c, string.substring(2));
+          } else {
+            return handler(string.substring(2), this);
+          }
+        }
+      }
+    } else {
+      return string;
+    }
+  };
+  decoder.decoder = function(options) {
+    return new decoder.Decoder(options);
+  };
+});
+goog.provide("com.cognitect.transit.impl.reader");
+goog.require("com.cognitect.transit.impl.decoder");
+goog.require("com.cognitect.transit.caching");
+goog.scope(function() {
+  var reader = com.cognitect.transit.impl.reader, decoder = com.cognitect.transit.impl.decoder, caching = com.cognitect.transit.caching;
+  reader.JSONUnmarshaller = function(opts) {
+    this.decoder = new decoder.Decoder(opts);
+  };
+  reader.JSONUnmarshaller.prototype.unmarshal = function(str, cache) {
+    return this.decoder.decode(JSON.parse(str), cache);
+  };
+  reader.Reader = function(unmarshaller, options) {
+    this.unmarshaller = unmarshaller;
+    this.options = options || {};
+    this.cache = this.options["cache"] ? this.options["cache"] : new caching.ReadCache;
+  };
+  reader.Reader.prototype.read = function(str) {
+    var ret = this.unmarshaller.unmarshal(str, this.cache);
+    this.cache.clear();
+    return ret;
+  };
+  reader.Reader.prototype["read"] = reader.Reader.prototype.read;
+});
 goog.provide("reagent.interop");
 goog.require("cljs.core");
 reagent.interop.fvars = {};
@@ -29433,2268 +31376,6 @@ reagent.core.partial = function() {
   partial.cljs$core$IFn$_invoke$arity$variadic = partial__delegate;
   return partial;
 }();
-goog.provide("chat_client.components.chat");
-goog.require("cljs.core");
-goog.require("reagent.core");
-goog.require("reagent.core");
-chat_client.components.chat.make_message_item = function() {
-  var method_table__4520__auto__ = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
-  var prefer_table__4521__auto__ = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
-  var method_cache__4522__auto__ = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
-  var cached_hierarchy__4523__auto__ = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
-  var hierarchy__4524__auto__ = cljs.core.get.call(null, cljs.core.PersistentArrayMap.EMPTY, new cljs.core.Keyword(null, "hierarchy", "hierarchy", -1053470341), cljs.core.get_global_hierarchy.call(null));
-  return new cljs.core.MultiFn("make-message-item", function(method_table__4520__auto__, prefer_table__4521__auto__, method_cache__4522__auto__, cached_hierarchy__4523__auto__, hierarchy__4524__auto__) {
-    return function(msg) {
-      return cljs.core.get.call(null, msg, "$variant");
-    };
-  }(method_table__4520__auto__, prefer_table__4521__auto__, method_cache__4522__auto__, cached_hierarchy__4523__auto__, hierarchy__4524__auto__), new cljs.core.Keyword(null, "default", "default", -1987822328), hierarchy__4524__auto__, method_table__4520__auto__, prefer_table__4521__auto__, method_cache__4522__auto__, cached_hierarchy__4523__auto__);
-}();
-cljs.core._add_method.call(null, chat_client.components.chat.make_message_item, "Joined", function(msg) {
-  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-item list-group-item", new cljs.core.Keyword(null, "style", "style", -496642736), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "background-color", "background-color", 570434026), "floralwhite"], null)], null), new cljs.core.PersistentVector(null, 
-  3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-action-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-file-folder"], null), 
-  " "], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", 
-  "class", -2030961996), "least-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "small", "small", 2133478704), " ", "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new moment(cljs.core.get_in.call(null, msg, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, ["message", "timestamp"], null)))).fromNow())], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, 
-  [new cljs.core.Keyword(null, "h5", "h5", -1829156625), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item-heading"], null), "user X joined with the channel"], null)], null)], null);
-});
-cljs.core._add_method.call(null, chat_client.components.chat.make_message_item, "Msg", function(msg) {
-  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-item list-group-item", new cljs.core.Keyword(null, "style", "style", -496642736), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "background", "background", -863952629), "white"], null)], null), new cljs.core.PersistentVector(null, 
-  3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-picture"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-social-person"], null), 
-  " "], null)], null), function() {
-    var msg_body = cljs.core.get.call(null, msg, "message");
-    var dt = new Date(cljs.core.get.call(null, msg_body, "timestamp"));
-    return new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", 
-    -2030961996), "least-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "small", "small", 2133478704), "last update ", "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new moment(dt)).fromNow())], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
-    "class", "class", -2030961996), "list-group-item-heading"], null), cljs.core.get_in.call(null, msg_body, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, ["user", "name"], null), "unknown")], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item-text"], null), 
-    " \x3e " + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.get.call(null, msg_body, "text"))], null)], null);
-  }()], null);
-});
-cljs.core._add_method.call(null, chat_client.components.chat.make_message_item, new cljs.core.Keyword(null, "default", "default", -1987822328), function(msg) {
-  return console.error("Unsupported message: ", msg);
-});
-chat_client.components.chat.make_chat_window = function make_chat_window(chat_dt) {
-  var active_channel = (new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, chat_dt));
-  var current_chat = cljs.core.get_in.call(null, cljs.core.deref.call(null, chat_dt), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "channels", "channels", 1132759174), active_channel], null));
-  return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-messages-container"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", 
-  "class", -2030961996), "list-group"], null), "#TODO: finish it"], null)], null);
-};
-chat_client.components.chat.make_chat_form = function make_chat_form(chat_dt) {
-  var msg_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "sent", "sent", -1537501490)], null), chat_dt);
-  return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-form-container"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "form", "form", -1624062471), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", 
-  "class", -2030961996), "form-horizontal"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "fieldset", "fieldset", -1949770816), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "form-group"], null), new cljs.core.PersistentVector(null, 
-  3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "label", "label", 1718410804), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "for", "for", -1323786319), "new-message-input", new cljs.core.Keyword(null, "class", "class", -2030961996), "col-lg-2 control-label"], null), "New message:"], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 
-  1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "col-lg-10"], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "textarea", "textarea", -650375824), new cljs.core.PersistentArrayMap(null, 6, [new cljs.core.Keyword(null, "id", "id", -1388402092), "new-message-input", new cljs.core.Keyword(null, "name", "name", 1843675177), "new-message-input", new cljs.core.Keyword(null, "class", "class", -2030961996), "form-control", 
-  new cljs.core.Keyword(null, "rows", "rows", 850049680), 3, new cljs.core.Keyword(null, "defaultValue", "defaultValue", -586131910), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "message", "message", -406056002)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, msg_cur))), new cljs.core.Keyword(null, "on-change", "on-change", -732046149), function(msg_cur) {
-    return function(ev) {
-      return cljs.core.swap_BANG_.call(null, msg_cur, function(msg_cur) {
-        return function(xs) {
-          return cljs.core.assoc.call(null, xs, new cljs.core.Keyword(null, "message", "message", -406056002), ev.target.value);
-        };
-      }(msg_cur));
-    };
-  }(msg_cur)], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "span", "span", 1394872991), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "help-block"], null), "Type your message and press `ENTER` to send your message."], null)], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 
-  1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "form-group"], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "col-lg-10 col-lg-offset-2"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, 
-  "button", "button", 1456579943), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "class", "class", -2030961996), "btn btn-default", new cljs.core.Keyword(null, "on-click", "on-click", 1632826543), function(msg_cur) {
-    return function(ev) {
-      ev.preventDefault();
-      return cljs.core.swap_BANG_.call(null, msg_cur, function(msg_cur) {
-        return function(xs) {
-          return cljs.core.assoc.call(null, xs, new cljs.core.Keyword(null, "message", "message", -406056002), "");
-        };
-      }(msg_cur));
-    };
-  }(msg_cur)], null), "Clear"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "button", "button", 1456579943), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "class", "class", -2030961996), "btn btn-primary", new cljs.core.Keyword(null, "on-click", "on-click", 1632826543), function(msg_cur) {
-    return function(ev) {
-      ev.preventDefault();
-      return cljs.core.swap_BANG_.call(null, msg_cur, function(msg_cur) {
-        return function(xs) {
-          return cljs.core.assoc.call(null, xs, new cljs.core.Keyword(null, "status", "status", -1997798413), new cljs.core.Keyword(null, "sending", "sending", -1806704862));
-        };
-      }(msg_cur));
-    };
-  }(msg_cur), new cljs.core.Keyword(null, "type", "type", 1174270348), "submit"], null), "Send message"], null)], null)], null)], null)], null)], null);
-};
-chat_client.components.chat.render = function render(global_app_state) {
-  var chat_dt = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339)], null), global_app_state);
-  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel panel-success"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", 
-  -2030961996), "panel-heading"], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h3", "h3", 2067611163), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-title"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
-  "class", "class", -2030961996), "icon mdi-action-speaker-notes"], null), " "], null), "Chat"], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-body", new cljs.core.Keyword(null, "style", "style", -496642736), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "height", 
-  "height", 1025178622), "100%"], null)], null), chat_client.components.chat.make_chat_window.call(null, chat_dt), chat_client.components.chat.make_chat_form.call(null, chat_dt)], null)], null);
-};
-goog.provide("reagent.cursor");
-goog.require("cljs.core");
-reagent.cursor.RCursor = function(path, ratom) {
-  this.path = path;
-  this.ratom = ratom;
-  this.cljs$lang$protocol_mask$partition0$ = 2153938944;
-  this.cljs$lang$protocol_mask$partition1$ = 114690;
-};
-reagent.cursor.RCursor.cljs$lang$type = true;
-reagent.cursor.RCursor.cljs$lang$ctorStr = "reagent.cursor/RCursor";
-reagent.cursor.RCursor.cljs$lang$ctorPrWriter = function(this__4217__auto__, writer__4218__auto__, opt__4219__auto__) {
-  return cljs.core._write.call(null, writer__4218__auto__, "reagent.cursor/RCursor");
-};
-reagent.cursor.RCursor.prototype.cljs$core$IHash$_hash$arity$1 = function(this$) {
-  var self__ = this;
-  var this$__$1 = this;
-  return goog.getUid(this$__$1);
-};
-reagent.cursor.RCursor.prototype.cljs$core$IWatchable$_notify_watches$arity$3 = function(this$, oldval, newval) {
-  var self__ = this;
-  var this$__$1 = this;
-  return cljs.core._notify_watches.call(null, self__.ratom, oldval, newval);
-};
-reagent.cursor.RCursor.prototype.cljs$core$IWatchable$_add_watch$arity$3 = function(this$, key, f) {
-  var self__ = this;
-  var this$__$1 = this;
-  return cljs.core._add_watch.call(null, self__.ratom, key, f);
-};
-reagent.cursor.RCursor.prototype.cljs$core$IWatchable$_remove_watch$arity$2 = function(this$, key) {
-  var self__ = this;
-  var this$__$1 = this;
-  return cljs.core._remove_watch.call(null, self__.ratom, key);
-};
-reagent.cursor.RCursor.prototype.cljs$core$IPrintWithWriter$_pr_writer$arity$3 = function(a, writer, opts) {
-  var self__ = this;
-  var a__$1 = this;
-  cljs.core._write.call(null, writer, "#\x3cCursor: ");
-  cljs.core.pr_writer.call(null, self__.path, writer, opts);
-  cljs.core._write.call(null, writer, " ");
-  cljs.core.pr_writer.call(null, self__.ratom, writer, opts);
-  return cljs.core._write.call(null, writer, "\x3e");
-};
-reagent.cursor.RCursor.prototype.cljs$core$IMeta$_meta$arity$1 = function(_) {
-  var self__ = this;
-  var ___$1 = this;
-  return cljs.core._meta.call(null, self__.ratom);
-};
-reagent.cursor.RCursor.prototype.cljs$core$ISwap$_swap_BANG_$arity$2 = function(a, f) {
-  var self__ = this;
-  var a__$1 = this;
-  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.update_in, self__.path, f);
-};
-reagent.cursor.RCursor.prototype.cljs$core$ISwap$_swap_BANG_$arity$3 = function(a, f, x) {
-  var self__ = this;
-  var a__$1 = this;
-  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.update_in, self__.path, f, x);
-};
-reagent.cursor.RCursor.prototype.cljs$core$ISwap$_swap_BANG_$arity$4 = function(a, f, x, y) {
-  var self__ = this;
-  var a__$1 = this;
-  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.update_in, self__.path, f, x, y);
-};
-reagent.cursor.RCursor.prototype.cljs$core$ISwap$_swap_BANG_$arity$5 = function(a, f, x, y, more) {
-  var self__ = this;
-  var a__$1 = this;
-  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.update_in, self__.path, function(a__$1) {
-    return function(v) {
-      return cljs.core.apply.call(null, f, v, x, y, more);
-    };
-  }(a__$1));
-};
-reagent.cursor.RCursor.prototype.cljs$core$IReset$_reset_BANG_$arity$2 = function(a, new_value) {
-  var self__ = this;
-  var a__$1 = this;
-  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.assoc_in, self__.path, new_value);
-};
-reagent.cursor.RCursor.prototype.cljs$core$IDeref$_deref$arity$1 = function(this$) {
-  var self__ = this;
-  var this$__$1 = this;
-  return cljs.core.get_in.call(null, cljs.core.deref.call(null, self__.ratom), self__.path);
-};
-reagent.cursor.RCursor.prototype.cljs$core$IEquiv$_equiv$arity$2 = function(o, other) {
-  var self__ = this;
-  var o__$1 = this;
-  return o__$1 === other;
-};
-reagent.cursor.__GT_RCursor = function __GT_RCursor(path, ratom) {
-  return new reagent.cursor.RCursor(path, ratom);
-};
-reagent.cursor.cursor = function() {
-  var cursor = null;
-  var cursor__1 = function(path) {
-    return function(ra) {
-      return cursor.call(null, path, ra);
-    };
-  };
-  var cursor__2 = function(path, ra) {
-    return new reagent.cursor.RCursor(path, ra);
-  };
-  cursor = function(path, ra) {
-    switch(arguments.length) {
-      case 1:
-        return cursor__1.call(this, path);
-      case 2:
-        return cursor__2.call(this, path, ra);
-    }
-    throw new Error("Invalid arity: " + arguments.length);
-  };
-  cursor.cljs$core$IFn$_invoke$arity$1 = cursor__1;
-  cursor.cljs$core$IFn$_invoke$arity$2 = cursor__2;
-  return cursor;
-}();
-goog.provide("chat_client.components.channels");
-goog.require("cljs.core");
-goog.require("reagent.cursor");
-goog.require("reagent.cursor");
-chat_client.components.channels.make_channel_item = function make_channel_item(channel) {
-  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "channel-list-item list-group-item"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
-  "class", "class", -2030961996), "row-action-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-action-group-work material-blue"], null), " "], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), 
-  new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h5", "h5", -1829156625), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item-heading"], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "name", "name", 1843675177)).cljs$core$IFn$_invoke$arity$1(channel))], 
-  null)], null)], null);
-};
-chat_client.components.channels.render = function render(global_app_state) {
-  var cur_path = new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174)], null);
-  var channels_cur = reagent.cursor.cursor.call(null, cur_path, global_app_state);
-  console.log("rendering channels lists");
-  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel panel-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", 
-  -2030961996), "panel-heading"], null), new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h3", "h3", 2067611163), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-title"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
-  "class", "class", -2030961996), "icon mdi-action-speaker-notes pull-left"], null), " "], null), "Channels: ", "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.count.call(null, cljs.core.deref.call(null, channels_cur)))], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-body"], 
-  null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group channel-list"], null), function() {
-    var iter__4379__auto__ = function(cur_path, channels_cur) {
-      return function iter__5750(s__5751) {
-        return new cljs.core.LazySeq(null, function(cur_path, channels_cur) {
-          return function() {
-            var s__5751__$1 = s__5751;
-            while (true) {
-              var temp__4126__auto__ = cljs.core.seq.call(null, s__5751__$1);
-              if (temp__4126__auto__) {
-                var s__5751__$2 = temp__4126__auto__;
-                if (cljs.core.chunked_seq_QMARK_.call(null, s__5751__$2)) {
-                  var c__4377__auto__ = cljs.core.chunk_first.call(null, s__5751__$2);
-                  var size__4378__auto__ = cljs.core.count.call(null, c__4377__auto__);
-                  var b__5753 = cljs.core.chunk_buffer.call(null, size__4378__auto__);
-                  if (function() {
-                    var i__5752 = 0;
-                    while (true) {
-                      if (i__5752 < size__4378__auto__) {
-                        var channel = cljs.core._nth.call(null, c__4377__auto__, i__5752);
-                        cljs.core.chunk_append.call(null, b__5753, chat_client.components.channels.make_channel_item.call(null, channel));
-                        var G__5754 = i__5752 + 1;
-                        i__5752 = G__5754;
-                        continue;
-                      } else {
-                        return true;
-                      }
-                      break;
-                    }
-                  }()) {
-                    return cljs.core.chunk_cons.call(null, cljs.core.chunk.call(null, b__5753), iter__5750.call(null, cljs.core.chunk_rest.call(null, s__5751__$2)));
-                  } else {
-                    return cljs.core.chunk_cons.call(null, cljs.core.chunk.call(null, b__5753), null);
-                  }
-                } else {
-                  var channel = cljs.core.first.call(null, s__5751__$2);
-                  return cljs.core.cons.call(null, chat_client.components.channels.make_channel_item.call(null, channel), iter__5750.call(null, cljs.core.rest.call(null, s__5751__$2)));
-                }
-              } else {
-                return null;
-              }
-              break;
-            }
-          };
-        }(cur_path, channels_cur), null, null);
-      };
-    }(cur_path, channels_cur);
-    return iter__4379__auto__.call(null, cljs.core.vals.call(null, cljs.core.deref.call(null, channels_cur)));
-  }()], null)], null)], null);
-};
-goog.provide("chat_client.components.users");
-goog.require("cljs.core");
-goog.require("reagent.core");
-goog.require("reagent.core");
-goog.require("reagent.core");
-chat_client.components.users.make_user_item = function make_user_item(user) {
-  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item user-list-item"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
-  "class", "class", -2030961996), "row-action-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-social-person"], null), " "], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 
-  1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "least-content"], null), "active"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h5", "h5", -1829156625), 
-  new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item-heading"], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.get.call(null, user, "name"))], null)], null)], null);
-};
-chat_client.components.users.make_user_list = function make_user_list(channel_cur) {
-  return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group user-list"], null), function() {
-    var iter__4379__auto__ = function iter__5379(s__5380) {
-      return new cljs.core.LazySeq(null, function() {
-        var s__5380__$1 = s__5380;
-        while (true) {
-          var temp__4126__auto__ = cljs.core.seq.call(null, s__5380__$1);
-          if (temp__4126__auto__) {
-            var s__5380__$2 = temp__4126__auto__;
-            if (cljs.core.chunked_seq_QMARK_.call(null, s__5380__$2)) {
-              var c__4377__auto__ = cljs.core.chunk_first.call(null, s__5380__$2);
-              var size__4378__auto__ = cljs.core.count.call(null, c__4377__auto__);
-              var b__5382 = cljs.core.chunk_buffer.call(null, size__4378__auto__);
-              if (function() {
-                var i__5381 = 0;
-                while (true) {
-                  if (i__5381 < size__4378__auto__) {
-                    var user = cljs.core._nth.call(null, c__4377__auto__, i__5381);
-                    cljs.core.chunk_append.call(null, b__5382, chat_client.components.users.make_user_item.call(null, user));
-                    var G__5383 = i__5381 + 1;
-                    i__5381 = G__5383;
-                    continue;
-                  } else {
-                    return true;
-                  }
-                  break;
-                }
-              }()) {
-                return cljs.core.chunk_cons.call(null, cljs.core.chunk.call(null, b__5382), iter__5379.call(null, cljs.core.chunk_rest.call(null, s__5380__$2)));
-              } else {
-                return cljs.core.chunk_cons.call(null, cljs.core.chunk.call(null, b__5382), null);
-              }
-            } else {
-              var user = cljs.core.first.call(null, s__5380__$2);
-              return cljs.core.cons.call(null, chat_client.components.users.make_user_item.call(null, user), iter__5379.call(null, cljs.core.rest.call(null, s__5380__$2)));
-            }
-          } else {
-            return null;
-          }
-          break;
-        }
-      }, null, null);
-    };
-    return iter__4379__auto__.call(null, (new cljs.core.Keyword(null, "users", "users", -713552705)).cljs$core$IFn$_invoke$arity$1(channel_cur));
-  }()], null);
-};
-chat_client.components.users.render = function render(global_app_state) {
-  var current_channel = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935)], null), global_app_state);
-  var current_channel_name = "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, current_channel));
-  var channel_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174), current_channel_name], null), global_app_state);
-  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel panel-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", 
-  -2030961996), "panel-heading"], null), new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h3", "h3", 2067611163), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-title"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
-  "class", "class", -2030961996), "icon mdi-social-people"], null), " "], null), "Users on the channel ", new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "strong", "strong", 269529E3), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, current_channel))], null)], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), 
-  new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-body"], null), chat_client.components.users.make_user_list.call(null, cljs.core.deref.call(null, channel_cur))], null)], null);
-};
-goog.provide("chat_client.components.status");
-goog.require("cljs.core");
-goog.require("reagent.core");
-goog.require("reagent.core");
-goog.require("reagent.core");
-chat_client.components.status.render = function render(global_app_state) {
-  var conn_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "connection", "connection", -123599300)], null), global_app_state);
-  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel panel-info"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", 
-  -2030961996), "panel-heading"], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h3", "h3", 2067611163), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-title"], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
-  "class", "class", -2030961996), "icon mdi-communication-phone pull-left"], null)], null), "Connection status"], null)], null), new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-body"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, 
-  "p", "p", 151049309), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "strong", "strong", 269529E3), "status: "], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "status", "status", -1997798413)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, conn_cur)))], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), 
-  new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "strong", "strong", 269529E3), "url: "], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "url", "url", 276297046)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, conn_cur)))], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), new cljs.core.PersistentVector(null, 
-  2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "strong", "strong", 269529E3), "username: "], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "username", "username", 1605666410)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, conn_cur)))], null)], null)], null);
-};
-goog.provide("com.cognitect.transit.util");
-goog.require("goog.object");
-goog.scope(function() {
-  var util = com.cognitect.transit.util, gobject = goog.object;
-  if (typeof Object.keys != "undefined") {
-    util.objectKeys = function(obj) {
-      return Object.keys(obj);
-    };
-  } else {
-    util.objectKeys = function(obj) {
-      return gobject.getKeys(obj);
-    };
-  }
-  if (typeof Array.isArray != "undefined") {
-    util.isArray = function(obj) {
-      return Array.isArray(obj);
-    };
-  } else {
-    util.isArray = function(obj) {
-      return goog.typeOf(obj) === "array";
-    };
-  }
-  util.chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\x3d";
-  util.randInt = function(ub) {
-    return Math.round(Math.random() * ub);
-  };
-  util.randHex = function() {
-    return util.randInt(15).toString(16);
-  };
-  util.randomUUID = function() {
-    var rhex = (8 | 3 & util.randInt(14)).toString(16), ret = util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + "-" + util.randHex() + util.randHex() + util.randHex() + util.randHex() + "-" + "4" + util.randHex() + util.randHex() + util.randHex() + "-" + rhex + util.randHex() + util.randHex() + util.randHex() + "-" + util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + 
-    util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex() + util.randHex();
-    return ret;
-  };
-  util.btoa = function(input) {
-    if (typeof btoa != "undefined") {
-      return btoa(input);
-    } else {
-      var str = String(input);
-      for (var block, charCode, idx = 0, map = util.chars, output = "";str.charAt(idx | 0) || (map = "\x3d", idx % 1);output += map.charAt(63 & block >> 8 - idx % 1 * 8)) {
-        charCode = str.charCodeAt(idx += 3 / 4);
-        if (charCode > 255) {
-          throw new Error("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");
-        }
-        block = block << 8 | charCode;
-      }
-      return output;
-    }
-  };
-  util.atob = function(input) {
-    if (typeof atob != "undefined") {
-      return atob(input);
-    } else {
-      var str = String(input).replace(/=+$/, "");
-      if (str.length % 4 == 1) {
-        throw new Error("'atob' failed: The string to be decoded is not correctly encoded.");
-      }
-      for (var bc = 0, bs, buffer, idx = 0, output = "";buffer = str.charAt(idx++);~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer, bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0) {
-        buffer = util.chars.indexOf(buffer);
-      }
-      return output;
-    }
-  };
-  util.Uint8ToBase64 = function(u8Arr) {
-    var CHUNK_SIZE = 32768, index = 0, length = u8Arr.length, result = "", slice = null;
-    while (index < length) {
-      slice = u8Arr.subarray(index, Math.min(index + CHUNK_SIZE, length));
-      result += String.fromCharCode.apply(null, slice);
-      index += CHUNK_SIZE;
-    }
-    return util.btoa(result);
-  };
-  util.Base64ToUint8 = function(base64) {
-    var binary_string = util.atob(base64), len = binary_string.length, bytes = new Uint8Array(len);
-    for (var i = 0;i < len;i++) {
-      var ascii = binary_string.charCodeAt(i);
-      bytes[i] = ascii;
-    }
-    return bytes;
-  };
-});
-goog.provide("com.cognitect.transit.eq");
-goog.require("com.cognitect.transit.util");
-goog.scope(function() {
-  var eq = com.cognitect.transit.eq, util = com.cognitect.transit.util;
-  eq.hashCodeProperty = "transit$hashCode$";
-  eq.hashCodeCounter = 1;
-  eq.equals = function(x, y) {
-    if (x == null) {
-      return y == null;
-    } else {
-      if (x === y) {
-        return true;
-      } else {
-        if (typeof x === "object") {
-          if (util.isArray(x)) {
-            if (util.isArray(y)) {
-              if (x.length === y.length) {
-                for (var i = 0;i < x.length;i++) {
-                  if (!eq.equals(x[i], y[i])) {
-                    return false;
-                  }
-                }
-                return true;
-              } else {
-                return false;
-              }
-            } else {
-              return false;
-            }
-          } else {
-            if (x.com$cognitect$transit$equals) {
-              return x.com$cognitect$transit$equals(y);
-            } else {
-              if (y != null && typeof y === "object") {
-                if (y.com$cognitect$transit$equals) {
-                  return y.com$cognitect$transit$equals(x);
-                } else {
-                  var xklen = 0, yklen = util.objectKeys(y).length;
-                  for (var p in x) {
-                    if (!x.hasOwnProperty(p)) {
-                      continue;
-                    }
-                    xklen++;
-                    if (!y.hasOwnProperty(p)) {
-                      return false;
-                    } else {
-                      if (!eq.equals(x[p], y[p])) {
-                        return false;
-                      }
-                    }
-                  }
-                  return xklen === yklen;
-                }
-              } else {
-                return false;
-              }
-            }
-          }
-        } else {
-          return false;
-        }
-      }
-    }
-  };
-  eq.hashCombine = function(seed, hash) {
-    return seed ^ hash + 2654435769 + (seed << 6) + (seed >> 2);
-  };
-  eq.stringCodeCache = {};
-  eq.stringCodeCacheSize = 0;
-  eq.STR_CACHE_MAX = 256;
-  eq.hashString = function(str) {
-    var cached = eq.stringCodeCache[str];
-    if (cached != null) {
-      return cached;
-    }
-    var code = 0;
-    for (var i = 0;i < str.length;++i) {
-      code = 31 * code + str.charCodeAt(i);
-      code %= 4294967296;
-    }
-    eq.stringCodeCacheSize++;
-    if (eq.stringCodeCacheSize >= eq.STR_CACHE_MAX) {
-      eq.stringCodeCache = {};
-      eq.stringCodeCacheSize = 1;
-    }
-    eq.stringCodeCache[str] = code;
-    return code;
-  };
-  eq.hashMapLike = function(m) {
-    var code = 0;
-    if (m.forEach != null) {
-      m.forEach(function(val, key, m) {
-        code = (code + (eq.hashCode(key) ^ eq.hashCode(val))) % 4503599627370496;
-      });
-    } else {
-      var keys = util.objectKeys(m);
-      for (var i = 0;i < keys.length;i++) {
-        var key = keys[i];
-        var val = m[key];
-        code = (code + (eq.hashCode(key) ^ eq.hashCode(val))) % 4503599627370496;
-      }
-    }
-    return code;
-  };
-  eq.hashArrayLike = function(arr) {
-    var code = 0;
-    if (util.isArray(arr)) {
-      for (var i = 0;i < arr.length;i++) {
-        code = eq.hashCombine(code, eq.hashCode(arr[i]));
-      }
-    } else {
-      if (arr.forEach) {
-        arr.forEach(function(x, i) {
-          code = eq.hashCombine(code, eq.hashCode(x));
-        });
-      }
-    }
-    return code;
-  };
-  eq.hashCode = function(x) {
-    if (x == null) {
-      return 0;
-    } else {
-      switch(typeof x) {
-        case "number":
-          return x;
-          break;
-        case "boolean":
-          return x === true ? 1 : 0;
-          break;
-        case "string":
-          return eq.hashString(x);
-          break;
-        case "function":
-          var code = x[eq.hashCodeProperty];
-          if (code) {
-            return code;
-          } else {
-            code = eq.hashCodeCounter;
-            if (typeof Object.defineProperty != "undefined") {
-              Object.defineProperty(x, eq.hashCodeProperty, {value:code, enumerable:false});
-            } else {
-              x[eq.hashCodeProperty] = code;
-            }
-            eq.hashCodeCounter++;
-            return code;
-          }
-          break;
-        default:
-          if (x instanceof Date) {
-            return x.valueOf();
-          } else {
-            if (util.isArray(x)) {
-              return eq.hashArrayLike(x);
-            }
-          }
-          if (x.com$cognitect$transit$hashCode) {
-            return x.com$cognitect$transit$hashCode();
-          } else {
-            return eq.hashMapLike(x);
-          }
-          break;
-      }
-    }
-  };
-  eq.extendToEQ = function(obj, opts) {
-    obj.com$cognitect$transit$hashCode = opts["hashCode"];
-    obj.com$cognitect$transit$equals = opts["equals"];
-    return obj;
-  };
-});
-goog.provide("goog.math.Long");
-goog.math.Long = function(low, high) {
-  this.low_ = low | 0;
-  this.high_ = high | 0;
-};
-goog.math.Long.IntCache_ = {};
-goog.math.Long.fromInt = function(value) {
-  if (-128 <= value && value < 128) {
-    var cachedObj = goog.math.Long.IntCache_[value];
-    if (cachedObj) {
-      return cachedObj;
-    }
-  }
-  var obj = new goog.math.Long(value | 0, value < 0 ? -1 : 0);
-  if (-128 <= value && value < 128) {
-    goog.math.Long.IntCache_[value] = obj;
-  }
-  return obj;
-};
-goog.math.Long.fromNumber = function(value) {
-  if (isNaN(value) || !isFinite(value)) {
-    return goog.math.Long.ZERO;
-  } else {
-    if (value <= -goog.math.Long.TWO_PWR_63_DBL_) {
-      return goog.math.Long.MIN_VALUE;
-    } else {
-      if (value + 1 >= goog.math.Long.TWO_PWR_63_DBL_) {
-        return goog.math.Long.MAX_VALUE;
-      } else {
-        if (value < 0) {
-          return goog.math.Long.fromNumber(-value).negate();
-        } else {
-          return new goog.math.Long(value % goog.math.Long.TWO_PWR_32_DBL_ | 0, value / goog.math.Long.TWO_PWR_32_DBL_ | 0);
-        }
-      }
-    }
-  }
-};
-goog.math.Long.fromBits = function(lowBits, highBits) {
-  return new goog.math.Long(lowBits, highBits);
-};
-goog.math.Long.fromString = function(str, opt_radix) {
-  if (str.length == 0) {
-    throw Error("number format error: empty string");
-  }
-  var radix = opt_radix || 10;
-  if (radix < 2 || 36 < radix) {
-    throw Error("radix out of range: " + radix);
-  }
-  if (str.charAt(0) == "-") {
-    return goog.math.Long.fromString(str.substring(1), radix).negate();
-  } else {
-    if (str.indexOf("-") >= 0) {
-      throw Error('number format error: interior "-" character: ' + str);
-    }
-  }
-  var radixToPower = goog.math.Long.fromNumber(Math.pow(radix, 8));
-  var result = goog.math.Long.ZERO;
-  for (var i = 0;i < str.length;i += 8) {
-    var size = Math.min(8, str.length - i);
-    var value = parseInt(str.substring(i, i + size), radix);
-    if (size < 8) {
-      var power = goog.math.Long.fromNumber(Math.pow(radix, size));
-      result = result.multiply(power).add(goog.math.Long.fromNumber(value));
-    } else {
-      result = result.multiply(radixToPower);
-      result = result.add(goog.math.Long.fromNumber(value));
-    }
-  }
-  return result;
-};
-goog.math.Long.TWO_PWR_16_DBL_ = 1 << 16;
-goog.math.Long.TWO_PWR_24_DBL_ = 1 << 24;
-goog.math.Long.TWO_PWR_32_DBL_ = goog.math.Long.TWO_PWR_16_DBL_ * goog.math.Long.TWO_PWR_16_DBL_;
-goog.math.Long.TWO_PWR_31_DBL_ = goog.math.Long.TWO_PWR_32_DBL_ / 2;
-goog.math.Long.TWO_PWR_48_DBL_ = goog.math.Long.TWO_PWR_32_DBL_ * goog.math.Long.TWO_PWR_16_DBL_;
-goog.math.Long.TWO_PWR_64_DBL_ = goog.math.Long.TWO_PWR_32_DBL_ * goog.math.Long.TWO_PWR_32_DBL_;
-goog.math.Long.TWO_PWR_63_DBL_ = goog.math.Long.TWO_PWR_64_DBL_ / 2;
-goog.math.Long.ZERO = goog.math.Long.fromInt(0);
-goog.math.Long.ONE = goog.math.Long.fromInt(1);
-goog.math.Long.NEG_ONE = goog.math.Long.fromInt(-1);
-goog.math.Long.MAX_VALUE = goog.math.Long.fromBits(4294967295 | 0, 2147483647 | 0);
-goog.math.Long.MIN_VALUE = goog.math.Long.fromBits(0, 2147483648 | 0);
-goog.math.Long.TWO_PWR_24_ = goog.math.Long.fromInt(1 << 24);
-goog.math.Long.prototype.toInt = function() {
-  return this.low_;
-};
-goog.math.Long.prototype.toNumber = function() {
-  return this.high_ * goog.math.Long.TWO_PWR_32_DBL_ + this.getLowBitsUnsigned();
-};
-goog.math.Long.prototype.toString = function(opt_radix) {
-  var radix = opt_radix || 10;
-  if (radix < 2 || 36 < radix) {
-    throw Error("radix out of range: " + radix);
-  }
-  if (this.isZero()) {
-    return "0";
-  }
-  if (this.isNegative()) {
-    if (this.equals(goog.math.Long.MIN_VALUE)) {
-      var radixLong = goog.math.Long.fromNumber(radix);
-      var div = this.div(radixLong);
-      var rem = div.multiply(radixLong).subtract(this);
-      return div.toString(radix) + rem.toInt().toString(radix);
-    } else {
-      return "-" + this.negate().toString(radix);
-    }
-  }
-  var radixToPower = goog.math.Long.fromNumber(Math.pow(radix, 6));
-  var rem = this;
-  var result = "";
-  while (true) {
-    var remDiv = rem.div(radixToPower);
-    var intval = rem.subtract(remDiv.multiply(radixToPower)).toInt();
-    var digits = intval.toString(radix);
-    rem = remDiv;
-    if (rem.isZero()) {
-      return digits + result;
-    } else {
-      while (digits.length < 6) {
-        digits = "0" + digits;
-      }
-      result = "" + digits + result;
-    }
-  }
-};
-goog.math.Long.prototype.getHighBits = function() {
-  return this.high_;
-};
-goog.math.Long.prototype.getLowBits = function() {
-  return this.low_;
-};
-goog.math.Long.prototype.getLowBitsUnsigned = function() {
-  return this.low_ >= 0 ? this.low_ : goog.math.Long.TWO_PWR_32_DBL_ + this.low_;
-};
-goog.math.Long.prototype.getNumBitsAbs = function() {
-  if (this.isNegative()) {
-    if (this.equals(goog.math.Long.MIN_VALUE)) {
-      return 64;
-    } else {
-      return this.negate().getNumBitsAbs();
-    }
-  } else {
-    var val = this.high_ != 0 ? this.high_ : this.low_;
-    for (var bit = 31;bit > 0;bit--) {
-      if ((val & 1 << bit) != 0) {
-        break;
-      }
-    }
-    return this.high_ != 0 ? bit + 33 : bit + 1;
-  }
-};
-goog.math.Long.prototype.isZero = function() {
-  return this.high_ == 0 && this.low_ == 0;
-};
-goog.math.Long.prototype.isNegative = function() {
-  return this.high_ < 0;
-};
-goog.math.Long.prototype.isOdd = function() {
-  return(this.low_ & 1) == 1;
-};
-goog.math.Long.prototype.equals = function(other) {
-  return this.high_ == other.high_ && this.low_ == other.low_;
-};
-goog.math.Long.prototype.notEquals = function(other) {
-  return this.high_ != other.high_ || this.low_ != other.low_;
-};
-goog.math.Long.prototype.lessThan = function(other) {
-  return this.compare(other) < 0;
-};
-goog.math.Long.prototype.lessThanOrEqual = function(other) {
-  return this.compare(other) <= 0;
-};
-goog.math.Long.prototype.greaterThan = function(other) {
-  return this.compare(other) > 0;
-};
-goog.math.Long.prototype.greaterThanOrEqual = function(other) {
-  return this.compare(other) >= 0;
-};
-goog.math.Long.prototype.compare = function(other) {
-  if (this.equals(other)) {
-    return 0;
-  }
-  var thisNeg = this.isNegative();
-  var otherNeg = other.isNegative();
-  if (thisNeg && !otherNeg) {
-    return-1;
-  }
-  if (!thisNeg && otherNeg) {
-    return 1;
-  }
-  if (this.subtract(other).isNegative()) {
-    return-1;
-  } else {
-    return 1;
-  }
-};
-goog.math.Long.prototype.negate = function() {
-  if (this.equals(goog.math.Long.MIN_VALUE)) {
-    return goog.math.Long.MIN_VALUE;
-  } else {
-    return this.not().add(goog.math.Long.ONE);
-  }
-};
-goog.math.Long.prototype.add = function(other) {
-  var a48 = this.high_ >>> 16;
-  var a32 = this.high_ & 65535;
-  var a16 = this.low_ >>> 16;
-  var a00 = this.low_ & 65535;
-  var b48 = other.high_ >>> 16;
-  var b32 = other.high_ & 65535;
-  var b16 = other.low_ >>> 16;
-  var b00 = other.low_ & 65535;
-  var c48 = 0, c32 = 0, c16 = 0, c00 = 0;
-  c00 += a00 + b00;
-  c16 += c00 >>> 16;
-  c00 &= 65535;
-  c16 += a16 + b16;
-  c32 += c16 >>> 16;
-  c16 &= 65535;
-  c32 += a32 + b32;
-  c48 += c32 >>> 16;
-  c32 &= 65535;
-  c48 += a48 + b48;
-  c48 &= 65535;
-  return goog.math.Long.fromBits(c16 << 16 | c00, c48 << 16 | c32);
-};
-goog.math.Long.prototype.subtract = function(other) {
-  return this.add(other.negate());
-};
-goog.math.Long.prototype.multiply = function(other) {
-  if (this.isZero()) {
-    return goog.math.Long.ZERO;
-  } else {
-    if (other.isZero()) {
-      return goog.math.Long.ZERO;
-    }
-  }
-  if (this.equals(goog.math.Long.MIN_VALUE)) {
-    return other.isOdd() ? goog.math.Long.MIN_VALUE : goog.math.Long.ZERO;
-  } else {
-    if (other.equals(goog.math.Long.MIN_VALUE)) {
-      return this.isOdd() ? goog.math.Long.MIN_VALUE : goog.math.Long.ZERO;
-    }
-  }
-  if (this.isNegative()) {
-    if (other.isNegative()) {
-      return this.negate().multiply(other.negate());
-    } else {
-      return this.negate().multiply(other).negate();
-    }
-  } else {
-    if (other.isNegative()) {
-      return this.multiply(other.negate()).negate();
-    }
-  }
-  if (this.lessThan(goog.math.Long.TWO_PWR_24_) && other.lessThan(goog.math.Long.TWO_PWR_24_)) {
-    return goog.math.Long.fromNumber(this.toNumber() * other.toNumber());
-  }
-  var a48 = this.high_ >>> 16;
-  var a32 = this.high_ & 65535;
-  var a16 = this.low_ >>> 16;
-  var a00 = this.low_ & 65535;
-  var b48 = other.high_ >>> 16;
-  var b32 = other.high_ & 65535;
-  var b16 = other.low_ >>> 16;
-  var b00 = other.low_ & 65535;
-  var c48 = 0, c32 = 0, c16 = 0, c00 = 0;
-  c00 += a00 * b00;
-  c16 += c00 >>> 16;
-  c00 &= 65535;
-  c16 += a16 * b00;
-  c32 += c16 >>> 16;
-  c16 &= 65535;
-  c16 += a00 * b16;
-  c32 += c16 >>> 16;
-  c16 &= 65535;
-  c32 += a32 * b00;
-  c48 += c32 >>> 16;
-  c32 &= 65535;
-  c32 += a16 * b16;
-  c48 += c32 >>> 16;
-  c32 &= 65535;
-  c32 += a00 * b32;
-  c48 += c32 >>> 16;
-  c32 &= 65535;
-  c48 += a48 * b00 + a32 * b16 + a16 * b32 + a00 * b48;
-  c48 &= 65535;
-  return goog.math.Long.fromBits(c16 << 16 | c00, c48 << 16 | c32);
-};
-goog.math.Long.prototype.div = function(other) {
-  if (other.isZero()) {
-    throw Error("division by zero");
-  } else {
-    if (this.isZero()) {
-      return goog.math.Long.ZERO;
-    }
-  }
-  if (this.equals(goog.math.Long.MIN_VALUE)) {
-    if (other.equals(goog.math.Long.ONE) || other.equals(goog.math.Long.NEG_ONE)) {
-      return goog.math.Long.MIN_VALUE;
-    } else {
-      if (other.equals(goog.math.Long.MIN_VALUE)) {
-        return goog.math.Long.ONE;
-      } else {
-        var halfThis = this.shiftRight(1);
-        var approx = halfThis.div(other).shiftLeft(1);
-        if (approx.equals(goog.math.Long.ZERO)) {
-          return other.isNegative() ? goog.math.Long.ONE : goog.math.Long.NEG_ONE;
-        } else {
-          var rem = this.subtract(other.multiply(approx));
-          var result = approx.add(rem.div(other));
-          return result;
-        }
-      }
-    }
-  } else {
-    if (other.equals(goog.math.Long.MIN_VALUE)) {
-      return goog.math.Long.ZERO;
-    }
-  }
-  if (this.isNegative()) {
-    if (other.isNegative()) {
-      return this.negate().div(other.negate());
-    } else {
-      return this.negate().div(other).negate();
-    }
-  } else {
-    if (other.isNegative()) {
-      return this.div(other.negate()).negate();
-    }
-  }
-  var res = goog.math.Long.ZERO;
-  var rem = this;
-  while (rem.greaterThanOrEqual(other)) {
-    var approx = Math.max(1, Math.floor(rem.toNumber() / other.toNumber()));
-    var log2 = Math.ceil(Math.log(approx) / Math.LN2);
-    var delta = log2 <= 48 ? 1 : Math.pow(2, log2 - 48);
-    var approxRes = goog.math.Long.fromNumber(approx);
-    var approxRem = approxRes.multiply(other);
-    while (approxRem.isNegative() || approxRem.greaterThan(rem)) {
-      approx -= delta;
-      approxRes = goog.math.Long.fromNumber(approx);
-      approxRem = approxRes.multiply(other);
-    }
-    if (approxRes.isZero()) {
-      approxRes = goog.math.Long.ONE;
-    }
-    res = res.add(approxRes);
-    rem = rem.subtract(approxRem);
-  }
-  return res;
-};
-goog.math.Long.prototype.modulo = function(other) {
-  return this.subtract(this.div(other).multiply(other));
-};
-goog.math.Long.prototype.not = function() {
-  return goog.math.Long.fromBits(~this.low_, ~this.high_);
-};
-goog.math.Long.prototype.and = function(other) {
-  return goog.math.Long.fromBits(this.low_ & other.low_, this.high_ & other.high_);
-};
-goog.math.Long.prototype.or = function(other) {
-  return goog.math.Long.fromBits(this.low_ | other.low_, this.high_ | other.high_);
-};
-goog.math.Long.prototype.xor = function(other) {
-  return goog.math.Long.fromBits(this.low_ ^ other.low_, this.high_ ^ other.high_);
-};
-goog.math.Long.prototype.shiftLeft = function(numBits) {
-  numBits &= 63;
-  if (numBits == 0) {
-    return this;
-  } else {
-    var low = this.low_;
-    if (numBits < 32) {
-      var high = this.high_;
-      return goog.math.Long.fromBits(low << numBits, high << numBits | low >>> 32 - numBits);
-    } else {
-      return goog.math.Long.fromBits(0, low << numBits - 32);
-    }
-  }
-};
-goog.math.Long.prototype.shiftRight = function(numBits) {
-  numBits &= 63;
-  if (numBits == 0) {
-    return this;
-  } else {
-    var high = this.high_;
-    if (numBits < 32) {
-      var low = this.low_;
-      return goog.math.Long.fromBits(low >>> numBits | high << 32 - numBits, high >> numBits);
-    } else {
-      return goog.math.Long.fromBits(high >> numBits - 32, high >= 0 ? 0 : -1);
-    }
-  }
-};
-goog.math.Long.prototype.shiftRightUnsigned = function(numBits) {
-  numBits &= 63;
-  if (numBits == 0) {
-    return this;
-  } else {
-    var high = this.high_;
-    if (numBits < 32) {
-      var low = this.low_;
-      return goog.math.Long.fromBits(low >>> numBits | high << 32 - numBits, high >>> numBits);
-    } else {
-      if (numBits == 32) {
-        return goog.math.Long.fromBits(high, 0);
-      } else {
-        return goog.math.Long.fromBits(high >>> numBits - 32, 0);
-      }
-    }
-  }
-};
-goog.provide("com.cognitect.transit.types");
-goog.require("com.cognitect.transit.util");
-goog.require("com.cognitect.transit.eq");
-goog.require("goog.math.Long");
-goog.scope(function() {
-  var types = com.cognitect.transit.types, util = com.cognitect.transit.util, eq = com.cognitect.transit.eq, Long = goog.math.Long;
-  types.TaggedValue = function(tag, rep) {
-    this.tag = tag;
-    this.rep = rep;
-    this.hashCode = -1;
-  };
-  types.TaggedValue.prototype.toString = function() {
-    return "[TaggedValue: " + this.tag + ", " + this.rep + "]";
-  };
-  types.TaggedValue.prototype.equiv = function(other) {
-    return eq.equals(this, other);
-  };
-  types.TaggedValue.prototype["equiv"] = types.TaggedValue.prototype.equiv;
-  types.TaggedValue.prototype.com$cognitect$transit$equals = function(other) {
-    if (other instanceof types.TaggedValue) {
-      return this.tag === other.tag && eq.equals(this.rep, other.rep);
-    } else {
-      return false;
-    }
-  };
-  types.TaggedValue.prototype.com$cognitect$transit$hashCode = function() {
-    if (this.hashCode === -1) {
-      this.hashCode = eq.hashCombine(eq.hashCode(this.tag), eq.hashCode(this.rep));
-    }
-    return this.hashCode;
-  };
-  types.taggedValue = function(tag, rep) {
-    return new types.TaggedValue(tag, rep);
-  };
-  types.isTaggedValue = function(x) {
-    return x instanceof types.TaggedValue;
-  };
-  types.nullValue = function() {
-    return null;
-  };
-  types.boolValue = function(s) {
-    return s === "t";
-  };
-  types.MAX_INT = Long.fromString("9007199254740992");
-  types.MIN_INT = Long.fromString("-9007199254740992");
-  types.intValue = function(s) {
-    if (typeof s === "number") {
-      return s;
-    } else {
-      if (s instanceof Long) {
-        return s;
-      } else {
-        var n = Long.fromString(s, 10);
-        if (n.greaterThan(types.MAX_INT) || n.lessThan(types.MIN_INT)) {
-          return n;
-        } else {
-          return n.toNumber();
-        }
-      }
-    }
-  };
-  Long.prototype.equiv = function(other) {
-    return eq.equals(this, other);
-  };
-  Long.prototype["equiv"] = Long.prototype.equiv;
-  Long.prototype.com$cognitect$transit$equals = function(other) {
-    return other instanceof Long && this.equals(other);
-  };
-  Long.prototype.com$cognitect$transit$hashCode = function() {
-    return this.toInt();
-  };
-  types.isInteger = function(x) {
-    if (x instanceof Long) {
-      return true;
-    } else {
-      return typeof x === "number" && !isNaN(x) && !(x === Infinity) && parseFloat(x) === parseInt(x);
-    }
-  };
-  types.floatValue = function(s) {
-    return parseFloat(s);
-  };
-  types.bigInteger = function(s) {
-    return types.taggedValue("n", s);
-  };
-  types.isBigInteger = function(x) {
-    return x instanceof types.TaggedValue && x.tag === "n";
-  };
-  types.bigDecimalValue = function(s) {
-    return types.taggedValue("f", s);
-  };
-  types.isBigDecimal = function(x) {
-    return x instanceof types.TaggedValue && x.tag === "f";
-  };
-  types.charValue = function(s) {
-    return s;
-  };
-  types.Keyword = function(name) {
-    this.name = name;
-    this.hashCode = -1;
-  };
-  types.Keyword.prototype.toString = function() {
-    return ":" + this.name;
-  };
-  types.Keyword.prototype.equiv = function(other) {
-    return eq.equals(this, other);
-  };
-  types.Keyword.prototype["equiv"] = types.Keyword.prototype.equiv;
-  types.Keyword.prototype.com$cognitect$transit$equals = function(other) {
-    return other instanceof types.Keyword && this.name == other.name;
-  };
-  types.Keyword.prototype.com$cognitect$transit$hashCode = function() {
-    if (this.hashCode === -1) {
-      this.hashCode = eq.hashCode(this.name);
-    }
-    return this.hashCode;
-  };
-  types.keyword = function(s) {
-    return new types.Keyword(s);
-  };
-  types.isKeyword = function(x) {
-    return x instanceof types.Keyword;
-  };
-  types.Symbol = function(name) {
-    this.name = name;
-    this.hashCode = -1;
-  };
-  types.Symbol.prototype.toString = function() {
-    return "[Symbol: " + this.name + "]";
-  };
-  types.Symbol.prototype.equiv = function(other) {
-    return eq.equals(this, other);
-  };
-  types.Symbol.prototype["equiv"] = types.Symbol.prototype.equiv;
-  types.Symbol.prototype.com$cognitect$transit$equals = function(other) {
-    return other instanceof types.Symbol && this.name == other.name;
-  };
-  types.Symbol.prototype.com$cognitect$transit$hashCode = function() {
-    if (this.hashCode === -1) {
-      this.hashCode = eq.hashCode(this.name);
-    }
-    return this.hashCode;
-  };
-  types.symbol = function(s) {
-    return new types.Symbol(s);
-  };
-  types.isSymbol = function(x) {
-    return x instanceof types.Symbol;
-  };
-  types.hexFor = function(aLong, sidx, eidx) {
-    var ret = "", eidx = eidx || sidx + 1;
-    for (var i = sidx, shift = (7 - i) * 8, mask = Long.fromInt(255).shiftLeft(shift);i < eidx;i++, shift -= 8, mask = mask.shiftRightUnsigned(8)) {
-      var s = aLong.and(mask).shiftRightUnsigned(shift).toString(16);
-      if (s.length == 1) {
-        s = "0" + s;
-      }
-      ret += s;
-    }
-    return ret;
-  };
-  types.UUID = function(high, low) {
-    this.high = high;
-    this.low = low;
-    this.hashCode = -1;
-  };
-  types.UUID.prototype.getLeastSignificantBits = function() {
-    return this.low;
-  };
-  types.UUID.prototype.getMostSignificantBits = function() {
-    return this.high;
-  };
-  types.UUID.prototype.toString = function(s) {
-    var s = "", hi64 = this.high, lo64 = this.low;
-    s += types.hexFor(hi64, 0, 4) + "-";
-    s += types.hexFor(hi64, 4, 6) + "-";
-    s += types.hexFor(hi64, 6, 8) + "-";
-    s += types.hexFor(lo64, 0, 2) + "-";
-    s += types.hexFor(lo64, 2, 8);
-    return s;
-  };
-  types.UUID.prototype.equiv = function(other) {
-    return eq.equals(this, other);
-  };
-  types.UUID.prototype["equiv"] = types.UUID.prototype.equiv;
-  types.UUID.prototype.com$cognitect$transit$equals = function(other) {
-    return other instanceof types.UUID && this.high.equals(other.high) && this.low.equals(other.low);
-  };
-  types.UUID.prototype.com$cognitect$transit$hashCode = function() {
-    if (this.hashCode === -1) {
-      this.hashCode = eq.hashCode(this.toString());
-    }
-    return this.hashCode;
-  };
-  types.UUIDfromString = function uuidFromString(s) {
-    var s = s.replace(/-/g, ""), hi64 = null, lo64 = null, hi32 = 0, lo32 = 0, off = 24, i = 0;
-    for (hi32 = 0, i = 0, off = 24;i < 8;i += 2, off -= 8) {
-      hi32 |= parseInt(s.substring(i, i + 2), 16) << off;
-    }
-    for (lo32 = 0, i = 8, off = 24;i < 16;i += 2, off -= 8) {
-      lo32 |= parseInt(s.substring(i, i + 2), 16) << off;
-    }
-    hi64 = Long.fromBits(lo32, hi32);
-    for (hi32 = 0, i = 16, off = 24;i < 24;i += 2, off -= 8) {
-      hi32 |= parseInt(s.substring(i, i + 2), 16) << off;
-    }
-    for (lo32 = 0, i = 24, off = 24;i < 32;i += 2, off -= 8) {
-      lo32 |= parseInt(s.substring(i, i + 2), 16) << off;
-    }
-    lo64 = Long.fromBits(lo32, hi32);
-    return new types.UUID(hi64, lo64);
-  };
-  types.uuid = function(s) {
-    return types.UUIDfromString(s);
-  };
-  types.isUUID = function(x) {
-    return x instanceof types.UUID;
-  };
-  types.date = function(s) {
-    s = typeof s === "number" ? s : parseInt(s, 10);
-    return new Date(s);
-  };
-  types.verboseDate = function(s) {
-    return new Date(s);
-  };
-  Date.prototype.com$cognitect$transit$equals = function(other) {
-    if (other instanceof Date) {
-      return this.valueOf() === other.valueOf();
-    } else {
-      return false;
-    }
-  };
-  Date.prototype.com$cognitect$transit$hashCode = function() {
-    return this.valueOf();
-  };
-  types.binary = function(str, decoder) {
-    if ((!decoder || decoder.preferBuffers !== false) && typeof Buffer != "undefined") {
-      return new Buffer(str, "base64");
-    } else {
-      if (typeof Uint8Array != "undefined") {
-        return util.Base64ToUint8(str);
-      } else {
-        return types.taggedValue("b", str);
-      }
-    }
-  };
-  types.isBinary = function(x) {
-    if (typeof Buffer != "undefined" && x instanceof Buffer) {
-      return true;
-    } else {
-      if (typeof Uint8Array != "undefined" && x instanceof Uint8Array) {
-        return true;
-      } else {
-        return x instanceof types.TaggedValue && x.tag === "b";
-      }
-    }
-  };
-  types.uri = function(s) {
-    return types.taggedValue("r", s);
-  };
-  types.isURI = function(x) {
-    return x instanceof types.TaggedValue && x.tag === "r";
-  };
-  types.KEYS = 0;
-  types.VALUES = 1;
-  types.ENTRIES = 2;
-  types.TransitArrayMapIterator = function(entries, type) {
-    this.entries = entries;
-    this.type = type || types.KEYS;
-    this.idx = 0;
-  };
-  types.TransitArrayMapIterator.prototype.next = function(map, type) {
-    if (this.idx < this.entries.length) {
-      var value = null;
-      if (this.type === types.KEYS) {
-        value = this.entries[this.idx];
-      } else {
-        if (this.type === types.VALUES) {
-          value = this.entries[this.idx + 1];
-        } else {
-          value = [this.entries[this.idx], this.entries[this.idx + 1]];
-        }
-      }
-      var ret = {"value":value, "done":false};
-      this.idx += 2;
-      return ret;
-    } else {
-      return{"value":null, "done":true};
-    }
-  };
-  types.TransitArrayMapIterator.prototype["next"] = types.TransitArrayMapIterator.prototype.next;
-  types.TransitMapIterator = function(map, type) {
-    this.map = map;
-    this.type = type || types.KEYS;
-    this.keys = this.map.getKeys();
-    this.idx = 0;
-    this.bucket = null;
-    this.bucketIdx = 0;
-  };
-  types.TransitMapIterator.prototype.next = function() {
-    if (this.idx < this.map.size) {
-      if (this.bucket == null || !(this.bucketIdx < this.bucket.length)) {
-        this.bucket = this.map.map[this.keys[this.idx]];
-        this.bucketIdx = 0;
-      }
-      var value = null;
-      if (this.type === types.KEYS) {
-        value = this.bucket[this.bucketIdx];
-      } else {
-        if (this.type === types.VALUES) {
-          value = this.bucket[this.bucketIdx + 1];
-        } else {
-          value = [this.bucket[this.bucketIdx], this.bucket[this.bucketIdx + 1]];
-        }
-      }
-      var ret = {"value":value, "done":false};
-      this.idx++;
-      this.bucketIdx += 2;
-      return ret;
-    } else {
-      return{"value":null, "done":true};
-    }
-  };
-  types.TransitMapIterator.prototype["next"] = types.TransitMapIterator.prototype.next;
-  types.mapEquals = function(me, you) {
-    if ((you instanceof types.TransitMap || you instanceof types.TransitArrayMap) && me.size === you.size) {
-      for (var code in me.map) {
-        var bucket = me.map[code];
-        for (var j = 0;j < bucket.length;j += 2) {
-          if (!eq.equals(bucket[j + 1], you.get(bucket[j]))) {
-            return false;
-          }
-        }
-      }
-      return true;
-    } else {
-      if (you != null && typeof you === "object") {
-        var ks = util.objectKeys(you), kslen = ks.length;
-        if (me.size === kslen) {
-          for (var i = 0;i < kslen;i++) {
-            var k = ks[i];
-            if (!me.has(k) || !eq.equals(you[k], me.get(k))) {
-              return false;
-            }
-          }
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    }
-  };
-  types.SMALL_ARRAY_MAP_THRESHOLD = 8;
-  types.ARRAY_MAP_THRESHOLD = 32;
-  types.ARRAY_MAP_ACCESS_THRESHOLD = 32;
-  types.TransitArrayMap = function(entries) {
-    this._entries = entries;
-    this.backingMap = null;
-    this.hashCode = -1;
-    this.size = entries.length / 2;
-    this.accesses = 0;
-  };
-  types.TransitArrayMap.prototype.toString = function() {
-    return "[TransitArrayMap]";
-  };
-  types.TransitArrayMap.prototype.convert = function() {
-    if (this.backingMap) {
-      throw Error("Invalid operation, already converted");
-    }
-    if (this.size < types.SMALL_ARRAY_MAP_THRESHOLD) {
-      return false;
-    }
-    this.accesses++;
-    if (this.accesses > types.ARRAY_MAP_ACCESS_THRESHOLD) {
-      this.backingMap = types.map(this._entries, false, true);
-      this._entries = [];
-      return true;
-    } else {
-      return false;
-    }
-  };
-  types.TransitArrayMap.prototype.clear = function() {
-    this.hashCode = -1;
-    if (this.backingMap) {
-      this.backingMap.clear();
-      this.size = 0;
-    } else {
-      this._entries = [];
-      this.size = 0;
-    }
-  };
-  types.TransitArrayMap.prototype["clear"] = types.TransitArrayMap.prototype.clear;
-  types.TransitArrayMap.prototype.keys = function() {
-    if (this.backingMap) {
-      return this.backingMap.keys();
-    } else {
-      return new types.TransitArrayMapIterator(this._entries, types.KEYS);
-    }
-  };
-  types.TransitArrayMap.prototype["keys"] = types.TransitArrayMap.prototype.keys;
-  types.TransitArrayMap.prototype.keySet = function() {
-    if (this.backingMap) {
-      return this.backingMap.keySet();
-    } else {
-      var ret = [];
-      for (var i = 0, j = 0;j < this._entries.length;i++, j += 2) {
-        ret[i] = this._entries[j];
-      }
-      return ret;
-    }
-  };
-  types.TransitArrayMap.prototype["keySet"] = types.TransitArrayMap.prototype.keySet;
-  types.TransitArrayMap.prototype.entries = function() {
-    if (this.backingMap) {
-      return this.backingMap.entries();
-    } else {
-      return new types.TransitArrayMapIterator(this._entries, types.ENTRIES);
-    }
-  };
-  types.TransitArrayMap.prototype["entries"] = types.TransitArrayMap.prototype.entries;
-  types.TransitArrayMap.prototype.values = function() {
-    if (this.backingMap) {
-      return this.backingMap.values();
-    } else {
-      return new types.TransitArrayMapIterator(this._entries, types.VALUES);
-    }
-  };
-  types.TransitArrayMap.prototype["values"] = types.TransitArrayMap.prototype.values;
-  types.TransitArrayMap.prototype.forEach = function(f) {
-    if (this.backingMap) {
-      this.backingMap.forEach(f);
-    } else {
-      for (var i = 0;i < this._entries.length;i += 2) {
-        f(this._entries[i + 1], this._entries[i]);
-      }
-    }
-  };
-  types.TransitArrayMap.prototype["forEach"] = types.TransitArrayMap.prototype.forEach;
-  types.TransitArrayMap.prototype.get = function(k, notFound) {
-    if (this.backingMap) {
-      return this.backingMap.get(k);
-    } else {
-      if (this.convert()) {
-        return this.get(k);
-      } else {
-        for (var i = 0;i < this._entries.length;i += 2) {
-          if (eq.equals(this._entries[i], k)) {
-            return this._entries[i + 1];
-          }
-        }
-        return notFound;
-      }
-    }
-  };
-  types.TransitArrayMap.prototype["get"] = types.TransitArrayMap.prototype.get;
-  types.TransitArrayMap.prototype.has = function(k) {
-    if (this.backingMap) {
-      return this.backingMap.has(k);
-    } else {
-      if (this.convert()) {
-        return this.has(k);
-      } else {
-        for (var i = 0;i < this._entries.length;i += 2) {
-          if (eq.equals(this._entries[i], k)) {
-            return true;
-          }
-        }
-        return false;
-      }
-    }
-  };
-  types.TransitArrayMap.prototype["has"] = types.TransitArrayMap.prototype.has;
-  types.TransitArrayMap.prototype.set = function(k, v) {
-    this.hashCode = -1;
-    if (this.backingMap) {
-      this.backingMap.set(k, v);
-      this.size = this.backingMap.size;
-    } else {
-      for (var i = 0;i < this._entries.length;i += 2) {
-        if (eq.equals(this._entries[i], k)) {
-          this._entries[i + 1] = v;
-          return;
-        }
-      }
-      this._entries.push(k);
-      this._entries.push(v);
-      this.size++;
-      if (this.size > types.ARRAY_MAP_THRESHOLD) {
-        this.backingMap = types.map(this._entries, false, true);
-        this._entries = null;
-      }
-    }
-  };
-  types.TransitArrayMap.prototype["set"] = types.TransitArrayMap.prototype.set;
-  types.TransitArrayMap.prototype["delete"] = function(k) {
-    this.hashCode = -1;
-    if (this.backingMap) {
-      this.backingMap["delete"](k);
-      this.size = this.backingMap.size;
-    } else {
-      for (var i = 0;i < this._entries.length;i += 2) {
-        if (eq.equals(this._entries[i], k)) {
-          this._entries.splice(i, 2);
-          this.size--;
-          return;
-        }
-      }
-    }
-  };
-  types.TransitArrayMap.prototype.com$cognitect$transit$hashCode = function() {
-    if (this.backingMap) {
-      return this.backingMap.com$cognitect$transit$hashCode();
-    } else {
-      if (this.hashCode === -1) {
-        this.hashCode = eq.hashMapLike(this);
-      }
-      return this.hashCode;
-    }
-  };
-  types.TransitArrayMap.prototype.com$cognitect$transit$equals = function(other) {
-    if (this.backingMap) {
-      return types.mapEquals(this.backingMap, other);
-    } else {
-      return types.mapEquals(this, other);
-    }
-  };
-  types.TransitMap = function(keys, map, size) {
-    this.map = map || {};
-    this._keys = keys || [];
-    this.size = size || 0;
-    this.hashCode = -1;
-  };
-  types.TransitMap.prototype.toString = function() {
-    return "[TransitMap]";
-  };
-  types.TransitMap.prototype.clear = function() {
-    this.hashCode = -1;
-    this.map = {};
-    this._keys = [];
-    this.size = 0;
-  };
-  types.TransitMap.prototype["clear"] = types.TransitMap.prototype.clear;
-  types.TransitMap.prototype.getKeys = function() {
-    if (this._keys != null) {
-      return this._keys;
-    } else {
-      return util.objectKeys(this.map);
-    }
-  };
-  types.TransitMap.prototype["delete"] = function(k) {
-    this.hashCode = -1;
-    this._keys = null;
-    var code = eq.hashCode(k), bucket = this.map[code];
-    for (var i = 0;i < bucket.length;i += 2) {
-      if (eq.equals(k, bucket[i])) {
-        bucket.splice(i, 2);
-        if (bucket.length === 0) {
-          delete this.map[code];
-        }
-        this.size--;
-        break;
-      }
-    }
-  };
-  types.TransitMap.prototype.entries = function() {
-    return new types.TransitMapIterator(this, types.ENTRIES);
-  };
-  types.TransitMap.prototype["entries"] = types.TransitMap.prototype.entries;
-  types.TransitMap.prototype.forEach = function(callback) {
-    var ks = this.getKeys();
-    for (var i = 0;i < ks.length;i++) {
-      var bucket = this.map[ks[i]];
-      for (var j = 0;j < bucket.length;j += 2) {
-        callback(bucket[j + 1], bucket[j], this);
-      }
-    }
-  };
-  types.TransitMap.prototype["forEach"] = types.TransitMap.prototype.forEach;
-  types.TransitMap.prototype.get = function(k, notFound) {
-    var code = eq.hashCode(k), bucket = this.map[code];
-    if (bucket != null) {
-      for (var i = 0;i < bucket.length;i += 2) {
-        if (eq.equals(k, bucket[i])) {
-          return bucket[i + 1];
-        }
-      }
-    } else {
-      return notFound;
-    }
-  };
-  types.TransitMap.prototype["get"] = types.TransitMap.prototype.get;
-  types.TransitMap.prototype.has = function(k) {
-    var code = eq.hashCode(k), bucket = this.map[code];
-    if (bucket != null) {
-      for (var i = 0;i < bucket.length;i += 2) {
-        if (eq.equals(k, bucket[i])) {
-          return true;
-        }
-      }
-      return false;
-    } else {
-      return false;
-    }
-  };
-  types.TransitMap.prototype["has"] = types.TransitMap.prototype.has;
-  types.TransitMap.prototype.keys = function() {
-    return new types.TransitMapIterator(this, types.KEYS);
-  };
-  types.TransitMap.prototype["keys"] = types.TransitMap.prototype.keys;
-  types.TransitMap.prototype.keySet = function() {
-    var keys = this.getKeys(), ret = [];
-    for (var i = 0;i < keys.length;i++) {
-      var bucket = this.map[keys[i]];
-      for (var j = 0;j < bucket.length;j += 2) {
-        ret.push(bucket[j]);
-      }
-    }
-    return ret;
-  };
-  types.TransitMap.prototype["keySet"] = types.TransitMap.prototype.keySet;
-  types.TransitMap.prototype.set = function(k, v) {
-    this.hashCode = -1;
-    var code = eq.hashCode(k), bucket = this.map[code];
-    if (bucket == null) {
-      if (this._keys) {
-        this._keys.push(code);
-      }
-      this.map[code] = [k, v];
-      this.size++;
-    } else {
-      var newEntry = true;
-      for (var i = 0;i < bucket.length;i += 2) {
-        if (eq.equals(v, bucket[i])) {
-          newEntry = false;
-          bucket[i] = v;
-          break;
-        }
-      }
-      if (newEntry) {
-        bucket.push(k);
-        bucket.push(v);
-        this.size++;
-      }
-    }
-  };
-  types.TransitMap.prototype["set"] = types.TransitMap.prototype.set;
-  types.TransitMap.prototype.values = function() {
-    return new types.TransitMapIterator(this, types.VALUES);
-  };
-  types.TransitMap.prototype["values"] = types.TransitMap.prototype.values;
-  types.TransitMap.prototype.com$cognitect$transit$hashCode = function() {
-    if (this.hashCode === -1) {
-      this.hashCode = eq.hashMapLike(this);
-    }
-    return this.hashCode;
-  };
-  types.TransitMap.prototype.com$cognitect$transit$equals = function(other) {
-    return types.mapEquals(this, other);
-  };
-  types.map = function(arr, checkDups, hashMap) {
-    arr = arr || [];
-    checkDups = checkDups === false ? checkDups : true;
-    hashMap = hashMap === true ? hashMap : false;
-    if (!hashMap && arr.length <= types.ARRAY_MAP_THRESHOLD * 2) {
-      if (checkDups) {
-        var t = arr;
-        arr = [];
-        for (var i = 0;i < t.length;i += 2) {
-          var seen = false;
-          for (var j = 0;j < arr.length;j += 2) {
-            if (eq.equals(arr[j], t[i])) {
-              arr[j + 1] = t[i + 1];
-              seen = true;
-              break;
-            }
-          }
-          if (!seen) {
-            arr.push(t[i]);
-            arr.push(t[i + 1]);
-          }
-        }
-      }
-      return new types.TransitArrayMap(arr);
-    } else {
-      var map = {}, keys = [], size = 0;
-      for (var i = 0;i < arr.length;i += 2) {
-        var code = eq.hashCode(arr[i]), bucket = map[code];
-        if (bucket == null) {
-          keys.push(code);
-          map[code] = [arr[i], arr[i + 1]];
-          size++;
-        } else {
-          var newEntry = true;
-          for (var j = 0;j < bucket.length;j += 2) {
-            if (eq.equals(bucket[j], arr[i])) {
-              bucket[j + 1] = arr[i + 1];
-              newEntry = false;
-              break;
-            }
-          }
-          if (newEntry) {
-            bucket.push(arr[i]);
-            bucket.push(arr[i + 1]);
-            size++;
-          }
-        }
-      }
-      return new types.TransitMap(keys, map, size);
-    }
-  };
-  types.isArrayMap = function(x) {
-    return x instanceof types.TransitArrayMap;
-  };
-  types.isMap = function(x) {
-    return x instanceof types.TransitArrayMap || x instanceof types.TransitMap;
-  };
-  types.TransitSet = function(map) {
-    this.map = map;
-    this.size = map.size;
-  };
-  types.TransitSet.prototype.toString = function() {
-    return "[TransitSet]";
-  };
-  types.TransitSet.prototype.add = function(value) {
-    this.map.set(value, value);
-    this.size = this.map.size;
-  };
-  types.TransitSet.prototype["add"] = types.TransitSet.prototype.add;
-  types.TransitSet.prototype.clear = function() {
-    this.map = new types.TransitMap;
-    this.size = 0;
-  };
-  types.TransitSet.prototype["clear"] = types.TransitSet.prototype.clear;
-  types.TransitSet.prototype["delete"] = function(value) {
-    this.map["delete"](value);
-    this.size = this.map.size;
-  };
-  types.TransitSet.prototype.entries = function() {
-    return this.map.entries();
-  };
-  types.TransitSet.prototype["entries"] = types.TransitSet.prototype.entries;
-  types.TransitSet.prototype.forEach = function(iterator, thisArg) {
-    var self = this;
-    this.map.forEach(function(v, k, m) {
-      iterator(k, self);
-    });
-  };
-  types.TransitSet.prototype["forEach"] = types.TransitSet.prototype.forEach;
-  types.TransitSet.prototype.has = function(value) {
-    return this.map.has(value);
-  };
-  types.TransitSet.prototype["has"] = types.TransitSet.prototype.has;
-  types.TransitSet.prototype.keys = function() {
-    return this.map.keys();
-  };
-  types.TransitSet.prototype["keys"] = types.TransitSet.prototype.keys;
-  types.TransitSet.prototype.keySet = function() {
-    return this.map.keySet();
-  };
-  types.TransitSet.prototype["keySet"] = types.TransitSet.prototype.keySet;
-  types.TransitSet.prototype.values = function() {
-    return this.map.values();
-  };
-  types.TransitSet.prototype["values"] = types.TransitSet.prototype.values;
-  types.TransitSet.prototype.com$cognitect$transit$equals = function(other) {
-    if (other instanceof types.TransitSet) {
-      if (this.size === other.size) {
-        return eq.equals(this.map, other.map);
-      }
-    } else {
-      return false;
-    }
-  };
-  types.TransitSet.prototype.com$cognitect$transit$hashCode = function(other) {
-    return eq.hashCode(this.map);
-  };
-  types.set = function(arr) {
-    arr = arr || [];
-    var map = {}, keys = [], size = 0;
-    for (var i = 0;i < arr.length;i++) {
-      var code = eq.hashCode(arr[i]), vals = map[code];
-      if (vals == null) {
-        keys.push(code);
-        map[code] = [arr[i], arr[i]];
-        size++;
-      } else {
-        var newEntry = true;
-        for (var j = 0;j < vals.length;j += 2) {
-          if (eq.equals(vals[j], arr[i])) {
-            newEntry = false;
-            break;
-          }
-        }
-        if (newEntry) {
-          vals.push(arr[i]);
-          vals.push(arr[i]);
-          size++;
-        }
-      }
-    }
-    return new types.TransitSet(new types.TransitMap(keys, map, size));
-  };
-  types.isSet = function(x) {
-    return x instanceof types.TransitSet;
-  };
-  types.quoted = function(obj) {
-    return types.taggedValue("'", obj);
-  };
-  types.isQuoted = function(x) {
-    return x instanceof types.TaggedValue && x.tag === "'";
-  };
-  types.list = function(xs) {
-    return types.taggedValue("list", xs);
-  };
-  types.isList = function(x) {
-    return x instanceof types.List && x.tag === "list";
-  };
-  types.link = function(rep) {
-    return types.taggedValue("link", rep);
-  };
-  types.isLink = function(x) {
-    return x instanceof types.TaggedValue && x.tag === "link";
-  };
-  types.specialDouble = function(v) {
-    switch(v) {
-      case "-INF":
-        return-Infinity;
-      case "INF":
-        return Infinity;
-      case "NaN":
-        return NaN;
-      default:
-        throw new Error("Invalid special double value " + v);break;
-    }
-  };
-});
-goog.provide("com.cognitect.transit.delimiters");
-goog.scope(function() {
-  var delimiters = com.cognitect.transit.delimiters;
-  delimiters.ESC = "~";
-  delimiters.TAG = "#";
-  delimiters.SUB = "^";
-  delimiters.RES = "`";
-  delimiters.ESC_TAG = "~#";
-});
-goog.provide("com.cognitect.transit.caching");
-goog.require("com.cognitect.transit.delimiters");
-goog.scope(function() {
-  var caching = com.cognitect.transit.caching, d = com.cognitect.transit.delimiters;
-  caching.MIN_SIZE_CACHEABLE = 3;
-  caching.BASE_CHAR_IDX = 48;
-  caching.CACHE_CODE_DIGITS = 44;
-  caching.MAX_CACHE_ENTRIES = caching.CACHE_CODE_DIGITS * caching.CACHE_CODE_DIGITS;
-  caching.MAX_CACHE_SIZE = 4096;
-  caching.isCacheable = function(string, asMapKey) {
-    if (string.length > caching.MIN_SIZE_CACHEABLE) {
-      if (asMapKey) {
-        return true;
-      } else {
-        var c0 = string.charAt(0), c1 = string.charAt(1);
-        if (c0 === d.ESC) {
-          return c1 === ":" || c1 === "$" || c1 === "#";
-        } else {
-          return false;
-        }
-      }
-    } else {
-      return false;
-    }
-  };
-  caching.idxToCode = function(idx) {
-    var hi = Math.floor(idx / caching.CACHE_CODE_DIGITS), lo = idx % caching.CACHE_CODE_DIGITS, loc = String.fromCharCode(lo + caching.BASE_CHAR_IDX);
-    if (hi === 0) {
-      return d.SUB + loc;
-    } else {
-      return d.SUB + String.fromCharCode(hi + caching.BASE_CHAR_IDX) + loc;
-    }
-  };
-  caching.WriteCache = function() {
-    this.idx = 0;
-    this.gen = 0;
-    this.cacheSize = 0;
-    this.cache = {};
-  };
-  caching.WriteCache.prototype.write = function(string, asMapKey) {
-    if (caching.isCacheable(string, asMapKey)) {
-      if (this.cacheSize === caching.MAX_CACHE_SIZE) {
-        this.clear();
-        this.gen = 0;
-        this.cache = {};
-      } else {
-        if (this.idx === caching.MAX_CACHE_ENTRIES) {
-          this.clear();
-        }
-      }
-      var entry = this.cache[string];
-      if (entry == null) {
-        this.cache[string] = [caching.idxToCode(this.idx), this.gen];
-        this.idx++;
-        return string;
-      } else {
-        if (entry[1] != this.gen) {
-          entry[1] = this.gen;
-          entry[0] = caching.idxToCode(this.idx);
-          this.idx++;
-          return string;
-        } else {
-          return entry[0];
-        }
-      }
-    } else {
-      return string;
-    }
-  };
-  caching.WriteCache.prototype.clear = function() {
-    this.idx = 0;
-    this.gen++;
-  };
-  caching.writeCache = function() {
-    return new caching.WriteCache;
-  };
-  caching.isCacheCode = function(string) {
-    return string.charAt(0) === d.SUB && string.charAt(1) !== " ";
-  };
-  caching.codeToIdx = function(code) {
-    if (code.length === 2) {
-      return code.charCodeAt(1) - caching.BASE_CHAR_IDX;
-    } else {
-      var hi = (code.charCodeAt(1) - caching.BASE_CHAR_IDX) * caching.CACHE_CODE_DIGITS, lo = code.charCodeAt(2) - caching.BASE_CHAR_IDX;
-      return hi + lo;
-    }
-  };
-  caching.ReadCache = function() {
-    this.idx = 0;
-    this.cache = [];
-  };
-  caching.ReadCache.prototype.write = function(obj, asMapKey) {
-    if (this.idx == caching.MAX_CACHE_ENTRIES) {
-      this.idx = 0;
-    }
-    this.cache[this.idx] = obj;
-    this.idx++;
-    return obj;
-  };
-  caching.ReadCache.prototype.read = function(string, asMapKey) {
-    return this.cache[caching.codeToIdx(string)];
-  };
-  caching.ReadCache.prototype.clear = function() {
-    this.idx = 0;
-  };
-  caching.readCache = function() {
-    return new caching.ReadCache;
-  };
-});
-goog.provide("com.cognitect.transit.impl.decoder");
-goog.require("com.cognitect.transit.util");
-goog.require("com.cognitect.transit.delimiters");
-goog.require("com.cognitect.transit.caching");
-goog.require("com.cognitect.transit.types");
-goog.scope(function() {
-  var decoder = com.cognitect.transit.impl.decoder, util = com.cognitect.transit.util, d = com.cognitect.transit.delimiters, caching = com.cognitect.transit.caching, types = com.cognitect.transit.types;
-  decoder.Tag = function(s) {
-    this.str = s;
-  };
-  decoder.tag = function(s) {
-    return new decoder.Tag(s);
-  };
-  decoder.isTag = function(x) {
-    return x && x instanceof decoder.Tag;
-  };
-  decoder.isGroundHandler = function(handler) {
-    switch(handler) {
-      case "_":
-      ;
-      case "s":
-      ;
-      case "?":
-      ;
-      case "i":
-      ;
-      case "d":
-      ;
-      case "b":
-      ;
-      case "'":
-      ;
-      case "array":
-      ;
-      case "map":
-        return true;
-    }
-    return false;
-  };
-  decoder.Decoder = function(options) {
-    this.options = options || {};
-    this.handlers = {};
-    for (var h in this.defaults.handlers) {
-      this.handlers[h] = this.defaults.handlers[h];
-    }
-    for (var h in this.options["handlers"]) {
-      if (decoder.isGroundHandler(h)) {
-        throw new Error('Cannot override handler for ground type "' + h + '"');
-      }
-      this.handlers[h] = this.options["handlers"][h];
-    }
-    this.preferStrings = this.options["preferStrings"] != null ? this.options["preferStrings"] : this.defaults.preferStrings;
-    this.preferBuffers = this.options["preferBuffers"] != null ? this.options["preferBuffers"] : this.defaults.preferBuffers;
-    this.defaultHandler = this.options["defaultHandler"] || this.defaults.defaultHandler;
-    this.mapBuilder = this.options["mapBuilder"];
-    this.arrayBuilder = this.options["arrayBuilder"];
-  };
-  decoder.Decoder.prototype.defaults = {handlers:{"_":function(v, d) {
-    return types.nullValue();
-  }, "?":function(v, d) {
-    return types.boolValue(v);
-  }, "b":function(v, d) {
-    return types.binary(v, d);
-  }, "i":function(v, d) {
-    return types.intValue(v);
-  }, "n":function(v, d) {
-    return types.bigInteger(v);
-  }, "d":function(v, d) {
-    return types.floatValue(v);
-  }, "f":function(v, d) {
-    return types.bigDecimalValue(v);
-  }, "c":function(v, d) {
-    return types.charValue(v);
-  }, ":":function(v, d) {
-    return types.keyword(v);
-  }, "$":function(v, d) {
-    return types.symbol(v);
-  }, "r":function(v, d) {
-    return types.uri(v);
-  }, "z":function(v, d) {
-    return types.specialDouble(v);
-  }, "'":function(v, d) {
-    return v;
-  }, "m":function(v, d) {
-    return types.date(v);
-  }, "t":function(v, d) {
-    return types.verboseDate(v);
-  }, "u":function(v, d) {
-    return types.uuid(v);
-  }, "set":function(v, d) {
-    return types.set(v);
-  }, "list":function(v, d) {
-    return types.list(v);
-  }, "link":function(v, d) {
-    return types.link(v);
-  }, "cmap":function(v, d) {
-    return types.map(v, false);
-  }}, defaultHandler:function(c, val) {
-    return types.taggedValue(c, val);
-  }, preferStrings:true, preferBuffers:true};
-  decoder.Decoder.prototype.decode = function(node, cache, asMapKey, tagValue) {
-    if (node == null) {
-      return null;
-    }
-    var t = typeof node;
-    switch(t) {
-      case "string":
-        return this.decodeString(node, cache, asMapKey, tagValue);
-        break;
-      case "object":
-        if (util.isArray(node)) {
-          if (node[0] === "^ ") {
-            return this.decodeArrayHash(node, cache, asMapKey, tagValue);
-          } else {
-            return this.decodeArray(node, cache, asMapKey, tagValue);
-          }
-        } else {
-          return this.decodeHash(node, cache, asMapKey, tagValue);
-        }
-        break;
-    }
-    return node;
-  };
-  decoder.Decoder.prototype["decode"] = decoder.Decoder.prototype.decode;
-  decoder.Decoder.prototype.decodeString = function(string, cache, asMapKey, tagValue) {
-    if (caching.isCacheable(string, asMapKey)) {
-      var val = this.parseString(string, cache, false);
-      if (cache) {
-        cache.write(val, asMapKey);
-      }
-      return val;
-    } else {
-      if (caching.isCacheCode(string)) {
-        return cache.read(string, asMapKey);
-      } else {
-        return this.parseString(string, cache, asMapKey);
-      }
-    }
-  };
-  decoder.Decoder.prototype.decodeHash = function(hash, cache, asMapKey, tagValue) {
-    var ks = util.objectKeys(hash), key = ks[0], tag = ks.length == 1 ? this.decode(key, cache, false, false) : null;
-    if (decoder.isTag(tag)) {
-      var val = hash[key], handler = this.handlers[tag.str];
-      if (handler != null) {
-        return handler(this.decode(val, cache, false, true), this);
-      } else {
-        return types.taggedValue(tag.str, this.decode(val, cache, false, false));
-      }
-    } else {
-      if (this.mapBuilder) {
-        if (ks.length < types.SMALL_ARRAY_MAP_THRESHOLD * 2 && this.mapBuilder.fromArray) {
-          var nodep = [];
-          for (var i = 0;i < ks.length;i++) {
-            var strKey = ks[i];
-            nodep.push(this.decode(strKey, cache, true, false));
-            nodep.push(this.decode(hash[strKey], cache, false, false));
-          }
-          return this.mapBuilder.fromArray(nodep, hash);
-        } else {
-          var ret = this.mapBuilder.init(hash);
-          for (var i = 0;i < ks.length;i++) {
-            var strKey = ks[i];
-            ret = this.mapBuilder.add(ret, this.decode(strKey, cache, true, false), this.decode(hash[strKey], cache, false, false), hash);
-          }
-          return this.mapBuilder.finalize(ret, hash);
-        }
-      } else {
-        var nodep = [];
-        for (var i = 0;i < ks.length;i++) {
-          var strKey = ks[i];
-          nodep.push(this.decode(strKey, cache, true, false));
-          nodep.push(this.decode(hash[strKey], cache, false, false));
-        }
-        return types.map(nodep, false);
-      }
-    }
-  };
-  decoder.Decoder.prototype.decodeArrayHash = function(node, cache, asMapKey, tagValue) {
-    if (this.mapBuilder) {
-      if (node.length < types.SMALL_ARRAY_MAP_THRESHOLD * 2 + 1 && this.mapBuilder.fromArray) {
-        var nodep = [];
-        for (var i = 1;i < node.length;i += 2) {
-          nodep.push(this.decode(node[i], cache, true, false));
-          nodep.push(this.decode(node[i + 1], cache, false, false));
-        }
-        return this.mapBuilder.fromArray(nodep, node);
-      } else {
-        var ret = this.mapBuilder.init(node);
-        for (var i = 1;i < node.length;i += 2) {
-          ret = this.mapBuilder.add(ret, this.decode(node[i], cache, true, false), this.decode(node[i + 1], cache, false, false), node);
-        }
-        return this.mapBuilder.finalize(ret, node);
-      }
-    } else {
-      var nodep = [];
-      for (var i = 1;i < node.length;i += 2) {
-        nodep.push(this.decode(node[i], cache, true, false));
-        nodep.push(this.decode(node[i + 1], cache, false, false));
-      }
-      return types.map(nodep, false);
-    }
-  };
-  decoder.Decoder.prototype.decodeArray = function(node, cache, asMapKey, tagValue) {
-    if (tagValue) {
-      var ret = [];
-      for (var i = 0;i < node.length;i++) {
-        ret.push(this.decode(node[i], cache, asMapKey, false));
-      }
-      return ret;
-    } else {
-      var cacheIdx = cache && cache.idx;
-      if (node.length === 2 && typeof node[0] === "string") {
-        var tag = this.decode(node[0], cache, false, false);
-        if (decoder.isTag(tag)) {
-          var val = node[1], handler = this.handlers[tag.str];
-          if (handler != null) {
-            var ret = handler(this.decode(val, cache, asMapKey, true), this);
-            return ret;
-          } else {
-            return types.taggedValue(tag.str, this.decode(val, cache, asMapKey, false));
-          }
-        }
-      }
-      if (cache && cacheIdx != cache.idx) {
-        cache.idx = cacheIdx;
-      }
-      if (this.arrayBuilder) {
-        if (node.length <= 32 && this.arrayBuilder.fromArray) {
-          var arr = [];
-          for (var i = 0;i < node.length;i++) {
-            arr.push(this.decode(node[i], cache, asMapKey, false));
-          }
-          return this.arrayBuilder.fromArray(arr, node);
-        } else {
-          var ret = this.arrayBuilder.init();
-          for (var i = 0;i < node.length;i++) {
-            ret = this.arrayBuilder.add(ret, this.decode(node[i], cache, asMapKey, false), node);
-          }
-          return this.arrayBuilder.finalize(ret, node);
-        }
-      } else {
-        var ret = [];
-        for (var i = 0;i < node.length;i++) {
-          ret.push(this.decode(node[i], cache, asMapKey, false));
-        }
-        return ret;
-      }
-    }
-  };
-  decoder.Decoder.prototype.parseString = function(string, cache, asMapKey) {
-    if (string.charAt(0) === d.ESC) {
-      var c = string.charAt(1);
-      if (c === d.ESC || c === d.SUB || c === d.RES) {
-        return string.substring(1);
-      } else {
-        if (c === d.TAG) {
-          return decoder.tag(string.substring(2));
-        } else {
-          var handler = this.handlers[c];
-          if (handler == null) {
-            return this.defaultHandler(c, string.substring(2));
-          } else {
-            return handler(string.substring(2), this);
-          }
-        }
-      }
-    } else {
-      return string;
-    }
-  };
-  decoder.decoder = function(options) {
-    return new decoder.Decoder(options);
-  };
-});
-goog.provide("com.cognitect.transit.impl.reader");
-goog.require("com.cognitect.transit.impl.decoder");
-goog.require("com.cognitect.transit.caching");
-goog.scope(function() {
-  var reader = com.cognitect.transit.impl.reader, decoder = com.cognitect.transit.impl.decoder, caching = com.cognitect.transit.caching;
-  reader.JSONUnmarshaller = function(opts) {
-    this.decoder = new decoder.Decoder(opts);
-  };
-  reader.JSONUnmarshaller.prototype.unmarshal = function(str, cache) {
-    return this.decoder.decode(JSON.parse(str), cache);
-  };
-  reader.Reader = function(unmarshaller, options) {
-    this.unmarshaller = unmarshaller;
-    this.options = options || {};
-    this.cache = this.options["cache"] ? this.options["cache"] : new caching.ReadCache;
-  };
-  reader.Reader.prototype.read = function(str) {
-    var ret = this.unmarshaller.unmarshal(str, this.cache);
-    this.cache.clear();
-    return ret;
-  };
-  reader.Reader.prototype["read"] = reader.Reader.prototype.read;
-});
 goog.provide("com.cognitect.transit.handlers");
 goog.require("com.cognitect.transit.util");
 goog.require("com.cognitect.transit.types");
@@ -33403,7 +33084,6 @@ if (typeof chat_client.connection.statuses !== "undefined") {
 } else {
   chat_client.connection.statuses = new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "connecting", "connecting", -1347943866), new cljs.core.Keyword(null, "open", "open", -1763596448), new cljs.core.Keyword(null, "closing", "closing", -1862893890), new cljs.core.Keyword(null, "closed", "closed", -919675359), new cljs.core.Keyword(null, "init", "init", -1875481434)], null);
 }
-chat_client.connection.channels = reagent.core.atom.call(null, cljs.core.PersistentVector.EMPTY);
 chat_client.connection.handle_message = function() {
   var method_table__4520__auto__ = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
   var prefer_table__4521__auto__ = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
@@ -33420,20 +33100,49 @@ cljs.core._add_method.call(null, chat_client.connection.handle_message, "Channel
   var chan_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174)], null), global_app_state);
   var names = cljs.core.get.call(null, msg, "names");
   var chan_tbl = cljs.core.zipmap.call(null, names, cljs.core.mapv.call(null, function(chan_cur, names) {
-    return function(p1__7723_SHARP_) {
-      return cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null, "name", "name", 1843675177)], [p1__7723_SHARP_]);
+    return function(p1__5738_SHARP_) {
+      return cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null, "name", "name", 1843675177)], [p1__5738_SHARP_]);
     };
   }(chan_cur, names), names));
-  cljs.core.reset_BANG_.call(null, chan_cur, chan_tbl);
-  console.log("New channels: ", cljs.core.pr_str.call(null, cljs.core.deref.call(null, chan_cur)));
-  return cljs.core.deref.call(null, chan_cur);
+  return cljs.core.reset_BANG_.call(null, chan_cur, chan_tbl);
 });
 cljs.core._add_method.call(null, chat_client.connection.handle_message, "JoinChannel", function(global_app_state, msg) {
   var ch_name = cljs.core.get.call(null, msg, "name");
   var ch_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174), ch_name], null), global_app_state);
-  console.log("Joined on the channel: ", cljs.core.pr_str.call(null, msg));
-  cljs.core.reset_BANG_.call(null, ch_cur, new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "name", "name", 1843675177), ch_name, new cljs.core.Keyword(null, "users", "users", -713552705), cljs.core.get.call(null, msg, "users"), new cljs.core.Keyword(null, "messages", "messages", 345434482), cljs.core.get.call(null, msg, "messages")], null));
-  return cljs.core.deref.call(null, ch_cur);
+  return cljs.core.reset_BANG_.call(null, ch_cur, new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "name", "name", 1843675177), ch_name, new cljs.core.Keyword(null, "users", "users", -713552705), cljs.core.vec.call(null, cljs.core.get.call(null, msg, "users")), new cljs.core.Keyword(null, "messages", "messages", 345434482), cljs.core.vec.call(null, cljs.core.get.call(null, msg, "messages", cljs.core.PersistentVector.EMPTY))], null));
+});
+cljs.core._add_method.call(null, chat_client.connection.handle_message, "Joined", function(global_app_state, msg) {
+  var ch_name = cljs.core.get.call(null, msg, "channel");
+  var new_user = cljs.core.get.call(null, msg, "user");
+  var channel_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174), ch_name], null), global_app_state);
+  return cljs.core.swap_BANG_.call(null, channel_cur, function(ch_name, new_user, channel_cur) {
+    return function(xs) {
+      return cljs.core.assoc.call(null, xs, new cljs.core.Keyword(null, "users", "users", -713552705), cljs.core.vec.call(null, cljs.core.cons.call(null, new_user, cljs.core.get.call(null, xs, new cljs.core.Keyword(null, "users", "users", -713552705), cljs.core.PersistentVector.EMPTY))));
+    };
+  }(ch_name, new_user, channel_cur));
+});
+cljs.core._add_method.call(null, chat_client.connection.handle_message, "Left", function(global_app_state, msg) {
+  var ch_name = cljs.core.get.call(null, msg, "channel");
+  var old_user = cljs.core.get.call(null, msg, "user");
+  var channel_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174), ch_name], null), global_app_state);
+  return cljs.core.swap_BANG_.call(null, global_app_state, function(ch_name, old_user, channel_cur) {
+    return function(xs) {
+      return cljs.core.vec.call(null, cljs.core.assoc.call(null, xs, new cljs.core.Keyword(null, "users", "users", -713552705), cljs.core.filter.call(null, function(ch_name, old_user, channel_cur) {
+        return function(p1__5739_SHARP_) {
+          return cljs.core._EQ_.call(null, cljs.core.get.call(null, old_user, "name"), cljs.core.get.call(null, p1__5739_SHARP_, "name"));
+        };
+      }(ch_name, old_user, channel_cur), xs)));
+    };
+  }(ch_name, old_user, channel_cur));
+});
+cljs.core._add_method.call(null, chat_client.connection.handle_message, "Msg", function(global_app_state, msg) {
+  var ch_name = cljs.core.get.call(null, msg, "channel");
+  var channel_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174), ch_name], null), global_app_state);
+  return cljs.core.swap_BANG_.call(null, channel_cur, function(ch_name, channel_cur) {
+    return function(xs) {
+      return cljs.core.assoc.call(null, xs, new cljs.core.Keyword(null, "messages", "messages", 345434482), cljs.core.vec.call(null, cljs.core.conj.call(null, (new cljs.core.Keyword(null, "messages", "messages", 345434482)).cljs$core$IFn$_invoke$arity$1(xs), cljs.core.get.call(null, msg, "message"))));
+    };
+  }(ch_name, channel_cur));
 });
 cljs.core._add_method.call(null, chat_client.connection.handle_message, new cljs.core.Keyword(null, "default", "default", -1987822328), function(_, msg) {
   return console.error("Got unknown message", cljs.core.pr_str.call(null, msg));
@@ -33478,6 +33187,86 @@ chat_client.connection.create = function create(global_app_state) {
   ws.onmessage = on_message;
   ws.onclose = on_close;
   return ws;
+};
+goog.provide("chat_client.components.status");
+goog.require("cljs.core");
+goog.require("reagent.core");
+goog.require("reagent.core");
+goog.require("reagent.core");
+chat_client.components.status.render = function render(global_app_state) {
+  var conn_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "connection", "connection", -123599300)], null), global_app_state);
+  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel panel-info"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", 
+  -2030961996), "panel-heading"], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h3", "h3", 2067611163), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-title"], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
+  "class", "class", -2030961996), "icon mdi-communication-phone pull-left"], null)], null), "Connection status"], null)], null), new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-body"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, 
+  "p", "p", 151049309), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "strong", "strong", 269529E3), "status: "], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "status", "status", -1997798413)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, conn_cur)))], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), 
+  new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "strong", "strong", 269529E3), "url: "], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "url", "url", 276297046)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, conn_cur)))], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), new cljs.core.PersistentVector(null, 
+  2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "strong", "strong", 269529E3), "username: "], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "username", "username", 1605666410)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, conn_cur)))], null)], null)], null);
+};
+goog.provide("chat_client.components.users");
+goog.require("cljs.core");
+goog.require("reagent.core");
+goog.require("reagent.core");
+goog.require("reagent.core");
+chat_client.components.users.make_user_item = function make_user_item(user) {
+  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item user-list-item"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
+  "class", "class", -2030961996), "row-action-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-social-person"], null), " "], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 
+  1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "least-content"], null), "active"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h5", "h5", -1829156625), 
+  new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item-heading"], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.get.call(null, user, "name"))], null)], null)], null);
+};
+chat_client.components.users.make_user_list = function make_user_list(channel_cur) {
+  return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group user-list"], null), function() {
+    var iter__4379__auto__ = function iter__5379(s__5380) {
+      return new cljs.core.LazySeq(null, function() {
+        var s__5380__$1 = s__5380;
+        while (true) {
+          var temp__4126__auto__ = cljs.core.seq.call(null, s__5380__$1);
+          if (temp__4126__auto__) {
+            var s__5380__$2 = temp__4126__auto__;
+            if (cljs.core.chunked_seq_QMARK_.call(null, s__5380__$2)) {
+              var c__4377__auto__ = cljs.core.chunk_first.call(null, s__5380__$2);
+              var size__4378__auto__ = cljs.core.count.call(null, c__4377__auto__);
+              var b__5382 = cljs.core.chunk_buffer.call(null, size__4378__auto__);
+              if (function() {
+                var i__5381 = 0;
+                while (true) {
+                  if (i__5381 < size__4378__auto__) {
+                    var user = cljs.core._nth.call(null, c__4377__auto__, i__5381);
+                    cljs.core.chunk_append.call(null, b__5382, chat_client.components.users.make_user_item.call(null, user));
+                    var G__5383 = i__5381 + 1;
+                    i__5381 = G__5383;
+                    continue;
+                  } else {
+                    return true;
+                  }
+                  break;
+                }
+              }()) {
+                return cljs.core.chunk_cons.call(null, cljs.core.chunk.call(null, b__5382), iter__5379.call(null, cljs.core.chunk_rest.call(null, s__5380__$2)));
+              } else {
+                return cljs.core.chunk_cons.call(null, cljs.core.chunk.call(null, b__5382), null);
+              }
+            } else {
+              var user = cljs.core.first.call(null, s__5380__$2);
+              return cljs.core.cons.call(null, chat_client.components.users.make_user_item.call(null, user), iter__5379.call(null, cljs.core.rest.call(null, s__5380__$2)));
+            }
+          } else {
+            return null;
+          }
+          break;
+        }
+      }, null, null);
+    };
+    return iter__4379__auto__.call(null, (new cljs.core.Keyword(null, "users", "users", -713552705)).cljs$core$IFn$_invoke$arity$1(channel_cur));
+  }()], null);
+};
+chat_client.components.users.render = function render(global_app_state) {
+  var current_channel = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935)], null), global_app_state);
+  var current_channel_name = "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, current_channel));
+  var channel_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174), current_channel_name], null), global_app_state);
+  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel panel-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", 
+  -2030961996), "panel-heading"], null), new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h3", "h3", 2067611163), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-title"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
+  "class", "class", -2030961996), "icon mdi-social-people"], null), " "], null), "Users on the channel ", new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "strong", "strong", 269529E3), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, current_channel))], null)], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), 
+  new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-body"], null), chat_client.components.users.make_user_list.call(null, cljs.core.deref.call(null, channel_cur))], null)], null);
 };
 goog.provide("chat_client.components.modal");
 goog.require("cljs.core");
@@ -33546,105 +33335,376 @@ chat_client.components.modal.render = function render(global_app_state) {
     };
   }(conn_cur)], null), "Connect"], null)], null)], null)], null)], null);
 };
-goog.provide("chat_client.core");
+goog.provide("chat_client.components.chat");
 goog.require("cljs.core");
+goog.require("chat_client.utils");
 goog.require("reagent.core");
-goog.require("chat_client.components.chat");
-goog.require("chat_client.components.users");
-goog.require("chat_client.components.chat");
-goog.require("chat_client.components.channels");
-goog.require("chat_client.components.modal");
+goog.require("chat_client.utils");
+goog.require("chat_client.connection");
+goog.require("chat_client.connection");
 goog.require("reagent.core");
-goog.require("chat_client.components.channels");
-goog.require("chat_client.components.status");
-goog.require("chat_client.components.users");
-goog.require("chat_client.components.status");
-goog.require("chat_client.components.modal");
-chat_client.core.$ = function() {
-  var $ = null;
-  var $__1 = function(selector) {
-    return $.call(null, document, selector);
+goog.require("reagent.core");
+chat_client.components.chat.$ = chat_client.utils.by_selector;
+chat_client.components.chat.make_message_item = function() {
+  var method_table__4520__auto__ = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
+  var prefer_table__4521__auto__ = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
+  var method_cache__4522__auto__ = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
+  var cached_hierarchy__4523__auto__ = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
+  var hierarchy__4524__auto__ = cljs.core.get.call(null, cljs.core.PersistentArrayMap.EMPTY, new cljs.core.Keyword(null, "hierarchy", "hierarchy", -1053470341), cljs.core.get_global_hierarchy.call(null));
+  return new cljs.core.MultiFn("make-message-item", function(method_table__4520__auto__, prefer_table__4521__auto__, method_cache__4522__auto__, cached_hierarchy__4523__auto__, hierarchy__4524__auto__) {
+    return function(msg) {
+      return cljs.core.get.call(null, msg, "$variant");
+    };
+  }(method_table__4520__auto__, prefer_table__4521__auto__, method_cache__4522__auto__, cached_hierarchy__4523__auto__, hierarchy__4524__auto__), new cljs.core.Keyword(null, "default", "default", -1987822328), hierarchy__4524__auto__, method_table__4520__auto__, prefer_table__4521__auto__, method_cache__4522__auto__, cached_hierarchy__4523__auto__);
+}();
+cljs.core._add_method.call(null, chat_client.components.chat.make_message_item, "Joined", function(msg) {
+  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-item list-group-item", new cljs.core.Keyword(null, "style", "style", -496642736), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "background-color", "background-color", 570434026), "floralwhite"], null)], null), new cljs.core.PersistentVector(null, 
+  3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-action-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-file-folder"], null), 
+  " "], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", 
+  "class", -2030961996), "least-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "small", "small", 2133478704), " ", chat_client.utils.time_ago.call(null, new moment)], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h5", "h5", -1829156625), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), 
+  "list-group-item-heading"], null), "user " + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.get_in.call(null, msg, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, ["user", "name"], null))) + " joined with the channel"], null)], null)], null);
+});
+cljs.core._add_method.call(null, chat_client.components.chat.make_message_item, "Left", function(msg) {
+  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-item list-group-item btn-material-bluegrey"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
+  "class", "class", -2030961996), "row-action-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-file-folder"], null), " "], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 
+  1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "least-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "small", "small", 2133478704), " ", 
+  chat_client.utils.time_ago.call(null, new moment)], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h5", "h5", -1829156625), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item-heading"], null), "User" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.get_in.call(null, msg, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, 
+  ["user", "name"], null))) + " left the room."], null)], null)], null);
+});
+cljs.core._add_method.call(null, chat_client.components.chat.make_message_item, new cljs.core.Keyword(null, "default", "default", -1987822328), function(msg) {
+  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-item list-group-item"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", 
+  "class", -2030961996), "row-picture"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-social-person"], null), " "], null)], null), new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 
+  1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "least-content"], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "small", "small", 2133478704), chat_client.utils.time_ago.call(null, 
+  cljs.core.get.call(null, msg, "stamp"))], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item-heading"], null), cljs.core.get_in.call(null, msg, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, ["user", "name"], null), "unknown")], null), new cljs.core.PersistentVector(null, 
+  3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item-text"], null), " \x3e " + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.get.call(null, msg, "text"))], null)], null)], null);
+});
+chat_client.components.chat.scrolled_to_end = function scrolled_to_end(elems) {
+  return cljs.core.with_meta.call(null, function() {
+    return elems;
+  }, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "component-did-mount", "component-did-mount", -1126910518), function(p1__6569_SHARP_) {
+    return function() {
+      var el = reagent.core.dom_node.call(null, p1__6569_SHARP_);
+      var parent_el = el.parentNode;
+      console.debug("Scrolled component to end ...");
+      return parent_el.scrollTop = parent_el.scrollHeight;
+    }().call(null);
+  }], null));
+};
+chat_client.components.chat.make_chat_window = function make_chat_window(global_app_state) {
+  var chat_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339)], null), global_app_state);
+  var active_channel = (new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, chat_cur));
+  var current_chat = cljs.core.get_in.call(null, cljs.core.deref.call(null, chat_cur), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "channels", "channels", 1132759174), active_channel], null));
+  var chat_msgs = cljs.core.map.call(null, function(chat_cur, active_channel, current_chat) {
+    return function(p1__6570_SHARP_) {
+      return chat_client.components.chat.make_message_item.call(null, p1__6570_SHARP_);
+    };
+  }(chat_cur, active_channel, current_chat), (new cljs.core.Keyword(null, "messages", "messages", 345434482)).cljs$core$IFn$_invoke$arity$1(current_chat));
+  return new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-messages-container"], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "a", "a", -2123407586), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "name", "name", 
+  1843675177), "chat-list-start"], null)], null), cljs.core.empty_QMARK_.call(null, chat_msgs) ? new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-item"], null), "No messages."], null) : new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [chat_client.components.chat.scrolled_to_end.call(null, 
+  new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group"], null), chat_msgs], null))], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "a", "a", -2123407586), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "name", 
+  "name", 1843675177), "chat-list-end"], null)], null)], null);
+};
+chat_client.components.chat.make_chat_form = function make_chat_form(global_app_state) {
+  var active_channel = cljs.core.get_in.call(null, cljs.core.deref.call(null, global_app_state), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935)], null));
+  var msg_cur = cljs.core.atom.call(null, "");
+  var send_message = function(active_channel, msg_cur) {
+    return function(msg) {
+      var temp__4124__auto__ = cljs.core.get_in.call(null, cljs.core.deref.call(null, global_app_state), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "connection", "connection", -123599300), new cljs.core.Keyword(null, "socket", "socket", 59137063)], null));
+      if (cljs.core.truth_(temp__4124__auto__)) {
+        var ws_socket = temp__4124__auto__;
+        return chat_client.connection.send_BANG_.call(null, ws_socket, new cljs.core.PersistentArrayMap(null, 3, ["$variant", "Msg", "channel", active_channel, "message", msg], null));
+      } else {
+        return console.error("Not connected - cant send message.");
+      }
+    };
+  }(active_channel, msg_cur);
+  return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-form-container"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "form", "form", -1624062471), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", 
+  "class", -2030961996), "form-horizontal"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "fieldset", "fieldset", -1949770816), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "form-group"], null), new cljs.core.PersistentVector(null, 
+  3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "label", "label", 1718410804), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "for", "for", -1323786319), "new-message-input", new cljs.core.Keyword(null, "class", "class", -2030961996), "col-lg-2 control-label"], null), "New message:"], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 
+  1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "col-lg-10"], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "textarea", "textarea", -650375824), new cljs.core.PersistentArrayMap(null, 6, [new cljs.core.Keyword(null, "id", "id", -1388402092), "new-message-input", new cljs.core.Keyword(null, "name", "name", 1843675177), "new-message-input", new cljs.core.Keyword(null, "class", "class", -2030961996), "form-control", 
+  new cljs.core.Keyword(null, "rows", "rows", 850049680), 3, new cljs.core.Keyword(null, "defaultValue", "defaultValue", -586131910), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, msg_cur)), new cljs.core.Keyword(null, "on-change", "on-change", -732046149), function(active_channel, msg_cur, send_message) {
+    return function(ev) {
+      return cljs.core.reset_BANG_.call(null, msg_cur, ev.target.value);
+    };
+  }(active_channel, msg_cur, send_message)], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "span", "span", 1394872991), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "help-block"], null), "Type your message and press `ENTER` to send your message."], null)], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, 
+  "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "form-group"], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "col-lg-10 col-lg-offset-2"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, 
+  [new cljs.core.Keyword(null, "button", "button", 1456579943), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "class", "class", -2030961996), "btn btn-default", new cljs.core.Keyword(null, "on-click", "on-click", 1632826543), function(active_channel, msg_cur, send_message) {
+    return function(ev) {
+      ev.preventDefault();
+      return cljs.core.reset_BANG_.call(null, msg_cur, "");
+    };
+  }(active_channel, msg_cur, send_message)], null), "Clear"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "button", "button", 1456579943), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "class", "class", -2030961996), "btn btn-primary", new cljs.core.Keyword(null, "on-click", "on-click", 1632826543), function(active_channel, msg_cur, send_message) {
+    return function(ev) {
+      ev.preventDefault();
+      send_message.call(null, cljs.core.deref.call(null, msg_cur));
+      return cljs.core.reset_BANG_.call(null, msg_cur, "");
+    };
+  }(active_channel, msg_cur, send_message), new cljs.core.Keyword(null, "type", "type", 1174270348), "button"], null), "Send message"], null)], null)], null)], null)], null)], null);
+};
+chat_client.components.chat.render = function render(global_app_state) {
+  var chat_dt = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339)], null), global_app_state);
+  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel panel-success"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", 
+  -2030961996), "panel-heading"], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h3", "h3", 2067611163), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-title"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
+  "class", "class", -2030961996), "icon mdi-action-speaker-notes"], null), " "], null), "Chat"], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-body", new cljs.core.Keyword(null, "style", "style", -496642736), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "height", 
+  "height", 1025178622), "100%"], null)], null), chat_client.components.chat.make_chat_window.call(null, global_app_state), chat_client.components.chat.make_chat_form.call(null, global_app_state)], null)], null);
+};
+goog.provide("reagent.cursor");
+goog.require("cljs.core");
+reagent.cursor.RCursor = function(path, ratom) {
+  this.path = path;
+  this.ratom = ratom;
+  this.cljs$lang$protocol_mask$partition0$ = 2153938944;
+  this.cljs$lang$protocol_mask$partition1$ = 114690;
+};
+reagent.cursor.RCursor.cljs$lang$type = true;
+reagent.cursor.RCursor.cljs$lang$ctorStr = "reagent.cursor/RCursor";
+reagent.cursor.RCursor.cljs$lang$ctorPrWriter = function(this__4217__auto__, writer__4218__auto__, opt__4219__auto__) {
+  return cljs.core._write.call(null, writer__4218__auto__, "reagent.cursor/RCursor");
+};
+reagent.cursor.RCursor.prototype.cljs$core$IHash$_hash$arity$1 = function(this$) {
+  var self__ = this;
+  var this$__$1 = this;
+  return goog.getUid(this$__$1);
+};
+reagent.cursor.RCursor.prototype.cljs$core$IWatchable$_notify_watches$arity$3 = function(this$, oldval, newval) {
+  var self__ = this;
+  var this$__$1 = this;
+  return cljs.core._notify_watches.call(null, self__.ratom, oldval, newval);
+};
+reagent.cursor.RCursor.prototype.cljs$core$IWatchable$_add_watch$arity$3 = function(this$, key, f) {
+  var self__ = this;
+  var this$__$1 = this;
+  return cljs.core._add_watch.call(null, self__.ratom, key, f);
+};
+reagent.cursor.RCursor.prototype.cljs$core$IWatchable$_remove_watch$arity$2 = function(this$, key) {
+  var self__ = this;
+  var this$__$1 = this;
+  return cljs.core._remove_watch.call(null, self__.ratom, key);
+};
+reagent.cursor.RCursor.prototype.cljs$core$IPrintWithWriter$_pr_writer$arity$3 = function(a, writer, opts) {
+  var self__ = this;
+  var a__$1 = this;
+  cljs.core._write.call(null, writer, "#\x3cCursor: ");
+  cljs.core.pr_writer.call(null, self__.path, writer, opts);
+  cljs.core._write.call(null, writer, " ");
+  cljs.core.pr_writer.call(null, self__.ratom, writer, opts);
+  return cljs.core._write.call(null, writer, "\x3e");
+};
+reagent.cursor.RCursor.prototype.cljs$core$IMeta$_meta$arity$1 = function(_) {
+  var self__ = this;
+  var ___$1 = this;
+  return cljs.core._meta.call(null, self__.ratom);
+};
+reagent.cursor.RCursor.prototype.cljs$core$ISwap$_swap_BANG_$arity$2 = function(a, f) {
+  var self__ = this;
+  var a__$1 = this;
+  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.update_in, self__.path, f);
+};
+reagent.cursor.RCursor.prototype.cljs$core$ISwap$_swap_BANG_$arity$3 = function(a, f, x) {
+  var self__ = this;
+  var a__$1 = this;
+  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.update_in, self__.path, f, x);
+};
+reagent.cursor.RCursor.prototype.cljs$core$ISwap$_swap_BANG_$arity$4 = function(a, f, x, y) {
+  var self__ = this;
+  var a__$1 = this;
+  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.update_in, self__.path, f, x, y);
+};
+reagent.cursor.RCursor.prototype.cljs$core$ISwap$_swap_BANG_$arity$5 = function(a, f, x, y, more) {
+  var self__ = this;
+  var a__$1 = this;
+  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.update_in, self__.path, function(a__$1) {
+    return function(v) {
+      return cljs.core.apply.call(null, f, v, x, y, more);
+    };
+  }(a__$1));
+};
+reagent.cursor.RCursor.prototype.cljs$core$IReset$_reset_BANG_$arity$2 = function(a, new_value) {
+  var self__ = this;
+  var a__$1 = this;
+  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.assoc_in, self__.path, new_value);
+};
+reagent.cursor.RCursor.prototype.cljs$core$IDeref$_deref$arity$1 = function(this$) {
+  var self__ = this;
+  var this$__$1 = this;
+  return cljs.core.get_in.call(null, cljs.core.deref.call(null, self__.ratom), self__.path);
+};
+reagent.cursor.RCursor.prototype.cljs$core$IEquiv$_equiv$arity$2 = function(o, other) {
+  var self__ = this;
+  var o__$1 = this;
+  return o__$1 === other;
+};
+reagent.cursor.__GT_RCursor = function __GT_RCursor(path, ratom) {
+  return new reagent.cursor.RCursor(path, ratom);
+};
+reagent.cursor.cursor = function() {
+  var cursor = null;
+  var cursor__1 = function(path) {
+    return function(ra) {
+      return cursor.call(null, path, ra);
+    };
   };
-  var $__2 = function(doc_node, selector) {
-    return doc_node.querySelector("" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(selector));
+  var cursor__2 = function(path, ra) {
+    return new reagent.cursor.RCursor(path, ra);
   };
-  $ = function(doc_node, selector) {
+  cursor = function(path, ra) {
     switch(arguments.length) {
       case 1:
-        return $__1.call(this, doc_node);
+        return cursor__1.call(this, path);
       case 2:
-        return $__2.call(this, doc_node, selector);
+        return cursor__2.call(this, path, ra);
     }
     throw new Error("Invalid arity: " + arguments.length);
   };
-  $.cljs$core$IFn$_invoke$arity$1 = $__1;
-  $.cljs$core$IFn$_invoke$arity$2 = $__2;
-  return $;
+  cursor.cljs$core$IFn$_invoke$arity$1 = cursor__1;
+  cursor.cljs$core$IFn$_invoke$arity$2 = cursor__2;
+  return cursor;
 }();
+goog.provide("chat_client.components.channels");
+goog.require("cljs.core");
+goog.require("reagent.cursor");
+goog.require("reagent.cursor");
+chat_client.components.channels.make_channel_item = function make_channel_item(channel) {
+  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "channel-list-item list-group-item"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
+  "class", "class", -2030961996), "row-action-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-action-group-work material-blue"], null), " "], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), 
+  new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h5", "h5", -1829156625), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item-heading"], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "name", "name", 1843675177)).cljs$core$IFn$_invoke$arity$1(channel))], 
+  null)], null)], null);
+};
+chat_client.components.channels.render = function render(global_app_state) {
+  var cur_path = new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174)], null);
+  var channels_cur = reagent.cursor.cursor.call(null, cur_path, global_app_state);
+  console.log("rendering channels lists");
+  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel panel-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", 
+  -2030961996), "panel-heading"], null), new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h3", "h3", 2067611163), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-title"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
+  "class", "class", -2030961996), "icon mdi-action-speaker-notes pull-left"], null), " "], null), "Channels: ", "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.count.call(null, cljs.core.deref.call(null, channels_cur)))], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-body"], 
+  null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group channel-list"], null), function() {
+    var iter__4379__auto__ = function(cur_path, channels_cur) {
+      return function iter__5750(s__5751) {
+        return new cljs.core.LazySeq(null, function(cur_path, channels_cur) {
+          return function() {
+            var s__5751__$1 = s__5751;
+            while (true) {
+              var temp__4126__auto__ = cljs.core.seq.call(null, s__5751__$1);
+              if (temp__4126__auto__) {
+                var s__5751__$2 = temp__4126__auto__;
+                if (cljs.core.chunked_seq_QMARK_.call(null, s__5751__$2)) {
+                  var c__4377__auto__ = cljs.core.chunk_first.call(null, s__5751__$2);
+                  var size__4378__auto__ = cljs.core.count.call(null, c__4377__auto__);
+                  var b__5753 = cljs.core.chunk_buffer.call(null, size__4378__auto__);
+                  if (function() {
+                    var i__5752 = 0;
+                    while (true) {
+                      if (i__5752 < size__4378__auto__) {
+                        var channel = cljs.core._nth.call(null, c__4377__auto__, i__5752);
+                        cljs.core.chunk_append.call(null, b__5753, chat_client.components.channels.make_channel_item.call(null, channel));
+                        var G__5754 = i__5752 + 1;
+                        i__5752 = G__5754;
+                        continue;
+                      } else {
+                        return true;
+                      }
+                      break;
+                    }
+                  }()) {
+                    return cljs.core.chunk_cons.call(null, cljs.core.chunk.call(null, b__5753), iter__5750.call(null, cljs.core.chunk_rest.call(null, s__5751__$2)));
+                  } else {
+                    return cljs.core.chunk_cons.call(null, cljs.core.chunk.call(null, b__5753), null);
+                  }
+                } else {
+                  var channel = cljs.core.first.call(null, s__5751__$2);
+                  return cljs.core.cons.call(null, chat_client.components.channels.make_channel_item.call(null, channel), iter__5750.call(null, cljs.core.rest.call(null, s__5751__$2)));
+                }
+              } else {
+                return null;
+              }
+              break;
+            }
+          };
+        }(cur_path, channels_cur), null, null);
+      };
+    }(cur_path, channels_cur);
+    return iter__4379__auto__.call(null, cljs.core.vals.call(null, cljs.core.deref.call(null, channels_cur)));
+  }()], null)], null)], null);
+};
+goog.provide("chat_client.core");
+goog.require("cljs.core");
+goog.require("chat_client.utils");
+goog.require("reagent.core");
+goog.require("chat_client.components.chat");
+goog.require("chat_client.components.users");
+goog.require("chat_client.components.chat");
+goog.require("chat_client.components.channels");
+goog.require("chat_client.components.modal");
+goog.require("reagent.core");
+goog.require("chat_client.components.channels");
+goog.require("chat_client.components.status");
+goog.require("chat_client.components.users");
+goog.require("chat_client.components.status");
+goog.require("chat_client.utils");
+goog.require("chat_client.components.modal");
 if (typeof chat_client.core.app_state !== "undefined") {
 } else {
   chat_client.core.app_state = reagent.core.atom.call(null, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "connection", "connection", -123599300), new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null, "status", "status", -1997798413), new cljs.core.Keyword(null, "closed", "closed", -919675359), new cljs.core.Keyword(null, "url", "url", 276297046), "ws://127.0.0.1:9000/chat", new cljs.core.Keyword(null, "username", "username", 1605666410), "unknown" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.rand_int.call(null, 
-  1E3)), new cljs.core.Keyword(null, "socket", "socket", 59137063), null], null), new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935), "main", new cljs.core.Keyword(null, "channels", "channels", 1132759174), cljs.core.PersistentArrayMap.EMPTY, new cljs.core.Keyword(null, "sent", "sent", -1537501490), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "status", 
-  "status", -1997798413), new cljs.core.Keyword(null, "unsent", "unsent", -1121819097), new cljs.core.Keyword(null, "message", "message", -406056002), "\x3ctype your message\x3e", new cljs.core.Keyword(null, "timestamp", "timestamp", 579478971), 1001], null)], null)], null));
+  1E3)), new cljs.core.Keyword(null, "socket", "socket", 59137063), null], null), new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935), "main", new cljs.core.Keyword(null, "channels", "channels", 1132759174), cljs.core.PersistentArrayMap.EMPTY], null)], null));
 }
 chat_client.core.main = function main() {
   var app_mount_points = new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".connection-modal", chat_client.components.modal.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".status-app", chat_client.components.status.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".channels-app", 
   chat_client.components.channels.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".users-app", chat_client.components.users.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".chat-app", chat_client.components.chat.render], null)], null);
-  var seq__7701 = cljs.core.seq.call(null, app_mount_points);
-  var chunk__7702 = null;
-  var count__7703 = 0;
-  var i__7704 = 0;
+  var seq__6160 = cljs.core.seq.call(null, app_mount_points);
+  var chunk__6161 = null;
+  var count__6162 = 0;
+  var i__6163 = 0;
   while (true) {
-    if (i__7704 < count__7703) {
-      var vec__7705 = cljs.core._nth.call(null, chunk__7702, i__7704);
-      var selector = cljs.core.nth.call(null, vec__7705, 0, null);
-      var app_renderer = cljs.core.nth.call(null, vec__7705, 1, null);
-      reagent.core.render_component.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [function(seq__7701, chunk__7702, count__7703, i__7704, vec__7705, selector, app_renderer, app_mount_points) {
+    if (i__6163 < count__6162) {
+      var vec__6164 = cljs.core._nth.call(null, chunk__6161, i__6163);
+      var selector = cljs.core.nth.call(null, vec__6164, 0, null);
+      var app_renderer = cljs.core.nth.call(null, vec__6164, 1, null);
+      reagent.core.render_component.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [function(seq__6160, chunk__6161, count__6162, i__6163, vec__6164, selector, app_renderer, app_mount_points) {
         return function() {
           return app_renderer.call(null, chat_client.core.app_state);
         };
-      }(seq__7701, chunk__7702, count__7703, i__7704, vec__7705, selector, app_renderer, app_mount_points)], null), chat_client.core.$.call(null, selector));
-      var G__7707 = seq__7701;
-      var G__7708 = chunk__7702;
-      var G__7709 = count__7703;
-      var G__7710 = i__7704 + 1;
-      seq__7701 = G__7707;
-      chunk__7702 = G__7708;
-      count__7703 = G__7709;
-      i__7704 = G__7710;
+      }(seq__6160, chunk__6161, count__6162, i__6163, vec__6164, selector, app_renderer, app_mount_points)], null), chat_client.utils.by_selector.call(null, selector));
+      var G__6166 = seq__6160;
+      var G__6167 = chunk__6161;
+      var G__6168 = count__6162;
+      var G__6169 = i__6163 + 1;
+      seq__6160 = G__6166;
+      chunk__6161 = G__6167;
+      count__6162 = G__6168;
+      i__6163 = G__6169;
       continue;
     } else {
-      var temp__4126__auto__ = cljs.core.seq.call(null, seq__7701);
+      var temp__4126__auto__ = cljs.core.seq.call(null, seq__6160);
       if (temp__4126__auto__) {
-        var seq__7701__$1 = temp__4126__auto__;
-        if (cljs.core.chunked_seq_QMARK_.call(null, seq__7701__$1)) {
-          var c__4410__auto__ = cljs.core.chunk_first.call(null, seq__7701__$1);
-          var G__7711 = cljs.core.chunk_rest.call(null, seq__7701__$1);
-          var G__7712 = c__4410__auto__;
-          var G__7713 = cljs.core.count.call(null, c__4410__auto__);
-          var G__7714 = 0;
-          seq__7701 = G__7711;
-          chunk__7702 = G__7712;
-          count__7703 = G__7713;
-          i__7704 = G__7714;
+        var seq__6160__$1 = temp__4126__auto__;
+        if (cljs.core.chunked_seq_QMARK_.call(null, seq__6160__$1)) {
+          var c__4410__auto__ = cljs.core.chunk_first.call(null, seq__6160__$1);
+          var G__6170 = cljs.core.chunk_rest.call(null, seq__6160__$1);
+          var G__6171 = c__4410__auto__;
+          var G__6172 = cljs.core.count.call(null, c__4410__auto__);
+          var G__6173 = 0;
+          seq__6160 = G__6170;
+          chunk__6161 = G__6171;
+          count__6162 = G__6172;
+          i__6163 = G__6173;
           continue;
         } else {
-          var vec__7706 = cljs.core.first.call(null, seq__7701__$1);
-          var selector = cljs.core.nth.call(null, vec__7706, 0, null);
-          var app_renderer = cljs.core.nth.call(null, vec__7706, 1, null);
-          reagent.core.render_component.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [function(seq__7701, chunk__7702, count__7703, i__7704, vec__7706, selector, app_renderer, seq__7701__$1, temp__4126__auto__, app_mount_points) {
+          var vec__6165 = cljs.core.first.call(null, seq__6160__$1);
+          var selector = cljs.core.nth.call(null, vec__6165, 0, null);
+          var app_renderer = cljs.core.nth.call(null, vec__6165, 1, null);
+          reagent.core.render_component.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [function(seq__6160, chunk__6161, count__6162, i__6163, vec__6165, selector, app_renderer, seq__6160__$1, temp__4126__auto__, app_mount_points) {
             return function() {
               return app_renderer.call(null, chat_client.core.app_state);
             };
-          }(seq__7701, chunk__7702, count__7703, i__7704, vec__7706, selector, app_renderer, seq__7701__$1, temp__4126__auto__, app_mount_points)], null), chat_client.core.$.call(null, selector));
-          var G__7715 = cljs.core.next.call(null, seq__7701__$1);
-          var G__7716 = null;
-          var G__7717 = 0;
-          var G__7718 = 0;
-          seq__7701 = G__7715;
-          chunk__7702 = G__7716;
-          count__7703 = G__7717;
-          i__7704 = G__7718;
+          }(seq__6160, chunk__6161, count__6162, i__6163, vec__6165, selector, app_renderer, seq__6160__$1, temp__4126__auto__, app_mount_points)], null), chat_client.utils.by_selector.call(null, selector));
+          var G__6174 = cljs.core.next.call(null, seq__6160__$1);
+          var G__6175 = null;
+          var G__6176 = 0;
+          var G__6177 = 0;
+          seq__6160 = G__6174;
+          chunk__6161 = G__6175;
+          count__6162 = G__6176;
+          i__6163 = G__6177;
           continue;
         }
       } else {

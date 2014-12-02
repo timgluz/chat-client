@@ -1,32 +1,57 @@
 (ns chat-client.connection
-  (:refer-clojure :exclude [atom])
   (:require [cognitect.transit :as transit]
             [reagent.core :as reagent :refer [cursor]]))
 
 (defonce statuses [:connecting :open :closing :closed :init])
 
-(def channels (reagent/atom []))
-
 (defmulti handle-message
   (fn [_ msg] (get msg "$variant" :default)))
 
+;TODO: maybe cursors are not best ideas here, check impl
 (defmethod handle-message "Channels" [global-app-state msg]
   (let [chan-cur (cursor [:chat :channels] global-app-state)
         names (get msg "names")
         chan-tbl (zipmap names
                          (mapv #(hash-map :name %1) names))]
-    (reset! chan-cur chan-tbl)
-    (.log js/console "New channels: " (pr-str @chan-cur))
-    @chan-cur))
+    (reset! chan-cur chan-tbl)))
 
 (defmethod handle-message "JoinChannel" [global-app-state msg]
   (let [ch-name (get msg "name")
         ch-cur (cursor [:chat :channels ch-name] global-app-state)]
-    (.log js/console "Joined on the channel: " (pr-str msg))
     (reset! ch-cur {:name ch-name
-                    :users (get msg "users")
-                    :messages (get msg "messages")})
-    @ch-cur))
+                    :users (vec (get msg "users"))
+                    :messages (vec (get msg "messages" []))})))
+
+(defmethod handle-message "Joined" [global-app-state msg]
+  (let [ch-name (get msg "channel")
+        new-user (get msg "user")
+        channel-cur (cursor [:chat :channels ch-name] global-app-state)]
+    (swap! channel-cur
+           (fn [xs]
+             (assoc xs :users
+                    (vec (cons new-user (get xs :users []))))))))
+
+(defmethod handle-message "Left" [global-app-state msg]
+  (let [ch-name (get msg "channel")
+        old-user (get msg "user")
+        channel-cur (cursor [:chat :channels ch-name] global-app-state)]
+    (swap! global-app-state
+           (fn [xs]
+             (->> xs
+                 (filter
+                   #(= (get old-user "name") (get % "name")))
+                 (assoc xs :users)
+                 vec)))))
+
+(defmethod handle-message "Msg" [global-app-state msg]
+  (let [ch-name (get msg "channel")
+        channel-cur (cursor [:chat :channels ch-name] global-app-state)]
+    (swap! channel-cur
+           (fn [xs]
+             (assoc xs :messages
+                    (vec
+                      (conj (:messages xs)
+                            (get msg "message"))))))))
 
 (defmethod handle-message :default [_ msg]
   (.error js/console "Got unknown message" (pr-str msg)))

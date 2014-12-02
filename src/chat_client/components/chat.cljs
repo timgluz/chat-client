@@ -1,5 +1,9 @@
 (ns chat-client.components.chat
-  (:require [reagent.core :refer [cursor]]))
+  (:require [reagent.core :as reagent :refer [cursor]]
+            [chat-client.connection :as connection]
+            [chat-client.utils :refer [time-ago by-selector]]))
+
+(def $ by-selector)
 
 (defmulti make-message-item
   (fn [msg] (get msg "$variant")))
@@ -11,55 +15,73 @@
       [:i {:class "icon mdi-file-folder"} " "]]
     [:div {:class "row-content"}
       [:div {:class "least-content"}
-        [:small " "
-          (str (.fromNow
-                 (js/moment. (get-in msg ["message" "timestamp"]))))]]
+        [:small " " (time-ago (js/moment.))]]
       [:h5
         {:class "list-group-item-heading"}
-        "user X joined with the channel"]]])
+        (str "user " (get-in msg ["user" "name"])
+             " joined with the channel")]]])
 
-(defmethod make-message-item "Msg" [msg]
-  [:div {:class "chat-item list-group-item"
-         :style {:background "white"}}
-    [:div {:class "row-picture"}
-      [:i {:class "icon mdi-social-person"} " "]]
-     (let [msg-body (get msg "message")
-          dt (js/Date. (get msg-body "timestamp"))]
-      [:div {:class "row-content"}
-        [:div {:class "least-content"}
-          [:small "last update "
-            (str (.fromNow (js/moment. dt)))]]
-        [:div
-          {:class "list-group-item-heading"}
-          (get-in msg-body ["user" "name"] "unknown")]
-        [:p {:class "list-group-item-text"}
-          (str " > " (get msg-body "text"))]])])
+(defmethod make-message-item "Left" [msg]
+  [:div {:class "chat-item list-group-item btn-material-bluegrey"}
+    [:div {:class "row-action-primary"}
+      [:i {:class "icon mdi-file-folder"} " "]]
+    [:div {:class "row-content"}
+      [:div {:class "least-content"}
+        [:small " " (time-ago (js/moment.))]]
+      [:h5 {:class "list-group-item-heading"}
+        (str "User" (get-in msg ["user" "name"])
+             " left the room.")]]])
 
 (defmethod make-message-item :default [msg]
-  (.error js/console "Unsupported message: " msg))
+  [:div {:class "chat-item list-group-item"}
+    [:div {:class "row-picture"}
+      [:i {:class "icon mdi-social-person"} " "]]
+    [:div {:class "row-content"}
+      [:div {:class "least-content"}
+        [:small (time-ago (get msg "stamp"))]]
+      [:div
+        {:class "list-group-item-heading"}
+        (get-in msg ["user" "name"] "unknown")]
+      [:p {:class "list-group-item-text"}
+        (str " > " (get msg "text"))]]])
+
+(defn scrolled-to-end [elems]
+  (with-meta (fn [] elems)
+    {:component-did-mount #(
+                             (let [el (reagent/dom-node %)
+                                   parent-el (.-parentNode el)]
+                              (.debug js/console "Scrolled component to end ...")
+                              (set! (.-scrollTop parent-el)
+                                    (.-scrollHeight parent-el))))}))
+
+(defn make-chat-window
+  [global-app-state]
+  (let [chat-cur (cursor [:chat] global-app-state)
+        active-channel (:active-channel @chat-cur)
+        current-chat (get-in @chat-cur [:channels active-channel])
+        chat-msgs (map #(make-message-item %)
+                       (:messages current-chat))]
+      [:div {:class "chat-messages-container"}
+          [:a {:name "chat-list-start"}]
+          (if (empty? chat-msgs)
+            [:div {:class "chat-item"} "No messages."]
+            [(scrolled-to-end
+              [:div {:class "list-group"} chat-msgs])])
+          [:a {:name "chat-list-end"}]]
+      ))
 
 
-(defn make-chat-window [chat-dt]
-  (let [active-channel (:active-channel @chat-dt)
-        current-chat (get-in @chat-dt [:channels active-channel])]
-    [:div {:class "chat-messages-container"}
-      [:div {:class "list-group"}
-       ;;NOTE: not perfect just take 100th latest msg from channel X.
-       ;;NB! the order of adding new message matters - LIFO stack
-       "#TODO: finish it"
-       #_(into []
-         (comp
-           (filter
-             (fn [msg] (= active-channel (get msg "channel"))))
-           (take 100)
-           (map #(make-message-item %)))
-        (:messages current-chat))
-       ]]))
-
-(defn make-chat-form [chat-dt]
-  (let [msg-cur (cursor [:sent] chat-dt)]
-    [:div
-      {:class "chat-form-container"}
+(defn make-chat-form [global-app-state]
+  (let [active-channel (get-in @global-app-state [:chat :active-channel])
+        msg-cur (atom "")
+        send-message (fn [msg]
+                       (if-let [ws-socket (get-in @global-app-state [:connection :socket])]
+                         (connection/send! ws-socket
+                                           {"$variant" "Msg"
+                                            "channel" active-channel
+                                            "message" msg})
+                         (.error js/console "Not connected - cant send message.")))]
+    [:div {:class "chat-form-container"}
       [:form {:class "form-horizontal"}
         [:fieldset
           [:div {:class "form-group"}
@@ -72,11 +94,9 @@
                  :name "new-message-input"
                  :class "form-control"
                  :rows 3
-                 :defaultValue (str (:message @msg-cur))
+                 :defaultValue (str @msg-cur)
                  :on-change (fn [ev]
-                            (swap! msg-cur
-                                   (fn [xs]
-                                     (assoc xs :message (.. ev -target -value)))))}]
+                              (reset! msg-cur (.. ev -target -value)))}]
               [:span {:class "help-block"}
                 "Type your message and press `ENTER` to send your message."]]]
           [:div {:class "form-group"}
@@ -85,17 +105,18 @@
                 {:class "btn btn-default"
                  :on-click (fn [ev]
                              (.preventDefault ev)
-                             (swap! msg-cur
-                                    (fn [xs] (assoc xs :message "" ))))}
+                             (reset! msg-cur ""))}
                 "Clear"]
               [:button
                 {:class "btn btn-primary"
                  :on-click (fn [ev]
                              (.preventDefault ev)
-                             (swap! msg-cur
-                                   (fn [xs] (assoc xs :status :sending))))
-                 :type "submit"}
+                             ;;TODO: if sending fails
+                             (send-message @msg-cur)
+                             (reset! msg-cur ""))
+                 :type "button"}
                "Send message"]]]]]]))
+
 
 (defn render
   [global-app-state]
@@ -107,7 +128,6 @@
           "Chat"]]
       [:div {:class "panel-body"
              :style {:height "100%"}}
-       (make-chat-window chat-dt)
-       (make-chat-form chat-dt)
-       ]]))
+       (make-chat-window global-app-state)
+       (make-chat-form global-app-state)]]))
 
