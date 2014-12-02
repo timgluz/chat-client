@@ -1,0 +1,55 @@
+<html>
+
+    <head>
+      <meta charset="utf-8"> 
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+      <link href="css/ripples.min.css" rel="stylesheet">
+      <link href="css/material-wfont.min.css" rel="stylesheet">
+      <link href="css/app.css" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <!-- app container -->
+        <div class="container-fluid">
+
+          <div class="connection-modal"></div>
+          <div class="row">
+            <div class="left-pane col-lg-3">
+              <div class="status-app"></div>
+              <div class="channels-app"></div>
+            </div>
+            <div class="content-pane col-lg-6">
+              <div class="chat-app"></div>
+            </div>
+            <div class="right-pane col-lg-3">
+              <div class="users-app"></div>
+            </div>
+          </div>
+          <div class="log-app"></div>
+        </div>
+        <div class = "connection-agent"></div>
+
+        <!-- load scripts -->
+        <!--
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        -->
+
+        <script src="js/jquery-1.11.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/react-0.9.0.js"></script>
+
+        <script src="js/ripples.min.js"></script>
+        <script src="js/material.min.js"></script>
+        <script src="js/chat-dev.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                $.material.init();
+            });
+        </script>
+    </body>
+
+</html>

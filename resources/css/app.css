@@ -1,0 +1,39 @@
+.chat-app .chat-item {
+  background-color: white;
+}
+
+.chat-messages-container {
+  height: calc(100% - 170px);
+  min-height: 300px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.chat-form-container {
+  height: 160px;
+  background-color: #eee;
+}
+
+.chat-item .row-picture i.icon,
+.chat-item .row-action-primary i.icon {
+  line-height: inherit;
+  height: 32px;
+  width: 32px;
+}
+
+.channel-list,
+.user-list {
+  height: 100%;
+  min-height: 200px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.channel-list-item .row-picture i.icon,
+.channel-list-item .row-action-primary i.icon,
+.user-list-item .row-picture i.icon,
+.user-list-item .row-action-primary i.icon {
+  line-height: inherit;
+  height: 24px;
+  width: 24px;
+}
