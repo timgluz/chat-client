@@ -1,4 +1,5 @@
 (ns chat-client.connection
+  (:refer-clojure :exclude [atom])
   (:require [cognitect.transit :as transit]
             [reagent.core :as reagent :refer [cursor]]))
 
@@ -15,6 +16,9 @@
         chan-tbl (zipmap names
                          (mapv #(hash-map :name %1) names))]
     (reset! chan-cur chan-tbl)
+    #_(swap! global-app-state
+           (fn [xs]
+             (assoc-in xs [:chat :channels] chan-tbl)))
     ;(reagent/force-update-all)
     (.log js/console "New channels: " (pr-str @chan-cur))
     @chan-cur))
@@ -27,7 +31,7 @@
                     :users (get msg "users")
                     :messages (get msg "messages")})
     ;(reagent/force-update-all)
-    ))
+    @ch-cur))
 
 (defmethod handle-message :default [_ msg]
   (.error js/console "Got unknown message" (pr-str msg)))
@@ -42,12 +46,13 @@
 
 (defn create
   [global-app-state]
-  (let [status-cur (cursor [:connection :status] global-app-state)]
   (letfn [(on-error [ev]
-            (.error js/console "Connection error: " ev)
-            (reset! status-cur :closed))
+            (let [status-cur (cursor [:connection :status] global-app-state)]
+              (.error js/console "Connection error: " ev)
+              (reset! status-cur :closed)))
           (on-open [ev]
             (let [ws (.-target ev)
+                  status-cur (cursor [:connection :status] global-app-state)
                   user-login (get-in @global-app-state [:connection :username])
                   last-channel (get-in @global-app-state [:chat :active-channel])]
               (.log js/console "Opened connection: " ev)
@@ -64,15 +69,16 @@
                 app-state
                 (transit/read r (.-data ev)))))
           (on-close [ev]
-            (.debug js/console "Connection is closed." ev)
-            (reset! status-cur :open))]
+            (let [status-cur (cursor [:connection :status] global-app-state)]
+              (.debug js/console "Connection is closed." ev)
+              (reset! status-cur :close)))]
     (let [url (get-in @global-app-state [:connection :url])
           ws (js/WebSocket. url)]
       (set! (.-onerror ws) on-error)
       (set! (.-onopen ws) on-open)
       (set! (.-onmessage ws) on-message)
       (set! (.-onclose ws) on-close)
-      ws))))
+      ws)))
 
 
 

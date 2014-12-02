@@ -1,5 +1,5 @@
 (ns chat-client.components.channels
-  (:require [reagent.core :refer [cursor]]))
+  (:require [reagent.cursor :refer [cursor]]))
 
 (defn make-channel-item
   [channel]

@@ -17,13 +17,13 @@
                      {:connection {:status :closed
                                    :url "ws://127.0.0.1:9000/chat"
                                    :username (str  "unknown" (rand-int 1000))
-                                   :socket nil
-                                   :error nil}
-                      :chat {:active-channel "main"
-                             :channels {}
-                             :sent {:status :unsent
-                                    :message "<type your message>"
-                                    :timestamp 1001}}}))
+                                   :socket nil}
+                      :chat {
+                        :active-channel "main"
+                        :channels {}
+                        :sent {:status :unsent
+                               :message "<type your message>"
+                               :timestamp 1001}}}))
 
 (defn ^:export main []
   (let [app-mount-points [
@@ -36,7 +36,11 @@
     ;;--mount apps
     (doseq [[selector app-renderer] app-mount-points]
       (reagent/render-component
-        (fn []  (app-renderer app-state))
-        ($ selector) ))))
+        (fn [] (app-renderer app-state))
+        ($ selector) ))
+
+    ;(reagent/render-component #(channels-app/render app-state) ($ ".channels-app"))
+
+    ))
 
 (main)
