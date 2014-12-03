@@ -33097,19 +33097,37 @@ chat_client.connection.handle_message = function() {
   }(method_table__4520__auto__, prefer_table__4521__auto__, method_cache__4522__auto__, cached_hierarchy__4523__auto__, hierarchy__4524__auto__), new cljs.core.Keyword(null, "default", "default", -1987822328), hierarchy__4524__auto__, method_table__4520__auto__, prefer_table__4521__auto__, method_cache__4522__auto__, cached_hierarchy__4523__auto__);
 }();
 cljs.core._add_method.call(null, chat_client.connection.handle_message, "Channels", function(global_app_state, msg) {
-  var chan_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174)], null), global_app_state);
+  var channel_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174)], null), global_app_state);
   var names = cljs.core.get.call(null, msg, "names");
-  var chan_tbl = cljs.core.zipmap.call(null, names, cljs.core.mapv.call(null, function(chan_cur, names) {
-    return function(p1__5347_SHARP_) {
-      return cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null, "name", "name", 1843675177)], [p1__5347_SHARP_]);
+  var chan_tbl = cljs.core.zipmap.call(null, names, cljs.core.mapv.call(null, function(channel_cur, names) {
+    return function(p1__8438_SHARP_) {
+      return cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null, "name", "name", 1843675177)], [p1__8438_SHARP_]);
     };
-  }(chan_cur, names), names));
-  return cljs.core.reset_BANG_.call(null, chan_cur, chan_tbl);
+  }(channel_cur, names), names));
+  return cljs.core.reset_BANG_.call(null, channel_cur, chan_tbl);
+});
+cljs.core._add_method.call(null, chat_client.connection.handle_message, "ChannelCreated", function(global_app_state, msg) {
+  var new_ch_name = cljs.core.get.call(null, msg, "name");
+  var active_ch = cljs.core.get_in.call(null, cljs.core.deref.call(null, global_app_state), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935)], null), "main");
+  var channel_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174), active_ch], null), global_app_state);
+  cljs.core.reset_BANG_.call(null, channel_cur, new cljs.core.Keyword(null, "messages", "messages", 345434482), cljs.core.vec.call(null, cljs.core.cons.call(null, msg, cljs.core.get.call(null, cljs.core.deref.call(null, channel_cur), new cljs.core.Keyword(null, "messages", "messages", 345434482), cljs.core.PersistentVector.EMPTY))));
+  return cljs.core.swap_BANG_.call(null, global_app_state, function(new_ch_name, active_ch, channel_cur) {
+    return function(xs) {
+      return cljs.core.assoc_in.call(null, xs, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174)], null), cljs.core.merge.call(null, cljs.core.get_in.call(null, xs, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 
+      1132759174)], null), cljs.core.PersistentArrayMap.EMPTY), new cljs.core.PersistentArrayMap.fromArray([new_ch_name, new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "name", "name", 1843675177), new_ch_name, new cljs.core.Keyword(null, "users", "users", -713552705), cljs.core.PersistentVector.EMPTY, new cljs.core.Keyword(null, "messages", "messages", 345434482), cljs.core.PersistentVector.EMPTY], null)], true, false)));
+    };
+  }(new_ch_name, active_ch, channel_cur));
 });
 cljs.core._add_method.call(null, chat_client.connection.handle_message, "JoinChannel", function(global_app_state, msg) {
   var ch_name = cljs.core.get.call(null, msg, "name");
-  var ch_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174), ch_name], null), global_app_state);
-  return cljs.core.reset_BANG_.call(null, ch_cur, new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "name", "name", 1843675177), ch_name, new cljs.core.Keyword(null, "users", "users", -713552705), cljs.core.vec.call(null, cljs.core.get.call(null, msg, "users")), new cljs.core.Keyword(null, "messages", "messages", 345434482), cljs.core.vec.call(null, cljs.core.get.call(null, msg, "messages", cljs.core.PersistentVector.EMPTY))], null));
+  var channel_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174), ch_name], null), global_app_state);
+  console.debug("Joined channel:", cljs.core.pr_str.call(null, msg));
+  cljs.core.swap_BANG_.call(null, global_app_state, function(ch_name, channel_cur) {
+    return function(xs) {
+      return cljs.core.assoc_in.call(null, xs, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935)], null), ch_name);
+    };
+  }(ch_name, channel_cur));
+  return cljs.core.reset_BANG_.call(null, channel_cur, new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "name", "name", 1843675177), ch_name, new cljs.core.Keyword(null, "users", "users", -713552705), cljs.core.vec.call(null, cljs.core.get.call(null, msg, "users")), new cljs.core.Keyword(null, "messages", "messages", 345434482), cljs.core.vec.call(null, cljs.core.get.call(null, msg, "messages", cljs.core.PersistentVector.EMPTY))], null));
 });
 cljs.core._add_method.call(null, chat_client.connection.handle_message, "Joined", function(global_app_state, msg) {
   var ch_name = cljs.core.get.call(null, msg, "channel");
@@ -33129,8 +33147,8 @@ cljs.core._add_method.call(null, chat_client.connection.handle_message, "Left", 
   return cljs.core.swap_BANG_.call(null, channel_cur, function(ch_name, old_user, channel_cur) {
     return function(xs) {
       return cljs.core.assoc.call(null, xs, new cljs.core.Keyword(null, "messages", "messages", 345434482), cljs.core.vec.call(null, cljs.core.cons.call(null, msg, cljs.core.get.call(null, xs, new cljs.core.Keyword(null, "messages", "messages", 345434482), cljs.core.PersistentVector.EMPTY))), new cljs.core.Keyword(null, "users", "users", -713552705), cljs.core.vec.call(null, cljs.core.filter.call(null, function(ch_name, old_user, channel_cur) {
-        return function(p1__5348_SHARP_) {
-          return cljs.core._EQ_.call(null, cljs.core.get.call(null, old_user, "name"), cljs.core.get.call(null, p1__5348_SHARP_, "name"));
+        return function(p1__8439_SHARP_) {
+          return cljs.core._EQ_.call(null, cljs.core.get.call(null, old_user, "name"), cljs.core.get.call(null, p1__8439_SHARP_, "name"));
         };
       }(ch_name, old_user, channel_cur), xs)));
     };
@@ -33145,6 +33163,11 @@ cljs.core._add_method.call(null, chat_client.connection.handle_message, "Msg", f
     };
   }(ch_name, channel_cur));
 });
+cljs.core._add_method.call(null, chat_client.connection.handle_message, "Error", function(global_app_state, msg) {
+  return cljs.core.swap_BANG_.call(null, global_app_state, function(xs) {
+    return cljs.core.assoc.call(null, xs, new cljs.core.Keyword(null, "alert", "alert", -571950580), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "title", "title", 636505583), "Server error", new cljs.core.Keyword(null, "message", "message", -406056002), cljs.core.get.call(null, msg, "error")], null));
+  });
+});
 cljs.core._add_method.call(null, chat_client.connection.handle_message, new cljs.core.Keyword(null, "default", "default", -1987822328), function(_, msg) {
   return console.error("Got unknown message", cljs.core.pr_str.call(null, msg));
 });
@@ -33154,6 +33177,15 @@ chat_client.connection.send_BANG_ = function send_BANG_(socket, data) {
 };
 chat_client.connection.close_BANG_ = function close_BANG_(socket) {
   return socket.close();
+};
+chat_client.connection.join_channel = function join_channel(ws_socket, chan_name) {
+  return chat_client.connection.send_BANG_.call(null, ws_socket, new cljs.core.PersistentArrayMap(null, 2, ["$variant", "JoinChannel", "name", "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(chan_name)], null));
+};
+chat_client.connection.leave_channel = function leave_channel(ws_socket, chan_name) {
+  return chat_client.connection.send_BANG_.call(null, ws_socket, new cljs.core.PersistentArrayMap(null, 2, ["$variant", "LeaveChannel", "name", "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(chan_name)], null));
+};
+chat_client.connection.register = function register(ws_socket, user_data) {
+  return chat_client.connection.send_BANG_.call(null, ws_socket, new cljs.core.PersistentArrayMap(null, 2, ["$variant", "Register", "user", user_data], null));
 };
 chat_client.connection.create = function create(global_app_state) {
   var on_error = function on_error(ev) {
@@ -33168,8 +33200,8 @@ chat_client.connection.create = function create(global_app_state) {
     var last_channel = cljs.core.get_in.call(null, cljs.core.deref.call(null, global_app_state), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935)], null));
     console.log("Opened connection: ", ev);
     cljs.core.reset_BANG_.call(null, status_cur, new cljs.core.Keyword(null, "open", "open", -1763596448));
-    chat_client.connection.send_BANG_.call(null, ws, new cljs.core.PersistentArrayMap(null, 2, ["$variant", "Register", "user", new cljs.core.PersistentArrayMap(null, 1, ["name", user_login], null)], null));
-    return chat_client.connection.send_BANG_.call(null, ws, new cljs.core.PersistentArrayMap(null, 2, ["$variant", "JoinChannel", "name", last_channel], null));
+    chat_client.connection.register.call(null, ws, new cljs.core.PersistentArrayMap(null, 1, ["name", user_login], null));
+    return chat_client.connection.join_channel.call(null, ws, "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(last_channel));
   };
   var on_message = function on_message(ev) {
     var r = cognitect.transit.reader.call(null, new cljs.core.Keyword(null, "json", "json", 1279968570));
@@ -33202,6 +33234,18 @@ chat_client.components.status.render = function render(global_app_state) {
   "p", "p", 151049309), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "strong", "strong", 269529E3), "status: "], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "status", "status", -1997798413)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, conn_cur)))], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), 
   new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "strong", "strong", 269529E3), "url: "], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "url", "url", 276297046)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, conn_cur)))], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), new cljs.core.PersistentVector(null, 
   2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "strong", "strong", 269529E3), "username: "], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "username", "username", 1605666410)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, conn_cur)))], null)], null)], null);
+};
+goog.provide("chat_client.components.alert");
+goog.require("cljs.core");
+goog.require("reagent.core");
+goog.require("reagent.core");
+goog.require("reagent.core");
+chat_client.components.alert.render = function render(global_app_state) {
+  var alert_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "alert", "alert", -571950580)], null), global_app_state);
+  var display_QMARK_ = !cljs.core.empty_QMARK_.call(null, cljs.core.deref.call(null, alert_cur));
+  return new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "class", "class", -2030961996), "alert alert-dismissable alert-warning", new cljs.core.Keyword(null, "style", "style", -496642736), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "display", "display", 242065432), display_QMARK_ ? "block" : "none"], null)], null), 
+  new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "button", "button", 1456579943), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "type", "type", 1174270348), "button", new cljs.core.Keyword(null, "class", "class", -2030961996), "close", new cljs.core.Keyword(null, "data-dismiss", "data-dismiss", -2004576016), "alert"], null), "x"], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, 
+  [new cljs.core.Keyword(null, "h4", "h4", 2004862993), (new cljs.core.Keyword(null, "title", "title", 636505583)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, alert_cur))], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), (new cljs.core.Keyword(null, "message", "message", -406056002)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, alert_cur))], null)], null);
 };
 goog.provide("chat_client.components.users");
 goog.require("cljs.core");
@@ -33360,17 +33404,23 @@ chat_client.components.chat.make_message_item = function() {
 }();
 cljs.core._add_method.call(null, chat_client.components.chat.make_message_item, "Joined", function(msg) {
   return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-item list-group-item", new cljs.core.Keyword(null, "style", "style", -496642736), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "background-color", "background-color", 570434026), "floralwhite"], null)], null), new cljs.core.PersistentVector(null, 
-  3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-action-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-file-folder"], null), 
+  3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-action-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-action-info"], null), 
   " "], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", 
   "class", -2030961996), "least-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "small", "small", 2133478704), " ", chat_client.utils.time_ago.call(null, new moment)], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item-text"], 
   null), "user " + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.get_in.call(null, msg, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, ["user", "name"], null))) + " joined with the channel"], null)], null)], null);
 });
 cljs.core._add_method.call(null, chat_client.components.chat.make_message_item, "Left", function(msg) {
   return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-item list-group-item btn-material-lightgrey"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
-  "class", "class", -2030961996), "row-action-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-file-folder"], null), " "], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 
+  "class", "class", -2030961996), "row-action-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-action-info"], null), " "], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 
   1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "least-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "small", "small", 2133478704), " ", 
   chat_client.utils.time_ago.call(null, new moment)], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item-text"], null), "User " + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.get_in.call(null, msg, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, 
   ["user", "name"], null))) + " left the room."], null)], null)], null);
+});
+cljs.core._add_method.call(null, chat_client.components.chat.make_message_item, "ChannelCreated", function(msg) {
+  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-item list-group-item btn-material-lightgrey"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
+  "class", "class", -2030961996), "row-action-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-action-info"], null), " "], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 
+  1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "least-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "small", "small", 2133478704), " ", 
+  chat_client.utils.time_ago.call(null, new moment)], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item-text"], null), "Someone created new chat-room:" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.get.call(null, msg, "name"))], null)], null)], null);
 });
 cljs.core._add_method.call(null, chat_client.components.chat.make_message_item, new cljs.core.Keyword(null, "default", "default", -1987822328), function(msg) {
   return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-item list-group-item"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", 
@@ -33382,13 +33432,12 @@ cljs.core._add_method.call(null, chat_client.components.chat.make_message_item, 
 chat_client.components.chat.scrolled_to_end = function scrolled_to_end(elems) {
   return cljs.core.with_meta.call(null, function() {
     return elems;
-  }, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "component-did-mount", "component-did-mount", -1126910518), function(p1__5343_SHARP_) {
-    return function() {
-      var el = reagent.core.dom_node.call(null, p1__5343_SHARP_);
-      var parent_el = el.parentNode;
-      console.debug("Scrolled component to end ...");
-      return parent_el.scrollTop = parent_el.scrollHeight;
-    }().call(null);
+  }, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "component-did-mount", "component-did-mount", -1126910518), function(this$) {
+    var el = reagent.core.dom_node.call(null, this$);
+    var parent_el = el.parentNode;
+    console.debug("Scrolled component to end ...");
+    parent_el.scrollTop = parent_el.scrollHeight;
+    return this$;
   }], null));
 };
 chat_client.components.chat.make_chat_window = function make_chat_window(global_app_state) {
@@ -33396,8 +33445,8 @@ chat_client.components.chat.make_chat_window = function make_chat_window(global_
   var active_channel = (new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, chat_cur));
   var current_chat = cljs.core.get_in.call(null, cljs.core.deref.call(null, chat_cur), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "channels", "channels", 1132759174), active_channel], null));
   var chat_msgs = cljs.core.map.call(null, function(chat_cur, active_channel, current_chat) {
-    return function(p1__5344_SHARP_) {
-      return chat_client.components.chat.make_message_item.call(null, p1__5344_SHARP_);
+    return function(p1__8197_SHARP_) {
+      return chat_client.components.chat.make_message_item.call(null, p1__8197_SHARP_);
     };
   }(chat_cur, active_channel, current_chat), (new cljs.core.Keyword(null, "messages", "messages", 345434482)).cljs$core$IFn$_invoke$arity$1(current_chat));
   return new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "chat-messages-container"], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "a", "a", -2123407586), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "name", "name", 
@@ -33445,161 +33494,138 @@ chat_client.components.chat.make_chat_form = function make_chat_form(global_app_
 chat_client.components.chat.render = function render(global_app_state) {
   var chat_dt = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339)], null), global_app_state);
   return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel panel-success"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", 
-  -2030961996), "panel-heading"], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h3", "h3", 2067611163), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-title"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
-  "class", "class", -2030961996), "icon mdi-action-speaker-notes"], null), " "], null), "Chat"], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-body", new cljs.core.Keyword(null, "style", "style", -496642736), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "height", 
-  "height", 1025178622), "100%"], null)], null), chat_client.components.chat.make_chat_window.call(null, global_app_state), chat_client.components.chat.make_chat_form.call(null, global_app_state)], null)], null);
+  -2030961996), "panel-heading"], null), new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h3", "h3", 2067611163), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-title"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
+  "class", "class", -2030961996), "icon mdi-action-speaker-notes"], null), " "], null), "Channel: ", "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.get.call(null, cljs.core.deref.call(null, chat_dt), new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935)))], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
+  "class", "class", -2030961996), "panel-body"], null), chat_client.components.chat.make_chat_window.call(null, global_app_state), chat_client.components.chat.make_chat_form.call(null, global_app_state)], null)], null);
 };
-goog.provide("reagent.cursor");
-goog.require("cljs.core");
-reagent.cursor.RCursor = function(path, ratom) {
-  this.path = path;
-  this.ratom = ratom;
-  this.cljs$lang$protocol_mask$partition0$ = 2153938944;
-  this.cljs$lang$protocol_mask$partition1$ = 114690;
-};
-reagent.cursor.RCursor.cljs$lang$type = true;
-reagent.cursor.RCursor.cljs$lang$ctorStr = "reagent.cursor/RCursor";
-reagent.cursor.RCursor.cljs$lang$ctorPrWriter = function(this__4217__auto__, writer__4218__auto__, opt__4219__auto__) {
-  return cljs.core._write.call(null, writer__4218__auto__, "reagent.cursor/RCursor");
-};
-reagent.cursor.RCursor.prototype.cljs$core$IHash$_hash$arity$1 = function(this$) {
-  var self__ = this;
-  var this$__$1 = this;
-  return goog.getUid(this$__$1);
-};
-reagent.cursor.RCursor.prototype.cljs$core$IWatchable$_notify_watches$arity$3 = function(this$, oldval, newval) {
-  var self__ = this;
-  var this$__$1 = this;
-  return cljs.core._notify_watches.call(null, self__.ratom, oldval, newval);
-};
-reagent.cursor.RCursor.prototype.cljs$core$IWatchable$_add_watch$arity$3 = function(this$, key, f) {
-  var self__ = this;
-  var this$__$1 = this;
-  return cljs.core._add_watch.call(null, self__.ratom, key, f);
-};
-reagent.cursor.RCursor.prototype.cljs$core$IWatchable$_remove_watch$arity$2 = function(this$, key) {
-  var self__ = this;
-  var this$__$1 = this;
-  return cljs.core._remove_watch.call(null, self__.ratom, key);
-};
-reagent.cursor.RCursor.prototype.cljs$core$IPrintWithWriter$_pr_writer$arity$3 = function(a, writer, opts) {
-  var self__ = this;
-  var a__$1 = this;
-  cljs.core._write.call(null, writer, "#\x3cCursor: ");
-  cljs.core.pr_writer.call(null, self__.path, writer, opts);
-  cljs.core._write.call(null, writer, " ");
-  cljs.core.pr_writer.call(null, self__.ratom, writer, opts);
-  return cljs.core._write.call(null, writer, "\x3e");
-};
-reagent.cursor.RCursor.prototype.cljs$core$IMeta$_meta$arity$1 = function(_) {
-  var self__ = this;
-  var ___$1 = this;
-  return cljs.core._meta.call(null, self__.ratom);
-};
-reagent.cursor.RCursor.prototype.cljs$core$ISwap$_swap_BANG_$arity$2 = function(a, f) {
-  var self__ = this;
-  var a__$1 = this;
-  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.update_in, self__.path, f);
-};
-reagent.cursor.RCursor.prototype.cljs$core$ISwap$_swap_BANG_$arity$3 = function(a, f, x) {
-  var self__ = this;
-  var a__$1 = this;
-  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.update_in, self__.path, f, x);
-};
-reagent.cursor.RCursor.prototype.cljs$core$ISwap$_swap_BANG_$arity$4 = function(a, f, x, y) {
-  var self__ = this;
-  var a__$1 = this;
-  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.update_in, self__.path, f, x, y);
-};
-reagent.cursor.RCursor.prototype.cljs$core$ISwap$_swap_BANG_$arity$5 = function(a, f, x, y, more) {
-  var self__ = this;
-  var a__$1 = this;
-  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.update_in, self__.path, function(a__$1) {
-    return function(v) {
-      return cljs.core.apply.call(null, f, v, x, y, more);
-    };
-  }(a__$1));
-};
-reagent.cursor.RCursor.prototype.cljs$core$IReset$_reset_BANG_$arity$2 = function(a, new_value) {
-  var self__ = this;
-  var a__$1 = this;
-  return cljs.core.swap_BANG_.call(null, self__.ratom, cljs.core.assoc_in, self__.path, new_value);
-};
-reagent.cursor.RCursor.prototype.cljs$core$IDeref$_deref$arity$1 = function(this$) {
-  var self__ = this;
-  var this$__$1 = this;
-  return cljs.core.get_in.call(null, cljs.core.deref.call(null, self__.ratom), self__.path);
-};
-reagent.cursor.RCursor.prototype.cljs$core$IEquiv$_equiv$arity$2 = function(o, other) {
-  var self__ = this;
-  var o__$1 = this;
-  return o__$1 === other;
-};
-reagent.cursor.__GT_RCursor = function __GT_RCursor(path, ratom) {
-  return new reagent.cursor.RCursor(path, ratom);
-};
-reagent.cursor.cursor = function() {
-  var cursor = null;
-  var cursor__1 = function(path) {
-    return function(ra) {
-      return cursor.call(null, path, ra);
-    };
-  };
-  var cursor__2 = function(path, ra) {
-    return new reagent.cursor.RCursor(path, ra);
-  };
-  cursor = function(path, ra) {
-    switch(arguments.length) {
-      case 1:
-        return cursor__1.call(this, path);
-      case 2:
-        return cursor__2.call(this, path, ra);
-    }
-    throw new Error("Invalid arity: " + arguments.length);
-  };
-  cursor.cljs$core$IFn$_invoke$arity$1 = cursor__1;
-  cursor.cljs$core$IFn$_invoke$arity$2 = cursor__2;
-  return cursor;
-}();
 goog.provide("chat_client.components.channels");
 goog.require("cljs.core");
-goog.require("reagent.cursor");
-goog.require("reagent.cursor");
-chat_client.components.channels.make_channel_item = function make_channel_item(channel) {
-  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "channel-list-item list-group-item"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
-  "class", "class", -2030961996), "row-action-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-action-group-work material-blue"], null), " "], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), 
-  new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "row-content"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h5", "h5", -1829156625), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group-item-heading"], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "name", "name", 1843675177)).cljs$core$IFn$_invoke$arity$1(channel))], 
-  null)], null)], null);
+goog.require("reagent.core");
+goog.require("chat_client.connection");
+goog.require("chat_client.connection");
+goog.require("reagent.core");
+chat_client.components.channels.is_form_visible = reagent.core.atom.call(null, false);
+chat_client.components.channels.new_channel_button = function new_channel_button() {
+  return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "span", "span", 1394872991), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "pull-right"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "button", "button", 1456579943), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "class", "class", 
+  -2030961996), "button button-action", new cljs.core.Keyword(null, "title", "title", 636505583), "Add new channel", new cljs.core.Keyword(null, "on-click", "on-click", 1632826543), function() {
+    return cljs.core.swap_BANG_.call(null, chat_client.components.channels.is_form_visible, cljs.core.not);
+  }], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "mdi-content-add-circle-outline"], null), " "], null)], null)], null);
+};
+chat_client.components.channels.inline_form = function inline_form(p__8415) {
+  var map__8418 = p__8415;
+  var map__8418__$1 = cljs.core.seq_QMARK_.call(null, map__8418) ? cljs.core.apply.call(null, cljs.core.hash_map, map__8418) : map__8418;
+  var on_stop = cljs.core.get.call(null, map__8418__$1, new cljs.core.Keyword(null, "on-stop", "on-stop", 1520114515));
+  var on_save = cljs.core.get.call(null, map__8418__$1, new cljs.core.Keyword(null, "on-save", "on-save", 1618176266));
+  var value = cljs.core.get.call(null, map__8418__$1, new cljs.core.Keyword(null, "value", "value", 305978217));
+  var val = reagent.core.atom.call(null, value);
+  var stop = function(val, map__8418, map__8418__$1, on_stop, on_save, value) {
+    return function() {
+      cljs.core.reset_BANG_.call(null, val, "");
+      if (cljs.core.truth_(on_stop)) {
+        return on_stop.call(null);
+      } else {
+        return null;
+      }
+    };
+  }(val, map__8418, map__8418__$1, on_stop, on_save, value);
+  var save = function(val, stop, map__8418, map__8418__$1, on_stop, on_save, value) {
+    return function() {
+      var v = clojure.string.trim.call(null, "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, val)));
+      if (!cljs.core.empty_QMARK_.call(null, v)) {
+        on_save.call(null, v);
+      } else {
+      }
+      return stop.call(null);
+    };
+  }(val, stop, map__8418, map__8418__$1, on_stop, on_save, value);
+  return function(val, stop, save, map__8418, map__8418__$1, on_stop, on_save, value) {
+    return function(props) {
+      return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "form-group"], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "input", "input", 556931961), cljs.core.merge.call(null, props, new cljs.core.PersistentArrayMap(null, 5, [new cljs.core.Keyword(null, 
+      "class", "class", -2030961996), "form-control col-lg-1 col-md-1", new cljs.core.Keyword(null, "type", "type", 1174270348), "text", new cljs.core.Keyword(null, "value", "value", 305978217), cljs.core.deref.call(null, val), new cljs.core.Keyword(null, "on-change", "on-change", -732046149), function(val, stop, save, map__8418, map__8418__$1, on_stop, on_save, value) {
+        return function(p1__8413_SHARP_) {
+          return cljs.core.reset_BANG_.call(null, val, p1__8413_SHARP_.target.value);
+        };
+      }(val, stop, save, map__8418, map__8418__$1, on_stop, on_save, value), new cljs.core.Keyword(null, "on-key-up", "on-key-up", 884441808), function(val, stop, save, map__8418, map__8418__$1, on_stop, on_save, value) {
+        return function(p1__8414_SHARP_) {
+          var G__8419 = p1__8414_SHARP_.which;
+          switch(G__8419) {
+            case 13:
+              return save.call(null);
+              break;
+            case 27:
+              return stop.call(null);
+              break;
+            default:
+              return null;
+          }
+        };
+      }(val, stop, save, map__8418, map__8418__$1, on_stop, on_save, value)], null))], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "button", "button", 1456579943), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "class", "class", -2030961996), "btn btn-primary", new cljs.core.Keyword(null, "type", "type", 1174270348), "button", new cljs.core.Keyword(null, "on-click", "on-click", 1632826543), save], null), 
+      "Ok"], null)], null);
+    };
+  }(val, stop, save, map__8418, map__8418__$1, on_stop, on_save, value);
+};
+chat_client.components.channels.new_channel_form = function new_channel_form(ws_socket, active_channel) {
+  var new_chan_name = reagent.core.atom.call(null, "new-channel1");
+  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "class", "class", -2030961996), "form-group", new cljs.core.Keyword(null, "style", "style", -496642736), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "display", "display", 242065432), cljs.core.truth_(cljs.core.deref.call(null, chat_client.components.channels.is_form_visible)) ? 
+  "block" : "none"], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "label", "label", 1718410804), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "control-label"], null), "A name of the new channel"], null), new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [chat_client.components.channels.inline_form.call(null, new cljs.core.PersistentArrayMap(null, 
+  3, [new cljs.core.Keyword(null, "value", "value", 305978217), "default_room", new cljs.core.Keyword(null, "on-stop", "on-stop", 1520114515), function(new_chan_name) {
+    return function() {
+      return cljs.core.reset_BANG_.call(null, chat_client.components.channels.is_form_visible, false);
+    };
+  }(new_chan_name), new cljs.core.Keyword(null, "on-save", "on-save", 1618176266), function(new_chan_name) {
+    return function(v) {
+      console.log("Going to create new room: ", v);
+      cljs.core.reset_BANG_.call(null, chat_client.components.channels.is_form_visible, false);
+      console.log("Leaving ", active_channel);
+      chat_client.connection.leave_channel.call(null, ws_socket, active_channel);
+      return chat_client.connection.join_channel.call(null, ws_socket, v);
+    };
+  }(new_chan_name)], null))], null)], null);
+};
+chat_client.components.channels.make_channel_item = function make_channel_item(channel, active_channel, ws_socket) {
+  return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "channel-list-item list-group-item"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
+  "class", "class", -2030961996), "row-content1"], null), cljs.core._EQ_.call(null, active_channel, (new cljs.core.Keyword(null, "name", "name", 1843675177)).cljs$core$IFn$_invoke$arity$1(channel)) ? new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "button", "button", 1456579943), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "btn btn-block btn-default disabled"], null), new cljs.core.PersistentVector(null, 
+  4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "span", "span", 1394872991), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-action-group-work"], null), " "], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, "name", "name", 1843675177)).cljs$core$IFn$_invoke$arity$1(channel)), 
+  new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "small", "small", 2133478704), " - current"], null)], null)], null) : new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "button", "button", 1456579943), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "class", "class", -2030961996), "btn btn-block btn-default", new cljs.core.Keyword(null, "on-click", "on-click", 
+  1632826543), function() {
+    var ch_name = (new cljs.core.Keyword(null, "name", "name", 1843675177)).cljs$core$IFn$_invoke$arity$1(channel);
+    console.debug("Logging into room: ", ch_name);
+    chat_client.connection.leave_channel.call(null, ws_socket, active_channel);
+    return chat_client.connection.join_channel.call(null, ws_socket, ch_name);
+  }], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "span", "span", 1394872991), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "icon mdi-action-group-work material-blue"], null), " "], null), "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1((new cljs.core.Keyword(null, 
+  "name", "name", 1843675177)).cljs$core$IFn$_invoke$arity$1(channel))], null)], null)], null)], null);
 };
 chat_client.components.channels.render = function render(global_app_state) {
-  var cur_path = new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174)], null);
-  var channels_cur = reagent.cursor.cursor.call(null, cur_path, global_app_state);
-  console.log("rendering channels lists");
+  var ws_socket = cljs.core.get_in.call(null, cljs.core.deref.call(null, global_app_state), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "connection", "connection", -123599300), new cljs.core.Keyword(null, "socket", "socket", 59137063)], null));
+  var active_channel = cljs.core.get_in.call(null, cljs.core.deref.call(null, global_app_state), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935)], null));
+  var channels_cur = reagent.core.cursor.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.Keyword(null, "channels", "channels", 1132759174)], null), global_app_state);
   return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel panel-primary"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", 
-  -2030961996), "panel-heading"], null), new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h3", "h3", 2067611163), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-title"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
-  "class", "class", -2030961996), "icon mdi-action-speaker-notes pull-left"], null), " "], null), "Channels: ", "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.count.call(null, cljs.core.deref.call(null, channels_cur)))], null)], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-body"], 
-  null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group channel-list"], null), function() {
-    var iter__4379__auto__ = function(cur_path, channels_cur) {
-      return function iter__5750(s__5751) {
-        return new cljs.core.LazySeq(null, function(cur_path, channels_cur) {
+  -2030961996), "panel-heading"], null), new cljs.core.PersistentVector(null, 6, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h3", "h3", 2067611163), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "panel-title"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "i", "i", -1386841315), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
+  "class", "class", -2030961996), "icon mdi-action-speaker-notes pull-left"], null), " "], null), "Channels: ", "" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.count.call(null, cljs.core.deref.call(null, channels_cur))), chat_client.components.channels.new_channel_button.call(null)], null)], null), new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, 
+  "class", "class", -2030961996), "panel-body"], null), new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "new-channel-container"], null), chat_client.components.channels.new_channel_form.call(null, ws_socket)], null), cljs.core.empty_QMARK_.call(null, cljs.core.deref.call(null, channels_cur)) ? new cljs.core.PersistentVector(null, 
+  3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), ""], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), "No channels."], null)], null) : new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "div", 
+  "div", 1057191632), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "class", "class", -2030961996), "list-group channel-list"], null), function() {
+    var iter__4379__auto__ = function(ws_socket, active_channel, channels_cur) {
+      return function iter__8425(s__8426) {
+        return new cljs.core.LazySeq(null, function(ws_socket, active_channel, channels_cur) {
           return function() {
-            var s__5751__$1 = s__5751;
+            var s__8426__$1 = s__8426;
             while (true) {
-              var temp__4126__auto__ = cljs.core.seq.call(null, s__5751__$1);
+              var temp__4126__auto__ = cljs.core.seq.call(null, s__8426__$1);
               if (temp__4126__auto__) {
-                var s__5751__$2 = temp__4126__auto__;
-                if (cljs.core.chunked_seq_QMARK_.call(null, s__5751__$2)) {
-                  var c__4377__auto__ = cljs.core.chunk_first.call(null, s__5751__$2);
+                var s__8426__$2 = temp__4126__auto__;
+                if (cljs.core.chunked_seq_QMARK_.call(null, s__8426__$2)) {
+                  var c__4377__auto__ = cljs.core.chunk_first.call(null, s__8426__$2);
                   var size__4378__auto__ = cljs.core.count.call(null, c__4377__auto__);
-                  var b__5753 = cljs.core.chunk_buffer.call(null, size__4378__auto__);
+                  var b__8428 = cljs.core.chunk_buffer.call(null, size__4378__auto__);
                   if (function() {
-                    var i__5752 = 0;
+                    var i__8427 = 0;
                     while (true) {
-                      if (i__5752 < size__4378__auto__) {
-                        var channel = cljs.core._nth.call(null, c__4377__auto__, i__5752);
-                        cljs.core.chunk_append.call(null, b__5753, chat_client.components.channels.make_channel_item.call(null, channel));
-                        var G__5754 = i__5752 + 1;
-                        i__5752 = G__5754;
+                      if (i__8427 < size__4378__auto__) {
+                        var channel = cljs.core._nth.call(null, c__4377__auto__, i__8427);
+                        cljs.core.chunk_append.call(null, b__8428, chat_client.components.channels.make_channel_item.call(null, channel, active_channel, ws_socket));
+                        var G__8429 = i__8427 + 1;
+                        i__8427 = G__8429;
                         continue;
                       } else {
                         return true;
@@ -33607,13 +33633,13 @@ chat_client.components.channels.render = function render(global_app_state) {
                       break;
                     }
                   }()) {
-                    return cljs.core.chunk_cons.call(null, cljs.core.chunk.call(null, b__5753), iter__5750.call(null, cljs.core.chunk_rest.call(null, s__5751__$2)));
+                    return cljs.core.chunk_cons.call(null, cljs.core.chunk.call(null, b__8428), iter__8425.call(null, cljs.core.chunk_rest.call(null, s__8426__$2)));
                   } else {
-                    return cljs.core.chunk_cons.call(null, cljs.core.chunk.call(null, b__5753), null);
+                    return cljs.core.chunk_cons.call(null, cljs.core.chunk.call(null, b__8428), null);
                   }
                 } else {
-                  var channel = cljs.core.first.call(null, s__5751__$2);
-                  return cljs.core.cons.call(null, chat_client.components.channels.make_channel_item.call(null, channel), iter__5750.call(null, cljs.core.rest.call(null, s__5751__$2)));
+                  var channel = cljs.core.first.call(null, s__8426__$2);
+                  return cljs.core.cons.call(null, chat_client.components.channels.make_channel_item.call(null, channel, active_channel, ws_socket), iter__8425.call(null, cljs.core.rest.call(null, s__8426__$2)));
                 }
               } else {
                 return null;
@@ -33621,9 +33647,9 @@ chat_client.components.channels.render = function render(global_app_state) {
               break;
             }
           };
-        }(cur_path, channels_cur), null, null);
+        }(ws_socket, active_channel, channels_cur), null, null);
       };
-    }(cur_path, channels_cur);
+    }(ws_socket, active_channel, channels_cur);
     return iter__4379__auto__.call(null, cljs.core.vals.call(null, cljs.core.deref.call(null, channels_cur)));
   }()], null)], null)], null);
 };
@@ -33641,71 +33667,74 @@ goog.require("chat_client.components.channels");
 goog.require("chat_client.components.status");
 goog.require("chat_client.components.users");
 goog.require("chat_client.components.status");
+goog.require("chat_client.components.alert");
 goog.require("chat_client.utils");
+goog.require("chat_client.components.alert");
 goog.require("chat_client.components.modal");
 if (typeof chat_client.core.app_state !== "undefined") {
 } else {
-  chat_client.core.app_state = reagent.core.atom.call(null, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "connection", "connection", -123599300), new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null, "status", "status", -1997798413), new cljs.core.Keyword(null, "closed", "closed", -919675359), new cljs.core.Keyword(null, "url", "url", 276297046), "ws://127.0.0.1:9000/chat", new cljs.core.Keyword(null, "username", "username", 1605666410), "unknown" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.rand_int.call(null, 
-  1E3)), new cljs.core.Keyword(null, "socket", "socket", 59137063), null], null), new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935), "main", new cljs.core.Keyword(null, "channels", "channels", 1132759174), cljs.core.PersistentArrayMap.EMPTY], null)], null));
+  chat_client.core.app_state = reagent.core.atom.call(null, new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "alert", "alert", -571950580), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "title", "title", 636505583), "Error", new cljs.core.Keyword(null, "message", "message", -406056002), "Demo error - bla bla!"], null), new cljs.core.Keyword(null, "connection", "connection", -123599300), new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null, 
+  "status", "status", -1997798413), new cljs.core.Keyword(null, "closed", "closed", -919675359), new cljs.core.Keyword(null, "url", "url", 276297046), "ws://127.0.0.1:9000/chat", new cljs.core.Keyword(null, "username", "username", 1605666410), "unknown" + cljs.core.str.cljs$core$IFn$_invoke$arity$1(cljs.core.rand_int.call(null, 1E3)), new cljs.core.Keyword(null, "socket", "socket", 59137063), null], null), new cljs.core.Keyword(null, "chat", "chat", -518268339), new cljs.core.PersistentArrayMap(null, 
+  2, [new cljs.core.Keyword(null, "active-channel", "active-channel", -1449557935), "main", new cljs.core.Keyword(null, "channels", "channels", 1132759174), cljs.core.PersistentArrayMap.EMPTY], null)], null));
 }
 chat_client.core.main = function main() {
-  var app_mount_points = new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".connection-modal", chat_client.components.modal.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".status-app", chat_client.components.status.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".channels-app", 
-  chat_client.components.channels.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".users-app", chat_client.components.users.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".chat-app", chat_client.components.chat.render], null)], null);
-  var seq__6160 = cljs.core.seq.call(null, app_mount_points);
-  var chunk__6161 = null;
-  var count__6162 = 0;
-  var i__6163 = 0;
+  var app_mount_points = new cljs.core.PersistentVector(null, 6, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".alert-app", chat_client.components.alert.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".connection-modal", chat_client.components.modal.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".status-app", chat_client.components.status.render], 
+  null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".channels-app", chat_client.components.channels.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".users-app", chat_client.components.users.render], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [".chat-app", chat_client.components.chat.render], null)], null);
+  var seq__8494 = cljs.core.seq.call(null, app_mount_points);
+  var chunk__8495 = null;
+  var count__8496 = 0;
+  var i__8497 = 0;
   while (true) {
-    if (i__6163 < count__6162) {
-      var vec__6164 = cljs.core._nth.call(null, chunk__6161, i__6163);
-      var selector = cljs.core.nth.call(null, vec__6164, 0, null);
-      var app_renderer = cljs.core.nth.call(null, vec__6164, 1, null);
-      reagent.core.render_component.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [function(seq__6160, chunk__6161, count__6162, i__6163, vec__6164, selector, app_renderer, app_mount_points) {
+    if (i__8497 < count__8496) {
+      var vec__8498 = cljs.core._nth.call(null, chunk__8495, i__8497);
+      var selector = cljs.core.nth.call(null, vec__8498, 0, null);
+      var app_renderer = cljs.core.nth.call(null, vec__8498, 1, null);
+      reagent.core.render_component.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [function(seq__8494, chunk__8495, count__8496, i__8497, vec__8498, selector, app_renderer, app_mount_points) {
         return function() {
           return app_renderer.call(null, chat_client.core.app_state);
         };
-      }(seq__6160, chunk__6161, count__6162, i__6163, vec__6164, selector, app_renderer, app_mount_points)], null), chat_client.utils.by_selector.call(null, selector));
-      var G__6166 = seq__6160;
-      var G__6167 = chunk__6161;
-      var G__6168 = count__6162;
-      var G__6169 = i__6163 + 1;
-      seq__6160 = G__6166;
-      chunk__6161 = G__6167;
-      count__6162 = G__6168;
-      i__6163 = G__6169;
+      }(seq__8494, chunk__8495, count__8496, i__8497, vec__8498, selector, app_renderer, app_mount_points)], null), chat_client.utils.by_selector.call(null, selector));
+      var G__8500 = seq__8494;
+      var G__8501 = chunk__8495;
+      var G__8502 = count__8496;
+      var G__8503 = i__8497 + 1;
+      seq__8494 = G__8500;
+      chunk__8495 = G__8501;
+      count__8496 = G__8502;
+      i__8497 = G__8503;
       continue;
     } else {
-      var temp__4126__auto__ = cljs.core.seq.call(null, seq__6160);
+      var temp__4126__auto__ = cljs.core.seq.call(null, seq__8494);
       if (temp__4126__auto__) {
-        var seq__6160__$1 = temp__4126__auto__;
-        if (cljs.core.chunked_seq_QMARK_.call(null, seq__6160__$1)) {
-          var c__4410__auto__ = cljs.core.chunk_first.call(null, seq__6160__$1);
-          var G__6170 = cljs.core.chunk_rest.call(null, seq__6160__$1);
-          var G__6171 = c__4410__auto__;
-          var G__6172 = cljs.core.count.call(null, c__4410__auto__);
-          var G__6173 = 0;
-          seq__6160 = G__6170;
-          chunk__6161 = G__6171;
-          count__6162 = G__6172;
-          i__6163 = G__6173;
+        var seq__8494__$1 = temp__4126__auto__;
+        if (cljs.core.chunked_seq_QMARK_.call(null, seq__8494__$1)) {
+          var c__4410__auto__ = cljs.core.chunk_first.call(null, seq__8494__$1);
+          var G__8504 = cljs.core.chunk_rest.call(null, seq__8494__$1);
+          var G__8505 = c__4410__auto__;
+          var G__8506 = cljs.core.count.call(null, c__4410__auto__);
+          var G__8507 = 0;
+          seq__8494 = G__8504;
+          chunk__8495 = G__8505;
+          count__8496 = G__8506;
+          i__8497 = G__8507;
           continue;
         } else {
-          var vec__6165 = cljs.core.first.call(null, seq__6160__$1);
-          var selector = cljs.core.nth.call(null, vec__6165, 0, null);
-          var app_renderer = cljs.core.nth.call(null, vec__6165, 1, null);
-          reagent.core.render_component.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [function(seq__6160, chunk__6161, count__6162, i__6163, vec__6165, selector, app_renderer, seq__6160__$1, temp__4126__auto__, app_mount_points) {
+          var vec__8499 = cljs.core.first.call(null, seq__8494__$1);
+          var selector = cljs.core.nth.call(null, vec__8499, 0, null);
+          var app_renderer = cljs.core.nth.call(null, vec__8499, 1, null);
+          reagent.core.render_component.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [function(seq__8494, chunk__8495, count__8496, i__8497, vec__8499, selector, app_renderer, seq__8494__$1, temp__4126__auto__, app_mount_points) {
             return function() {
               return app_renderer.call(null, chat_client.core.app_state);
             };
-          }(seq__6160, chunk__6161, count__6162, i__6163, vec__6165, selector, app_renderer, seq__6160__$1, temp__4126__auto__, app_mount_points)], null), chat_client.utils.by_selector.call(null, selector));
-          var G__6174 = cljs.core.next.call(null, seq__6160__$1);
-          var G__6175 = null;
-          var G__6176 = 0;
-          var G__6177 = 0;
-          seq__6160 = G__6174;
-          chunk__6161 = G__6175;
-          count__6162 = G__6176;
-          i__6163 = G__6177;
+          }(seq__8494, chunk__8495, count__8496, i__8497, vec__8499, selector, app_renderer, seq__8494__$1, temp__4126__auto__, app_mount_points)], null), chat_client.utils.by_selector.call(null, selector));
+          var G__8508 = cljs.core.next.call(null, seq__8494__$1);
+          var G__8509 = null;
+          var G__8510 = 0;
+          var G__8511 = 0;
+          seq__8494 = G__8508;
+          chunk__8495 = G__8509;
+          count__8496 = G__8510;
+          i__8497 = G__8511;
           continue;
         }
       } else {

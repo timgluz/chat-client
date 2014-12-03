@@ -7,22 +7,51 @@
 (defmulti handle-message
   (fn [_ msg] (get msg "$variant" :default)))
 
-;TODO: maybe cursors are not best ideas here, check impl
-(defmethod handle-message "Channels" [global-app-state msg]
-  (let [chan-cur (cursor [:chat :channels] global-app-state)
+(defmethod handle-message "Channels"
+  [global-app-state msg]
+  (let [channel-cur (cursor [:chat :channels] global-app-state)
         names (get msg "names")
         chan-tbl (zipmap names
                          (mapv #(hash-map :name %1) names))]
-    (reset! chan-cur chan-tbl)))
+    (reset! channel-cur chan-tbl)))
 
-(defmethod handle-message "JoinChannel" [global-app-state msg]
+;;TODO: should message propagate into each channel, or default or into active??
+;;choosed active
+(defmethod handle-message "ChannelCreated"
+  [global-app-state msg]
+  (let [new-ch-name (get msg "name")
+        active-ch (get-in @global-app-state [:chat :active-channel] "main")
+        channel-cur (cursor [:chat :channels active-ch] global-app-state)]
+      ;add message notification
+      (reset! channel-cur
+              :messages (vec (cons msg
+                                   (get @channel-cur :messages []))))
+      ;add new channel into channels list
+      (swap! global-app-state
+             (fn [xs]
+                (assoc-in xs [:chat :channels]
+                          (merge
+                            (get-in xs [:chat :channels] {})
+                            {new-ch-name {:name new-ch-name
+                                          :users []
+                                          :messages []}}))))))
+
+(defmethod handle-message "JoinChannel"
+  [global-app-state msg]
   (let [ch-name (get msg "name")
-        ch-cur (cursor [:chat :channels ch-name] global-app-state)]
-    (reset! ch-cur {:name ch-name
-                    :users (vec (get msg "users"))
-                    :messages (vec (get msg "messages" []))})))
+        channel-cur (cursor [:chat :channels ch-name] global-app-state)]
+    (.debug js/console "Joined channel:" (pr-str msg))
+    ;update active channel
+    (swap! global-app-state
+           (fn [xs]
+             (assoc-in xs [:chat :active-channel] ch-name)))
+    ;update channel record
+    (reset! channel-cur {:name ch-name
+                         :users (vec (get msg "users"))
+                         :messages (vec (get msg "messages" []))})))
 
-(defmethod handle-message "Joined" [global-app-state msg]
+(defmethod handle-message "Joined"
+  [global-app-state msg]
   (let [ch-name (get msg "channel")
         new-user (get msg "user")
         channel-cur (cursor [:chat :channels ch-name] global-app-state)]
@@ -32,7 +61,8 @@
                     :users (vec (cons new-user (get xs :users [])))
                     :messages (vec (cons msg (get xs :messages []))))))))
 
-(defmethod handle-message "Left" [global-app-state msg]
+(defmethod handle-message "Left"
+  [global-app-state msg]
   (let [ch-name (get msg "channel")
         old-user (get msg "user")
         channel-cur (cursor [:chat :channels ch-name] global-app-state)]
@@ -45,7 +75,8 @@
                                #(= (get old-user "name") (get % "name"))
                                xs)))))))
 
-(defmethod handle-message "Msg" [global-app-state msg]
+(defmethod handle-message "Msg"
+  [global-app-state msg]
   (let [ch-name (get msg "channel")
         channel-cur (cursor [:chat :channels ch-name] global-app-state)]
     (swap! channel-cur
@@ -54,6 +85,12 @@
                     (vec
                       (conj (:messages xs)
                             (get msg "message"))))))))
+
+(defmethod handle-message "Error"
+  [global-app-state msg]
+  (swap! global-app-state
+         (fn [xs] (assoc xs :alert {:title "Server error"
+                                    :message (get msg "error")}))))
 
 (defmethod handle-message :default [_ msg]
   (.error js/console "Got unknown message" (pr-str msg)))
@@ -65,6 +102,26 @@
 (defn close! [socket]
   (.close socket))
 
+;;-- commands
+(defn join-channel
+  [ws-socket chan-name]
+  (send! ws-socket
+         {"$variant" "JoinChannel"
+          "name" (str chan-name)}))
+
+(defn leave-channel
+  [ws-socket chan-name]
+  (send! ws-socket
+         {"$variant" "LeaveChannel"
+          "name" (str chan-name)}))
+
+(defn register
+  [ws-socket user-data]
+  (send! ws-socket
+         {"$variant" "Register"
+          "user" user-data}))
+
+;;TODO: add error handlers
 (defn create
   [global-app-state]
   (letfn [(on-error [ev]
@@ -79,10 +136,8 @@
               (.log js/console "Opened connection: " ev)
               (reset! status-cur :open)
               ;make handshake and join with default chat
-              (send! ws {"$variant" "Register"
-                         "user" {"name" user-login}})
-              (send! ws {"$variant" "JoinChannel"
-                         "name" last-channel})))
+              (register ws {"name" user-login})
+              (join-channel ws (str last-channel))))
           (on-message [ev]
             (let [r (transit/reader :json)
                   app-state global-app-state]
@@ -100,6 +155,5 @@
       (set! (.-onmessage ws) on-message)
       (set! (.-onclose ws) on-close)
       ws)))
-
 
 

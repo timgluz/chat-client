@@ -5,10 +5,13 @@
             [chat-client.components.channels :as channels-app]
             [chat-client.components.chat :as chat-app]
             [chat-client.components.users :as users-app]
+            [chat-client.components.alert :as alert-app]
             [chat-client.utils :refer [by-selector]]))
 
 (defonce app-state (reagent/atom
-                     {:connection {:status :closed
+                     {:alert {:title "Error"
+                              :message "Demo error - bla bla!"}
+                      :connection {:status :closed
                                    :url "ws://127.0.0.1:9000/chat"
                                    :username (str  "unknown" (rand-int 1000))
                                    :socket nil}
@@ -16,7 +19,8 @@
                              :channels {}}}))
 
 (defn ^:export main []
-  (let [app-mount-points [[".connection-modal" modal-app/render]
+  (let [app-mount-points [[".alert-app" alert-app/render]
+                          [".connection-modal" modal-app/render]
                           [".status-app" status-app/render]
                           [".channels-app" channels-app/render]
                           [".users-app" users-app/render]

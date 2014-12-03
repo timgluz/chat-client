@@ -8,11 +8,13 @@
 (defmulti make-message-item
   (fn [msg] (get msg "$variant")))
 
+;;TODO: should info messages be handled differently?
+;;TODO: info messages has no timestamp
 (defmethod make-message-item "Joined" [msg]
   [:div {:class "chat-item list-group-item"
          :style {:background-color "floralwhite"}}
     [:div {:class "row-action-primary"}
-      [:i {:class "icon mdi-file-folder"} " "]]
+      [:i {:class "icon mdi-action-info"} " "]]
     [:div {:class "row-content"}
       [:div {:class "least-content"}
         [:small " " (time-ago (js/moment.))]]
@@ -24,13 +26,23 @@
 (defmethod make-message-item "Left" [msg]
   [:div {:class "chat-item list-group-item btn-material-lightgrey"}
     [:div {:class "row-action-primary"}
-      [:i {:class "icon mdi-file-folder"} " "]]
+      [:i {:class "icon mdi-action-info"} " "]]
     [:div {:class "row-content"}
       [:div {:class "least-content"}
         [:small " " (time-ago (js/moment.))]]
       [:p {:class "list-group-item-text"}
         (str "User " (get-in msg ["user" "name"])
              " left the room.")]]])
+
+(defmethod make-message-item "ChannelCreated" [msg]
+  [:div {:class "chat-item list-group-item btn-material-lightgrey"}
+    [:div {:class "row-action-primary"}
+      [:i {:class "icon mdi-action-info"} " "]]
+    [:div {:class "row-content"}
+      [:div {:class "least-content"}
+        [:small " " (time-ago (js/moment.))]]
+      [:p {:class "list-group-item-text"}
+        (str "Someone created new chat-room:" (get msg "name"))]]])
 
 (defmethod make-message-item :default [msg]
   [:div {:class "chat-item list-group-item"}
@@ -47,12 +59,13 @@
 
 (defn scrolled-to-end [elems]
   (with-meta (fn [] elems)
-    {:component-did-mount #(
-                             (let [el (reagent/dom-node %)
+    {:component-did-mount (fn [this]
+                            (let [el (reagent/dom-node this)
                                    parent-el (.-parentNode el)]
                               (.debug js/console "Scrolled component to end ...")
                               (set! (.-scrollTop parent-el)
-                                    (.-scrollHeight parent-el))))}))
+                                    (.-scrollHeight parent-el))
+                              this))}))
 
 (defn make-chat-window
   [global-app-state]
@@ -70,7 +83,8 @@
           [:a {:name "chat-list-end"}]]
       ))
 
-
+;;TODO: make it more user-friendly as add-new-room is.
+;;TODO: error handling
 (defn make-chat-form [global-app-state]
   (let [active-channel (get-in @global-app-state [:chat :active-channel])
         msg-cur (atom "")
@@ -125,9 +139,8 @@
       [:div {:class "panel-heading"}
         [:h3 {:class "panel-title"}
           [:i {:class "icon mdi-action-speaker-notes"} " "]
-          "Chat"]]
-      [:div {:class "panel-body"
-             :style {:height "100%"}}
+          "Channel: " (str (get @chat-dt :active-channel))]]
+      [:div {:class "panel-body"}
        (make-chat-window global-app-state)
        (make-chat-form global-app-state)]]))
 
