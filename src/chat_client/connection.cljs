@@ -28,20 +28,22 @@
         channel-cur (cursor [:chat :channels ch-name] global-app-state)]
     (swap! channel-cur
            (fn [xs]
-             (assoc xs :users
-                    (vec (cons new-user (get xs :users []))))))))
+             (assoc xs
+                    :users (vec (cons new-user (get xs :users [])))
+                    :messages (vec (cons msg (get xs :messages []))))))))
 
 (defmethod handle-message "Left" [global-app-state msg]
   (let [ch-name (get msg "channel")
         old-user (get msg "user")
         channel-cur (cursor [:chat :channels ch-name] global-app-state)]
-    (swap! global-app-state
+    (swap! channel-cur
            (fn [xs]
-             (->> xs
-                 (filter
-                   #(= (get old-user "name") (get % "name")))
-                 (assoc xs :users)
-                 vec)))))
+             (assoc xs
+                    :messages (vec (cons msg (get xs :messages [])))
+                    :users (vec
+                             (filter
+                               #(= (get old-user "name") (get % "name"))
+                               xs)))))))
 
 (defmethod handle-message "Msg" [global-app-state msg]
   (let [ch-name (get msg "channel")

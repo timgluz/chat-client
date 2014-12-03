@@ -16,20 +16,20 @@
     [:div {:class "row-content"}
       [:div {:class "least-content"}
         [:small " " (time-ago (js/moment.))]]
-      [:h5
-        {:class "list-group-item-heading"}
+      [:p
+        {:class "list-group-item-text"}
         (str "user " (get-in msg ["user" "name"])
              " joined with the channel")]]])
 
 (defmethod make-message-item "Left" [msg]
-  [:div {:class "chat-item list-group-item btn-material-bluegrey"}
+  [:div {:class "chat-item list-group-item btn-material-lightgrey"}
     [:div {:class "row-action-primary"}
       [:i {:class "icon mdi-file-folder"} " "]]
     [:div {:class "row-content"}
       [:div {:class "least-content"}
         [:small " " (time-ago (js/moment.))]]
-      [:h5 {:class "list-group-item-heading"}
-        (str "User" (get-in msg ["user" "name"])
+      [:p {:class "list-group-item-text"}
+        (str "User " (get-in msg ["user" "name"])
              " left the room.")]]])
 
 (defmethod make-message-item :default [msg]
@@ -41,7 +41,7 @@
         [:small (time-ago (get msg "stamp"))]]
       [:div
         {:class "list-group-item-heading"}
-        (get-in msg ["user" "name"] "unknown")]
+        (get-in msg ["user" "name"] "anononymous")]
       [:p {:class "list-group-item-text"}
         (str " > " (get msg "text"))]]])
 
