@@ -3,7 +3,6 @@
             [reagent.core :refer [atom cursor]]
             [chat-client.connection :as conn]))
 
-
 (def is-form-visible (atom false))
 
 (defn new-channel-button []
@@ -46,8 +45,6 @@
                      :on-save (fn [v]
                                 (.log js/console "Going to create new room: " v)
                                 (reset! is-form-visible false)
-
-                                (.log js/console "Leaving " active-channel)
                                 (conn/leave-channel ws-socket active-channel)
                                 (conn/join-channel ws-socket v))})]]))
 
@@ -86,7 +83,7 @@
             (new-channel-button)]]
         [:div {:class "panel-body"}
           [:div {:class "new-channel-container"}
-            (new-channel-form ws-socket)]
+            (new-channel-form ws-socket active-channel)]
 
           (if (empty? @channels-cur)
             [:div {:class ""}

@@ -9,9 +9,10 @@
                  [com.cognitect/transit-cljs "0.8.192"]
                  [reagent "0.4.3"]
                  [reagent/reagent-cursor  "0.1.1"]
-                 ]
-  :plugins [[lein-cljsbuild "1.0.3"]]
-  :preamble ["reagent/react.js"]
+                 [com.cemerick/clojurescript.test "0.3.1"]]
+  :plugins [[lein-cljsbuild "1.0.3"]
+            [com.cemerick/clojurescript.test "0.3.1"]]
+  :preamble ["resources/js/react-0.9.0.js"]
   :cljsbuild {
     :builds {:dev {:source-paths ["src"]
                    :compiler {:output-to "resources/js/chat-dev.js"
@@ -20,4 +21,12 @@
              :prod {:source-paths ["src"]
                     :compiler {:output-to "resources/js/chat.js"
                                :optimizations :advanced
-                               :pretty-print false}}}})
+                               :pretty-print false}}
+             :test {:source-paths ["src" "test"]
+                    :compiler {:output-to "target/cljs/unit-tests.js"
+                               :optimizations :whitespace
+                               :pretty-print true}}}
+    :test-commands {"unit" ["phantomjs" :runner
+                            "resources/test/polyfill.js"
+                            "resources/js/react-0.9.0.js"
+                            "target/cljs/unit-tests.js"]}})

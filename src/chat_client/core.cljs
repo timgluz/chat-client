@@ -8,9 +8,9 @@
             [chat-client.components.alert :as alert-app]
             [chat-client.utils :refer [by-selector]]))
 
+;;TODO: add schemas for alert, channels, messages etc..
 (defonce app-state (reagent/atom
-                     {:alert {:title "Error"
-                              :message "Demo error - bla bla!"}
+                     {:alert {}
                       :connection {:status :closed
                                    :url "ws://127.0.0.1:9000/chat"
                                    :username (str  "unknown" (rand-int 1000))
@@ -31,4 +31,4 @@
         [(fn [] (app-renderer app-state))]
         (by-selector selector)))))
 
-(main)
+;(main)

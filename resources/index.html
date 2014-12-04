@@ -41,12 +41,16 @@
         <script src="js/ripples.min.js"></script>
         <script src="js/material.min.js"></script>
         <script src="js/chat-dev.js"></script>
-
+        <script type="text/javascript">goog.require('chat_client.core');</script>
+        <script type="text/javascript">
+          chat_client.core.main();
+        </script>
         <script>
             $(document).ready(function() {
                 $.material.init();
             });
         </script>
+
     </body>
 
 </html>
