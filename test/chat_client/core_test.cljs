@@ -27,12 +27,20 @@
 (deftest render-channel-component
   (let [test-app-state (atom {:chat {:channels {}}})
         test-el (by-sel "body")]
-    (testing "renders empty list if no items"
-      (println "#-- render-channel-component")
+    (println "#-- render-channel-component")
+    (reagent/render-component
+      [#(channels-app/render test-app-state)]
+      test-el)
 
-      (reagent/render-component
-        [#(channels-app/render test-app-state)]
-        test-el)
-      (println (.-innerHTML test-el))
-      (is (= 1 2))
-      )))
+    (testing "renders empty list if no items"
+      (is (= "No channels."
+             (re-find #"No channels." (.-innerHTML test-el)))))
+    (testing "renders a list of active channels"
+      (reset! test-app-state {:chat {:active-channel "main"
+                                     :channels {"main" {:name "main"
+                                                        :users []}}}})
+      (reagent/force-update-all)
+      (is (= "main"
+             (re-find #"main" (.-innerHTML test-el)))))
+
+    (reagent/unmount-component-at-node test-el)))
